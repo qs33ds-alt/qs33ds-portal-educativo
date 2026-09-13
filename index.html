@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#edf6f6" />
+<title>QS33DS · Educació</title>
+<style>
+:root{
+  --bg:#edf6f6;
+  --bg2:#f7fbfb;
+  --ink:#17313a;
+  --muted:#62767c;
+  --line:rgba(42,87,95,.14);
+  --glass:rgba(255,255,255,.76);
+  --shadow:0 18px 60px rgba(26,67,76,.10);
+  --r:24px;
+  --blue:#dcecf5;
+  --green:#dfeee5;
+  --mint:#dff1ec;
+  --amber:#f3ead9;
+  --rose:#f3e3e5;
+  --violet:#e9e5f2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:
+radial-gradient(circle at 16% 12%,rgba(191,225,231,.55),transparent 30%),
+radial-gradient(circle at 88% 20%,rgba(219,233,211,.60),transparent 28%),
+linear-gradient(135deg,var(--bg),var(--bg2));}
+body{min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.45;background-image:
+linear-gradient(rgba(55,98,106,.045) 1px,transparent 1px),
+linear-gradient(90deg,rgba(55,98,106,.045) 1px,transparent 1px);background-size:32px 32px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.6),transparent 88%)}
+.wrap{width:min(1320px,calc(100% - 36px));margin:0 auto;padding:28px 0 48px;position:relative}
+header{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:12px 4px 26px}
+.brand{display:flex;align-items:center;gap:14px}.mark{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.8);border:1px solid var(--line);box-shadow:0 8px 30px rgba(26,67,76,.08);display:grid;place-items:center}.mark svg{width:25px;height:25px}.brand h1{font-size:18px;letter-spacing:.18em;margin:0;font-weight:800}.brand p{margin:4px 0 0;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.12em}
+.topnote{font-size:12px;color:var(--muted);padding:9px 13px;border:1px solid var(--line);background:rgba(255,255,255,.52);border-radius:999px;backdrop-filter:blur(10px)}
+.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:24px;margin-bottom:26px}
+.hero-main,.hero-side{border:1px solid var(--line);border-radius:30px;background:var(--glass);box-shadow:var(--shadow);backdrop-filter:blur(16px)}
+.hero-main{padding:34px 34px 32px;min-height:238px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden}.hero-main:after{content:"";position:absolute;width:330px;height:330px;border-radius:50%;right:-90px;top:-120px;border:1px solid rgba(65,111,120,.12);box-shadow:0 0 0 32px rgba(65,111,120,.035),0 0 0 65px rgba(65,111,120,.025)}
+.kicker{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:#50747b;font-weight:800}.hero h2{font-size:clamp(32px,5vw,62px);line-height:.98;margin:12px 0 16px;max-width:800px;letter-spacing:-.04em}.hero-main p{margin:0;max-width:720px;color:var(--muted);font-size:15px;line-height:1.55}.hero-side{padding:26px;display:grid;align-content:center;gap:15px}.metric{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line)}.metric:last-child{border-bottom:0}.metric b{font-size:27px}.metric span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.section-head{display:flex;justify-content:space-between;align-items:end;margin:32px 2px 16px}.section-head h3{margin:0;font-size:20px}.section-head p{margin:0;color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.card{grid-column:span 4;min-height:220px;border-radius:var(--r);padding:21px;display:flex;flex-direction:column;justify-content:space-between;text-decoration:none;color:inherit;border:1px solid rgba(57,93,101,.11);box-shadow:0 10px 38px rgba(26,67,76,.08);transition:.25s ease;position:relative;overflow:hidden}.card:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(26,67,76,.14)}.card:focus-visible{outline:3px solid rgba(32,110,125,.25);outline-offset:3px}
+.card.large{grid-column:span 6;min-height:250px}.card .icon{width:58px;height:58px;border-radius:18px;background:rgba(255,255,255,.56);border:1px solid rgba(255,255,255,.75);display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}.card .icon svg{width:30px;height:30px;stroke-width:1.6}
+.card h4{font-size:22px;margin:18px 0 6px;letter-spacing:-.02em}.card p{font-size:13px;line-height:1.45;color:#53696f;margin:0;max-width:36ch}.card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px}.tag{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#547078}.arrow{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.85);font-size:18px}
+.blue{background:linear-gradient(145deg,#e9f4f8,var(--blue))}.green{background:linear-gradient(145deg,#eef7f1,var(--green))}.mint{background:linear-gradient(145deg,#eef9f6,var(--mint))}.amber{background:linear-gradient(145deg,#fbf6ec,var(--amber))}.rose{background:linear-gradient(145deg,#fbf0f1,var(--rose))}.violet{background:linear-gradient(145deg,#f5f1fa,var(--violet))}
+.card:before{content:"";position:absolute;right:-42px;bottom:-58px;width:180px;height:180px;border-radius:50%;border:1px solid rgba(65,101,108,.08);box-shadow:0 0 0 22px rgba(255,255,255,.12),0 0 0 44px rgba(255,255,255,.08)}
+footer{padding:30px 2px 0;display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.hero-side{grid-template-columns:repeat(3,1fr)}.metric{display:block;border:0;padding:6px}.metric b{display:block}.card,.card.large{grid-column:span 6}}
+@media(max-width:620px){.wrap{width:min(100% - 22px,1320px);padding-top:14px}header{align-items:flex-start}.topnote{display:none}.hero-main{padding:26px 22px}.hero-side{grid-template-columns:1fr 1fr 1fr}.card,.card.large{grid-column:1/-1;min-height:200px}.section-head{align-items:flex-start;gap:10px;flex-direction:column}footer{flex-direction:column;gap:6px}}
+</style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#17324d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .catch(err => console.error('Service Worker:', err));
+  });
+}
+</script>
+</head>
+<body>
+<main class="wrap">
+<header>
+  <div class="brand">
+    <div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z"/><path d="M6 10.5V16l6 3 6-3v-5.5"/></svg></div>
+    <div><h1>QS33DS</h1><p>Educational Lab</p></div>
+  </div>
+  <div class="topnote">Recursos · observació · aprenentatge</div>
+</header>
+
+<section class="hero">
+  <div class="hero-main">
+    <div class="kicker">Portal educatiu</div>
+    <h2>Eines digitals per aprendre, observar i intervenir.</h2>
+    <p>Accés directe a les aplicacions educatives desenvolupades per a l’aula, el seguiment de l’alumnat i el treball manipulatiu.</p>
+  </div>
+  <aside class="hero-side" aria-label="Resum del portal">
+    <div class="metric"><b>4</b><span>Aplicacions</span></div>
+    <div class="metric"><b>1</b><span>Portal</span></div>
+    <div class="metric"><b>∞</b><span>Actualitzacions</span></div>
+  </aside>
+</section>
+
+<div class="section-head"><div><div class="kicker">Aplicacions</div><h3>Entorn educatiu</h3></div><p>Selecciona una eina per entrar-hi.</p></div>
+
+<section class="grid">
+  <a class="card large blue" href="lecto_ee.html" aria-label="Obrir Lecto EE">
+    <div><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5A2.5 2.5 0 0 1 20 21.5v-16Z"/></svg></div><h4>Lecto · EE</h4><p>Avaluació lectora específica amb bateria adaptativa, subproves, perfil lector, evolució i informe pedagògic.</p></div>
+    <div class="foot"><span class="tag">Lectura · avaluació EE</span><span class="arrow">↗</span></div>
+  </a>
+
+  <a class="card large amber" href="laboratori_calcul.html" aria-label="Obrir Laboratori de càlcul">
+    <div><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17.5h7M17.5 14v7"/></svg></div><h4>Laboratori de càlcul</h4><p>Treball manipulatiu de sumes i restes, unitats i desenes, descomposició i canvi 10 ↔ 1 amb vista d’alumne.</p></div>
+    <div class="foot"><span class="tag">Matemàtiques · manipulació</span><span class="arrow">↗</span></div>
+  </a>
+
+  <a class="card large green" href="observapt.html" aria-label="Obrir ObservaPT">
+    <div><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.7"/></svg></div><h4>ObservaPT</h4><p>Observació funcional ràpida i completa, historial per alumne, àmbits prioritaris i recomanació del següent pas.</p></div>
+    <div class="foot"><span class="tag">Observació · seguiment</span><span class="arrow">↗</span></div>
+  </a>
+
+  <a class="card large violet" href="pictogrames.html" aria-label="Obrir Gestor de pictogrames">
+    <div><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m5 18 4-4 3 3 3-3 4 4"/></svg></div><h4>Pictogrames</h4><p>Gestor educatiu de pictogrames amb biblioteca estructurada i correspondències revisades per a l’ús a l’aula.</p></div>
+    <div class="foot"><span class="tag">Comunicació · suport visual</span><span class="arrow">↗</span></div>
+  </a>
+</section>
+
+<footer><span>QS33DS · Educational Lab</span><span>Portal d’accés a aplicacions educatives</span></footer>
+</main>
+</body>
+</html>

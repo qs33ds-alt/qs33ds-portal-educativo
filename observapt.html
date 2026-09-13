@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ObservaPT v2 · Registre d'Observació Funcional</title>
+<style>
+:root{
+  --bg:#f3f6fb;--card:#fff;--line:#dbe2eb;--text:#1f2937;--muted:#667085;
+  --accent:#294b8f;--accent2:#eaf0fb;--soft:#f8fafc;--danger:#8d2020;
+}
+*{box-sizing:border-box}
+html,body{margin:0;max-width:100%;overflow-x:hidden}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);padding:14px}
+.app{max-width:1100px;margin:0 auto}
+header{margin:6px 0 14px}
+h1{margin:0 0 4px;font-size:1.85rem}
+h2{margin:0 0 12px;font-size:1.25rem}
+h3{margin:0;font-size:1.02rem}
+.subtitle,.muted{color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:14px 0;box-shadow:0 4px 20px rgba(25,40,65,.04)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input,select,textarea,button{font:inherit}
+input,select,textarea{width:100%;padding:10px 12px;border:1px solid #cfd7e3;border-radius:11px;background:#fff}
+textarea{min-height:90px;resize:vertical}
+button{border:1px solid #ccd5e1;background:#fff;border-radius:11px;padding:9px 11px;cursor:pointer}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+button.danger{color:var(--danger)}
+.student-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px;margin-top:12px}
+.student-card{padding:12px;border:1px solid var(--line);border-radius:13px;background:var(--soft);cursor:pointer}
+.student-card.active{outline:2px solid #9eb0d9;background:#fff}
+.student-card strong{display:block;margin-bottom:4px}
+.context-card{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:12px}
+.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tags{display:flex;gap:7px;flex-wrap:wrap}
+.chip{padding:7px 9px;border:1px solid #cad4e2;border-radius:999px;background:#fff;cursor:pointer;font-size:.9rem}
+.chip.active{background:var(--accent2);border-color:#9fb2db;color:#183a78}
+.domain{border:1px solid var(--line);border-radius:15px;margin:12px 0;overflow:hidden}
+.domain-head{background:#f6f8fb;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer}
+.domain-body{padding:12px}
+.subdomain{margin:0 0 14px}
+.subdomain-title{font-weight:700;margin-bottom:6px;color:#344054}
+.item{border-top:1px solid #edf0f4;padding:12px 0}
+.item:first-child{border-top:0}
+.item-text{font-weight:600;line-height:1.35;margin-bottom:8px}
+.item-meta{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:8px}
+.scale-note{font-size:.8rem;color:var(--muted);margin-top:5px}
+.dimension-box{margin-top:10px;padding:12px;border:1px solid var(--line);border-radius:13px;background:#fbfcfe}
+.dimension-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.summary-box{padding:12px;border:1px solid var(--line);border-radius:13px;background:var(--soft)}
+.badge{display:inline-block;padding:4px 8px;margin:2px;border-radius:999px;background:#eef3fb;font-size:.82rem}
+.history-item{padding:11px 0;border-bottom:1px solid #edf0f4}
+.history-item:last-child{border-bottom:0}
+.status{padding:9px 10px;border-radius:10px;background:#f5f7fa;color:#475467;margin-top:10px}
+.hidden{display:none!important}
+@media(max-width:760px){
+  body{padding:9px}
+  .grid2,.grid3,.grid4,.item-meta,.dimension-grid,.summary-grid{grid-template-columns:1fr}
+  .card{padding:13px}
+}
+
+.quick-focus{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:var(--soft)}
+.quick-focus-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.followup{margin-top:10px;padding:10px;border:1px solid #d8e0ec;border-radius:12px;background:#fff}
+.followup button{margin-top:7px}
+@media(max-width:760px){.quick-focus-grid{grid-template-columns:1fr}}
+
+.student-dashboard-btn{margin-top:8px;width:100%;display:flex;justify-content:space-between;align-items:center}
+.student-dashboard{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:12px;background:#fbfcfe}
+.student-dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.student-dashboard-box{padding:11px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.student-dashboard-box h4{margin:0 0 7px;font-size:.95rem}
+.student-dashboard-list{display:grid;gap:7px}
+.student-dashboard-item{padding:8px;border-radius:9px;background:#f5f7fb;border:1px solid #e7ebf1}
+.student-followup-input{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}
+.student-followup-item{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px;border:1px solid #e4e9f0;border-radius:9px;background:#fff}
+.student-followup-item.done{opacity:.55;text-decoration:line-through}
+.student-mini-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.student-mini-actions button{padding:7px 9px}
+@media(max-width:760px){
+ .student-dashboard-grid{grid-template-columns:1fr}
+ .student-followup-input{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <h1>ObservaPT v2</h1>
+  <div class="subtitle">Registre d'observació funcional · estructura pedagògica</div>
+</header>
+
+<section class="card">
+  <h2>Alumnes</h2>
+  <div class="grid2">
+    <input id="newStudentName" placeholder="Nom o codi de l'alumne">
+    <input id="newStudentGroup" placeholder="Curs / grup (opcional)">
+  </div>
+  <div class="row" style="margin-top:10px">
+    <button id="addStudentBtn" class="primary">Nou alumne</button>
+  </div>
+  <div id="studentList" class="student-list"></div>
+<div id="studentDashboardWrap" class="hidden">
+  <button type="button" id="studentDashboardBtn" class="student-dashboard-btn">
+    <span>👤 Fitxa de l'alumne</span><span id="studentDashboardChevron">▾</span>
+  </button>
+  <div id="studentDashboard" class="student-dashboard hidden">
+    <div id="studentDashboardContent"></div>
+  </div>
+</div>
+
+</section>
+
+<section class="card">
+  <h2>Context de l'observació</h2>
+  <div class="grid3">
+    <div>
+      <label class="muted">Espai / context</label>
+      <select id="contextSelect">
+        <option>Aula ordinària</option>
+        <option>Petit grup</option>
+        <option>Atenció individual</option>
+        <option>Pati / espai no estructurat</option>
+        <option>Transició</option>
+        <option>Menjador</option>
+        <option>Altres</option>
+      </select>
+    </div>
+    <div>
+      <label class="muted">Agrupament</label>
+      <select id="groupingSelect">
+        <option>Grup classe</option>
+        <option>Petit grup</option>
+        <option>Parella</option>
+        <option>Individual</option>
+      </select>
+    </div>
+    <div>
+      <label class="muted">Tipus de tasca</label>
+      <select id="taskTypeSelect">
+        <option>Tasca coneguda</option>
+        <option>Tasca nova</option>
+        <option>Rutina habitual</option>
+        <option>Activitat oberta</option>
+        <option>Activitat dirigida</option>
+      </select>
+    </div>
+  </div>
+  <div class="grid3" style="margin-top:10px">
+    <div>
+      <label class="muted">Nivell de demanda</label>
+      <select id="demandSelect">
+        <option>Baixa</option><option selected>Mitjana</option><option>Alta</option>
+      </select>
+    </div>
+    <div>
+      <label class="muted">Durada aproximada</label>
+      <select id="durationSelect">
+        <option>Menys de 5 min</option><option>5–10 min</option><option>10–20 min</option><option>Més de 20 min</option>
+      </select>
+    </div>
+    <div>
+      <label class="muted">Moment</label>
+      <select id="momentSelect">
+        <option>Inici del matí</option><option>Mig matí</option><option>Després del pati</option><option>Tarda</option><option>Altres</option>
+      </select>
+    </div>
+  </div>
+  <div style="margin-top:10px">
+    <label class="muted">Activitat concreta</label>
+    <input id="activityInput" placeholder="Ex. resolució de problemes, lectura compartida, entrada a l'aula...">
+  </div>
+</section>
+
+<section class="card">
+  <h2>Modalitat d'observació</h2>
+  <div class="mode-switch">
+    <button id="quickModeBtn" class="active">Observació ràpida</button>
+    <button id="fullModeBtn">Observació completa</button>
+  </div>
+  <div class="status" id="modeStatus">Ràpida: selecció de 12 indicadors funcionals clau.</div>
+<div class="quick-focus" id="quickFocusBox">
+  <strong>Què vols observar avui?</strong>
+  <div class="quick-focus-grid" style="margin-top:8px">
+    <div><label class="muted">Àmbit</label><select id="quickDomainSelect"></select></div>
+    <div><label class="muted">Focus / subàmbit</label><select id="quickSubdomainSelect"></select></div>
+  </div>
+  <div class="muted" style="margin-top:7px">La resta d'àmbits queden sense observar en aquesta sessió i conserven l'historial anterior.</div>
+</div>
+</section>
+
+<section class="card">
+  <h2>Barreres i facilitadors</h2>
+  <div class="grid2">
+    <div>
+      <h3>Barreres observades</h3>
+      <div id="barrierTags" class="tags" style="margin-top:8px"></div>
+    </div>
+    <div>
+      <h3>Facilitadors / suports que ajuden</h3>
+      <div id="facilitatorTags" class="tags" style="margin-top:8px"></div>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Indicadors funcionals</h2>
+  <div class="status">
+    <strong>Nivell de suport:</strong> No observable · No ho realitza · Suport intens · Suport freqüent · Suport puntual · Autònom · Autònom i generalitza.<br>
+    <strong>Freqüència:</strong> No observable · Ocasional · Intermitent · Freqüent · Consistent.
+  </div>
+  <div id="observationItems"></div>
+</section>
+
+<section class="card">
+  <h2>Impacte funcional de la situació</h2>
+  <div class="dimension-grid">
+    <div><label class="muted">Participació</label><select id="participationSelect"></select></div>
+    <div><label class="muted">Aprenentatge</label><select id="learningSelect"></select></div>
+    <div><label class="muted">Autonomia</label><select id="autonomySelect"></select></div>
+    <div><label class="muted">Benestar / regulació</label><select id="wellbeingSelect"></select></div>
+  </div>
+  <div class="grid2" style="margin-top:10px">
+    <div>
+      <label class="muted">Generalització</label>
+      <select id="generalizationSelect">
+        <option value="">No observable</option>
+        <option>Només en aquesta situació</option>
+        <option>En situacions similars</option>
+        <option>En diversos contextos</option>
+        <option>Generalitza de manera estable</option>
+      </select>
+    </div>
+    <div>
+      <label class="muted">Necessitat global de mediació</label>
+      <select id="mediationSelect">
+        <option value="">No observable</option>
+        <option>Intensa i continuada</option>
+        <option>Freqüent</option>
+        <option>Puntual</option>
+        <option>Mínima / autònom</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Registre qualitatiu</h2>
+  <div class="grid2">
+    <div>
+      <label class="muted">Què facilita l'èxit?</label>
+      <textarea id="successInput" placeholder="Condicions, suports, tipus de consigna, agrupament..."></textarea>
+    </div>
+    <div>
+      <label class="muted">Què interfereix?</label>
+      <textarea id="interferenceInput" placeholder="Distractors, demanda, canvi, dificultat de comprensió..."></textarea>
+    </div>
+  </div>
+  <div style="margin-top:10px">
+    <label class="muted">Observacions</label>
+    <textarea id="notesInput" placeholder="Descripció breu i observable, evitant interpretacions diagnòstiques."></textarea>
+  </div>
+  <div class="row" style="margin-top:12px">
+    <button id="saveObservationBtn" class="primary">Desar observació</button>
+    <button id="resetObservationBtn">Netejar</button>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Perfil funcional acumulat</h2>
+  <div id="profileSummary" class="muted">Selecciona un alumne.</div>
+</section>
+
+<section class="card">
+  <h2>Historial</h2>
+  <div id="historyList" class="muted">Encara no hi ha observacions.</div>
+</section>
+</div>
+
+<script>
+const SUPPORT_SCALE = [
+  {v:"NA",label:"No observable",score:null},
+  {v:"0",label:"No ho realitza",score:0},
+  {v:"1",label:"Suport intens",score:1},
+  {v:"2",label:"Suport freqüent",score:2},
+  {v:"3",label:"Suport puntual",score:3},
+  {v:"4",label:"Autònom",score:4},
+  {v:"5",label:"Autònom i generalitza",score:5}
+];
+const FREQ_SCALE = [
+  {v:"NA",label:"No observable",score:null},
+  {v:"1",label:"Ocasional",score:1},
+  {v:"2",label:"Intermitent",score:2},
+  {v:"3",label:"Freqüent",score:3},
+  {v:"4",label:"Consistent",score:4}
+];
+
+const DOMAINS = [
+ {id:"access",name:"Accés i disponibilitat per aprendre",sub:[
+   {name:"Orientació i inici",items:["S'orienta cap a la proposta quan s'inicia l'activitat.","Identifica què s'espera que faci.","Inicia la tasca dins un temps funcional."]},
+   {name:"Atenció",items:["Manté l'atenció el temps necessari per avançar.","Filtra distractors habituals del context.","Recupera el focus després d'una interrupció."]}
+ ]},
+ {id:"comprehension",name:"Comprensió i gestió de consignes",sub:[
+   {name:"Comprensió",items:["Comprèn consignes simples relacionades amb la tasca.","Comprèn consignes de dos o més passos quan correspon.","Detecta quan no ha entès una instrucció."]},
+   {name:"Manteniment de la informació",items:["Manté activa la consigna mentre actua.","Recorda el pas següent sense reiniciar tota la instrucció.","Utilitza suports disponibles per recordar què ha de fer."]}
+ ]},
+ {id:"executive",name:"Funcions executives i organització",sub:[
+   {name:"Planificació i iniciació",items:["Organitza materials i passos bàsics.","Comença sense dependència contínua de l'adult.","Anticipa què necessita abans d'actuar."]},
+   {name:"Flexibilitat i monitorització",items:["Canvia d'estratègia quan una opció no funciona.","Revisa el resultat abans de donar la tasca per acabada.","Accepta canvis de consigna o procediment amb un suport ajustat."]},
+   {name:"Inhibició i temps",items:["Controla respostes impulsives que interfereixen.","Espera el torn o el moment adequat per actuar.","Gestiona el temps amb els suports disponibles."]}
+ ]},
+ {id:"persistence",name:"Persistència, esforç i finalització",sub:[
+   {name:"Persistència",items:["Manté l'esforç davant una dificultat assumible.","Reprèn la tasca després d'un error o pausa.","Tolera haver de repetir o revisar."]},
+   {name:"Finalització",items:["Completa el fragment de feina acordat.","Manté una qualitat funcional fins al final.","Identifica quan ha acabat realment la tasca."]}
+ ]},
+ {id:"regulation",name:"Regulació emocional i conductual",sub:[
+   {name:"Frustració i espera",items:["Tolera petites frustracions pròpies de l'activitat.","Gestiona esperes sense desorganitzar-se de manera significativa.","Accepta una correcció sense abandonar la situació."]},
+   {name:"Recuperació",items:["Recupera l'estat de treball després d'un malestar.","Utilitza estratègies o suports de regulació disponibles.","Pot tornar a participar després d'una incidència."]}
+ ]},
+ {id:"communication",name:"Comunicació funcional",sub:[
+   {name:"Expressió de necessitats",items:["Expressa què necessita d'una manera comprensible.","Demana ajuda abans d'abandonar o bloquejar-se.","Explica què no entén quan se li dona l'oportunitat."]},
+   {name:"Intercanvi",items:["Respon a preguntes vinculades a la situació.","Manté un intercanvi funcional amb adult o igual.","Ajusta el missatge al context bàsic."]}
+ ]},
+ {id:"participation",name:"Participació i interacció social",sub:[
+   {name:"Participació",items:["S'implica en l'activitat compartida.","Manté una presència activa sense requerir mediació constant.","Accepta diferents formes de participació dins el grup."]},
+   {name:"Interacció",items:["Respecta torns i espais bàsics d'interacció.","Accepta aportacions o intervencions d'altres.","Pot cooperar en una tasca compartida amb els suports necessaris."]}
+ ]},
+ {id:"autonomy",name:"Autonomia escolar i adaptativa",sub:[
+   {name:"Gestió personal",items:["Gestiona el material escolar amb un nivell funcional d'ajuda.","Es desplaça o canvia d'activitat amb els suports previstos.","Utilitza rutines conegudes amb autonomia creixent."]},
+   {name:"Autogestió",items:["Identifica quan necessita ajuda.","Utilitza recursos disponibles abans de recórrer a l'adult.","Pren petites decisions ajustades a la situació."]}
+ ]},
+ {id:"learning",name:"Resposta a l'aprenentatge",sub:[
+   {name:"Accés a la tasca",items:["Pot mostrar el que sap amb el format proposat.","Es beneficia d'una reducció o estructuració de la demanda.","Transfereix aprenentatges previs a una tasca semblant."]},
+   {name:"Resposta al suport",items:["Millora clarament quan s'introdueix un suport adequat.","Manté l'aprenentatge quan el suport es retira gradualment.","Accepta feedback i l'utilitza per millorar."]}
+ ]},
+ {id:"generalization",name:"Generalització i estabilitat",sub:[
+   {name:"Consistència",items:["Manté la conducta o habilitat en diferents moments.","Mostra un rendiment similar amb professionals diferents.","Manté el funcionament quan hi ha petits canvis contextuals."]},
+   {name:"Transferència",items:["Utilitza una habilitat apresa en una situació nova.","Aplica estratègies útils sense que se li recordin sempre.","Generalitza els aprenentatges a contextos naturals."]}
+ ]}
+];
+
+const QUICK = [
+ ["access",0,0],["access",1,0],["comprehension",0,0],["comprehension",1,0],
+ ["executive",0,1],["executive",1,0],["persistence",0,0],["regulation",0,0],
+ ["communication",0,1],["participation",0,0],["autonomy",0,0],["learning",1,0]
+];
+
+const BARRIERS = [
+ "Consigna massa llarga","Excés de llenguatge verbal","Soroll / distractors","Temps insuficient",
+ "Tasca poc estructurada","Excés de passos","Canvi inesperat","Demanda massa alta",
+ "Material poc accessible","Dificultat d'inici","Dificultat de comprensió","Fatiga / saturació",
+ "Interacció grupal complexa","Entorn poc predictible"
+];
+const FACILITATORS = [
+ "Suport visual","Modelatge","Anticipació","Fragmentació de la tasca","Recordatori verbal breu",
+ "Temps extra","Reducció de càrrega","Exemple resolt","Elecció entre opcions","Pausa reguladora",
+ "Rutina visual","Company de suport","Petit grup","Espai amb menys distractors","Reforç positiu",
+ "Material manipulatiu","Checklist / passos"
+];
+const IMPACT = ["No observable","Molt compromès","Compromès","Funcional amb suport freqüent","Funcional amb suport puntual","Autònom"];
+
+let mode="quick", activeId=localStorage.getItem("observapt_v2_active")||null;
+let ratings={}, barriers=new Set(), facilitators=new Set();
+
+const $=id=>document.getElementById(id);
+function parse(k,f){try{const x=localStorage.getItem(k);return x?JSON.parse(x):f}catch(e){return f}}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function students(){return parse("observapt_v2_students",{})}
+function records(){return parse("observapt_v2_records",{})}
+function uid(){return "ALU-"+Math.random().toString(36).slice(2,6).toUpperCase()+"-"+Date.now().toString(36).slice(-4).toUpperCase()}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+
+
+function followups(){return parse("observapt_v2_followups",{})}
+function saveFollowups(v){save("observapt_v2_followups",v)}
+
+function addFollowup(text,domainId=""){
+  if(!activeId||!text.trim())return;
+  const all=followups();
+  (all[activeId]||=[]).push({
+    id:"FU-"+Date.now(),
+    text:text.trim(),
+    domainId,
+    createdAt:new Date().toISOString(),
+    done:false
+  });
+  saveFollowups(all);
+  renderStudentDashboard();
+}
+
+function toggleFollowup(id){
+  const all=followups(), arr=all[activeId]||[];
+  const x=arr.find(a=>a.id===id); if(x)x.done=!x.done;
+  saveFollowups(all); renderStudentDashboard();
+}
+function deleteFollowup(id){
+  const all=followups(), arr=all[activeId]||[];
+  all[activeId]=arr.filter(a=>a.id!==id);
+  saveFollowups(all); renderStudentDashboard();
+}
+
+function recommendedNextObservation(){
+  if(!activeId)return null;
+  const arr=records()[activeId]||[];
+  if(!arr.length)return {label:"Fer una primera observació ràpida",domainId:""};
+  const quicks=arr.filter(r=>r.mode==="quick").slice(-5);
+  const weak=[];
+  quicks.forEach(r=>{
+    Object.entries(r.domainAgg||{}).forEach(([id,d])=>{
+      if(d.supportAvg!=null && d.supportAvg<3) weak.push({id,name:d.name,score:d.supportAvg,date:r.date});
+    });
+  });
+  if(weak.length){
+    weak.sort((a,b)=>a.score-b.score);
+    return {label:`Aprofundir en ${weak[0].name}`,domainId:weak[0].id};
+  }
+  const last=arr[arr.length-1];
+  if(last?.quickFocus?.domainId){
+    return {label:`Revisar ${last.quickFocus.domainName}`,domainId:last.quickFocus.domainId};
+  }
+  return {label:"Fer una observació ràpida de seguiment",domainId:""};
+}
+
+function openQuickForDomain(domainId=""){
+  mode="quick";
+  $("quickModeBtn").classList.add("active");$("fullModeBtn").classList.remove("active");
+  $("quickFocusBox").classList.remove("hidden");
+  $("modeStatus").textContent="Ràpida: selecciona un àmbit i observa només 3–6 indicadors.";
+  if(domainId && $("quickDomainSelect")){
+    $("quickDomainSelect").value=domainId;
+    updateQuickSubdomains();
+  }
+  ratings={};renderItems();
+  $("quickFocusBox").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function openFullForDomain(domainId=""){
+  mode="full";
+  $("fullModeBtn").classList.add("active");$("quickModeBtn").classList.remove("active");
+  $("quickFocusBox").classList.add("hidden");
+  $("modeStatus").textContent="Completa: aprofundiment estructurat de l'àmbit seleccionat.";
+  ratings={};renderItems();
+  setTimeout(()=>{
+    if(domainId){
+      const d=DOMAINS.find(x=>x.id===domainId);
+      document.querySelectorAll(".domain").forEach(el=>{
+        const title=el.querySelector(".domain-head span")?.textContent||"";
+        if(d && title!==d.name) el.querySelector(".domain-body")?.classList.add("hidden");
+      });
+    }
+    $("observationItems").scrollIntoView({behavior:"smooth",block:"start"});
+  },20);
+}
+
+function renderStudentDashboard(){
+  const wrap=$("studentDashboardWrap"), content=$("studentDashboardContent");
+  if(!activeId){wrap?.classList.add("hidden");return}
+  wrap.classList.remove("hidden");
+  const stu=students()[activeId], arr=records()[activeId]||[], fus=followups()[activeId]||[];
+  const recent=[...arr].reverse().slice(0,5);
+  const next=recommendedNextObservation();
+
+  const weakMap={};
+  arr.slice(-8).forEach(r=>Object.entries(r.domainAgg||{}).forEach(([id,d])=>{
+    if(d.supportAvg==null)return;
+    const a=weakMap[id]||={name:d.name,vals:[]};a.vals.push(Number(d.supportAvg));
+  }));
+  const weak=Object.entries(weakMap).map(([id,a])=>({
+    id,name:a.name,avg:a.vals.reduce((x,y)=>x+y,0)/a.vals.length
+  })).sort((a,b)=>a.avg-b.avg).slice(0,3);
+
+  const pending=fus.filter(x=>!x.done), done=fus.filter(x=>x.done).slice(-3);
+
+  content.innerHTML=`
+    <div class="student-dashboard-grid">
+      <div class="student-dashboard-box">
+        <h4>Resum</h4>
+        <div><strong>${esc(stu?.name||"Alumne")}</strong></div>
+        <div class="muted">${esc(stu?.group||"Sense curs/grup")}</div>
+        <div class="muted" style="margin-top:5px">${arr.length} observació${arr.length===1?"":"ns"} registrades</div>
+      </div>
+      <div class="student-dashboard-box">
+        <h4>Proper pas recomanat</h4>
+        <div>${esc(next?.label||"Sense proposta")}</div>
+        <div class="student-mini-actions">
+          <button type="button" id="dashboardQuickBtn">Observació ràpida</button>
+          <button type="button" id="dashboardFullBtn">Observació completa</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="student-dashboard-grid" style="margin-top:10px">
+      <div class="student-dashboard-box">
+        <h4>Darreres observacions</h4>
+        <div class="student-dashboard-list">
+          ${recent.length?recent.map(r=>`
+            <div class="student-dashboard-item">
+              <strong>${new Date(r.date).toLocaleDateString("ca-ES")}</strong> · ${r.mode==="quick"?"Ràpida":"Completa"}<br>
+              <span class="muted">${esc(r.quickFocus?.domainName||r.context?.space||"Observació funcional")}</span>
+            </div>`).join(""):'<span class="muted">Encara no hi ha observacions.</span>'}
+        </div>
+      </div>
+
+      <div class="student-dashboard-box">
+        <h4>Àmbits a revisar</h4>
+        <div class="student-dashboard-list">
+          ${weak.length?weak.map(x=>`
+            <div class="student-dashboard-item">
+              <strong>${esc(x.name)}</strong><br><span class="muted">Mitjana recent ${x.avg.toFixed(1)}/5</span>
+              <div class="student-mini-actions">
+                <button type="button" data-quick-domain="${esc(x.id)}">Ràpida</button>
+                <button type="button" data-full-domain="${esc(x.id)}">Aprofundir</button>
+              </div>
+            </div>`).join(""):'<span class="muted">Sense àmbits prioritaris detectats.</span>'}
+        </div>
+      </div>
+    </div>
+
+    <div class="student-dashboard-box" style="margin-top:10px">
+      <h4>Pendents / què vull tornar a passar</h4>
+      <div class="student-dashboard-list">
+        ${pending.length?pending.map(x=>`
+          <div class="student-followup-item">
+            <span>${esc(x.text)}</span>
+            <span>
+              <button type="button" data-done-follow="${esc(x.id)}">✓</button>
+              <button type="button" data-del-follow="${esc(x.id)}">✕</button>
+            </span>
+          </div>`).join(""):'<span class="muted">No hi ha pendents.</span>'}
+      </div>
+      <div class="student-followup-input">
+        <input id="newFollowupInput" placeholder="Ex. tornar a observar inici de tasca en aula ordinària">
+        <button type="button" id="addFollowupBtn">Afegir pendent</button>
+      </div>
+      ${done.length?`<div class="muted" style="margin-top:8px">Completats recents: ${done.map(x=>esc(x.text)).join(" · ")}</div>`:""}
+    </div>
+  `;
+
+  $("dashboardQuickBtn").onclick=()=>openQuickForDomain(next?.domainId||"");
+  $("dashboardFullBtn").onclick=()=>openFullForDomain(next?.domainId||"");
+  content.querySelectorAll("[data-quick-domain]").forEach(b=>b.onclick=()=>openQuickForDomain(b.dataset.quickDomain));
+  content.querySelectorAll("[data-full-domain]").forEach(b=>b.onclick=()=>openFullForDomain(b.dataset.fullDomain));
+  content.querySelectorAll("[data-done-follow]").forEach(b=>b.onclick=()=>toggleFollowup(b.dataset.doneFollow));
+  content.querySelectorAll("[data-del-follow]").forEach(b=>b.onclick=()=>deleteFollowup(b.dataset.delFollow));
+  $("addFollowupBtn").onclick=()=>{const v=$("newFollowupInput").value;addFollowup(v);};
+}
+function renderStudents(){
+ const box=$("studentList"), all=Object.values(students()).sort((a,b)=>a.name.localeCompare(b.name,"ca")); box.innerHTML="";
+ if(!all.length){box.innerHTML='<span class="muted">Encara no hi ha alumnes.</span>';return}
+ all.forEach(s=>{const n=(records()[s.id]||[]).length,d=document.createElement("div");d.className="student-card"+(s.id===activeId?" active":"");
+ d.innerHTML=`<strong>${esc(s.name)}</strong><span class="muted">${esc(s.group||"Sense curs/grup")} · ${n} registre${n===1?"":"s"}</span>`;
+ d.onclick=()=>{activeId=s.id;localStorage.setItem("observapt_v2_active",s.id);renderStudents();renderProfile();renderHistory();renderStudentDashboard()};box.appendChild(d)})
+}
+function addStudent(){
+ const name=$("newStudentName").value.trim();if(!name)return;const all=students(),id=uid();
+ all[id]={id,name,group:$("newStudentGroup").value.trim(),createdAt:new Date().toISOString()};save("observapt_v2_students",all);
+ activeId=id;localStorage.setItem("observapt_v2_active",id);$("newStudentName").value="";$("newStudentGroup").value="";renderStudents();renderProfile();renderHistory();renderStudentDashboard()
+}
+
+function tagRender(container,items,set){
+ const box=$(container);box.innerHTML="";
+ items.forEach(x=>{const b=document.createElement("button");b.type="button";b.className="chip"+(set.has(x)?" active":"");b.textContent=x;
+ b.onclick=()=>{set.has(x)?set.delete(x):set.add(x);tagRender(container,items,set)};box.appendChild(b)})
+}
+
+function itemList(){
+ if(mode==="full"){
+   const out=[];DOMAINS.forEach(d=>d.sub.forEach((s,si)=>s.items.forEach((t,ii)=>out.push({d,sub:s,si,ii,text:t}))));return out;
+ }
+ const did=$("quickDomainSelect")?.value || DOMAINS[0].id;
+ const d=DOMAINS.find(x=>x.id===did) || DOMAINS[0];
+ const subVal=$("quickSubdomainSelect")?.value || "ALL";
+ let out=[];
+ d.sub.forEach((sub,si)=>{
+   if(subVal!=="ALL" && String(si)!==subVal)return;
+   sub.items.forEach((text,ii)=>out.push({d,sub,si,ii,text}));
+ });
+ return out.slice(0,6);
+}
+
+function selectHtml(scale,value,key,type){
+ return `<select data-key="${key}" data-type="${type}">
+ ${scale.map(x=>`<option value="${x.v}" ${value===x.v?"selected":""}>${x.label}</option>`).join("")}</select>`;
+}
+
+function renderItems(){
+ const box=$("observationItems");box.innerHTML="";
+ const list=itemList(), grouped={};list.forEach(it=>(grouped[it.d.id]||=[]).push(it));
+ Object.values(grouped).forEach(items=>{
+   const wrap=document.createElement("div");wrap.className="domain";
+   const head=document.createElement("div");head.className="domain-head";head.innerHTML=`<span>${esc(items[0].d.name)}</span><span>▾</span>`;
+   const body=document.createElement("div");body.className="domain-body";
+   const subs={};items.forEach(it=>(subs[it.sub.name]||=[]).push(it));
+   Object.entries(subs).forEach(([sn,its])=>{
+     const sd=document.createElement("div");sd.className="subdomain";sd.innerHTML=`<div class="subdomain-title">${esc(sn)}</div>`;
+     its.forEach(it=>{
+       const key=it.d.id+":"+it.si+":"+it.ii, r=ratings[key]||{support:"NA",freq:"NA",note:""};
+       const div=document.createElement("div");div.className="item";
+       div.innerHTML=`<div class="item-text">${esc(it.text)}</div>
+       <div class="item-meta">
+         <div><label class="muted">Nivell de suport</label>${selectHtml(SUPPORT_SCALE,r.support,key,"support")}</div>
+         <div><label class="muted">Freqüència</label>${selectHtml(FREQ_SCALE,r.freq,key,"freq")}</div>
+         <div><label class="muted">Nota breu</label><input data-key="${key}" data-type="note" value="${esc(r.note||"")}" placeholder="Opcional"></div>
+       </div>`;sd.appendChild(div)
+     });body.appendChild(sd)
+   });
+   head.onclick=()=>body.classList.toggle("hidden");wrap.appendChild(head);wrap.appendChild(body);box.appendChild(wrap)
+ });
+ box.querySelectorAll("[data-key]").forEach(el=>{
+   el.addEventListener("change",()=>{const k=el.dataset.key,t=el.dataset.type;ratings[k]=ratings[k]||{support:"NA",freq:"NA",note:""};ratings[k][t]=el.value});
+   if(el.dataset.type==="note")el.addEventListener("input",()=>{const k=el.dataset.key;ratings[k]=ratings[k]||{support:"NA",freq:"NA",note:""};ratings[k].note=el.value})
+ })
+}
+
+
+function populateQuickDomains(){
+ const ds=$("quickDomainSelect"), ss=$("quickSubdomainSelect");
+ if(!ds||!ss)return;
+ ds.innerHTML=DOMAINS.map(d=>`<option value="${d.id}">${d.name}</option>`).join("");
+ updateQuickSubdomains();
+ ds.onchange=()=>{ratings={};updateQuickSubdomains();renderItems()};
+ ss.onchange=()=>{ratings={};renderItems()};
+}
+function updateQuickSubdomains(){
+ const ds=$("quickDomainSelect"), ss=$("quickSubdomainSelect");
+ if(!ds||!ss)return;
+ const d=DOMAINS.find(x=>x.id===ds.value)||DOMAINS[0];
+ ss.innerHTML=`<option value="ALL">Visió general de l'àmbit</option>`+
+   d.sub.map((s,i)=>`<option value="${i}">${s.name}</option>`).join("");
+}
+function quickDomainName(){
+ const d=DOMAINS.find(x=>x.id===($("quickDomainSelect")?.value||""));
+ return d?.name||"";
+}
+function populateImpact(){
+ ["participationSelect","learningSelect","autonomySelect","wellbeingSelect"].forEach(id=>{
+   $(id).innerHTML=IMPACT.map((x,i)=>`<option value="${i===0?"":i-1}">${x}</option>`).join("")
+ })
+}
+function scoreSupport(v){const x=SUPPORT_SCALE.find(x=>x.v===v);return x?x.score:null}
+function scoreFreq(v){const x=FREQ_SCALE.find(x=>x.v===v);return x?x.score:null}
+
+function saveObservation(){
+ if(!activeId){alert("Selecciona primer un alumne.");return}
+ const observed=Object.entries(ratings).filter(([k,v])=>v.support!=="NA"||v.freq!=="NA");
+ if(!observed.length){alert("Registra almenys un indicador observable.");return}
+ const domainAgg={};
+ observed.forEach(([key,r])=>{
+   const [did]=key.split(":"),d=DOMAINS.find(x=>x.id===did),a=domainAgg[did]||={name:d.name,support:[],freq:[]};
+   const s=scoreSupport(r.support),f=scoreFreq(r.freq);if(s!==null)a.support.push(s);if(f!==null)a.freq.push(f)
+ });
+ Object.values(domainAgg).forEach(a=>{
+   a.supportAvg=a.support.length?a.support.reduce((x,y)=>x+y,0)/a.support.length:null;
+   a.freqAvg=a.freq.length?a.freq.reduce((x,y)=>x+y,0)/a.freq.length:null
+ });
+ const impact={
+   participation:$("participationSelect").value,learning:$("learningSelect").value,
+   autonomy:$("autonomySelect").value,wellbeing:$("wellbeingSelect").value,
+   generalization:$("generalizationSelect").value,mediation:$("mediationSelect").value
+ };
+ const rec={
+   id:"OBS-"+Date.now(),date:new Date().toISOString(),mode,
+   quickFocus: mode==="quick" ? {
+     domainId:$("quickDomainSelect")?.value||"",
+     domainName:quickDomainName(),
+     subdomain:$("quickSubdomainSelect")?.selectedOptions?.[0]?.textContent||""
+   } : null,
+   context:{space:$("contextSelect").value,grouping:$("groupingSelect").value,taskType:$("taskTypeSelect").value,demand:$("demandSelect").value,duration:$("durationSelect").value,moment:$("momentSelect").value,activity:$("activityInput").value.trim()},
+   barriers:[...barriers],facilitators:[...facilitators],ratings:{...ratings},domainAgg,impact,
+   qualitative:{success:$("successInput").value.trim(),interference:$("interferenceInput").value.trim(),notes:$("notesInput").value.trim()}
+ };
+ const store=records();(store[activeId]||=[]).push(rec);save("observapt_v2_records",store);
+ if(mode==="quick"){
+   const low=Object.entries(domainAgg).find(([id,d])=>d.supportAvg!=null && d.supportAvg<3);
+   if(low){
+     const [did,d]=low;
+     const allF=followups();
+     const exists=(allF[activeId]||[]).some(x=>!x.done && x.domainId===did);
+     if(!exists){
+       (allF[activeId]||=[]).push({
+         id:"FU-"+Date.now(),
+         text:"Aprofundir / tornar a observar: "+d.name,
+         domainId:did,createdAt:new Date().toISOString(),done:false
+       });
+       saveFollowups(allF);
+     }
+   }
+ }
+ resetForm();renderStudents();renderProfile();renderHistory();renderStudentDashboard()
+}
+
+function resetForm(){
+ ratings={};barriers=new Set();facilitators=new Set();$("activityInput").value="";$("successInput").value="";$("interferenceInput").value="";$("notesInput").value="";
+ tagRender("barrierTags",BARRIERS,barriers);tagRender("facilitatorTags",FACILITATORS,facilitators);renderItems()
+}
+
+function renderProfile(){
+ const box=$("profileSummary");if(!activeId){box.textContent="Selecciona un alumne.";return}
+ const arr=records()[activeId]||[],stu=students()[activeId];if(!arr.length){box.innerHTML=`<strong>${esc(stu?.name||"Alumne")}</strong><br>Encara no hi ha prou dades.`;return}
+ const agg={};arr.forEach(r=>Object.entries(r.domainAgg||{}).forEach(([id,d])=>{const a=agg[id]||={name:d.name,s:[],f:[]};if(d.supportAvg!=null)a.s.push(d.supportAvg);if(d.freqAvg!=null)a.f.push(d.freqAvg)}));
+ const rows=Object.values(agg).map(a=>({name:a.name,s:a.s.length?a.s.reduce((x,y)=>x+y,0)/a.s.length:null,f:a.f.length?a.f.reduce((x,y)=>x+y,0)/a.f.length:null})).filter(x=>x.s!=null).sort((a,b)=>a.s-b.s);
+ const priorities=rows.slice(0,3),strengths=[...rows].sort((a,b)=>b.s-a.s).slice(0,3);
+ const fac={},bar={};arr.forEach(r=>{(r.facilitators||[]).forEach(x=>fac[x]=(fac[x]||0)+1);(r.barriers||[]).forEach(x=>bar[x]=(bar[x]||0)+1)});
+ const topF=Object.entries(fac).sort((a,b)=>b[1]-a[1]).slice(0,5).map(x=>x[0]),topB=Object.entries(bar).sort((a,b)=>b[1]-a[1]).slice(0,5).map(x=>x[0]);
+ box.innerHTML=`<div class="summary-grid">
+ <div class="summary-box"><strong>Fortaleses funcionals</strong><div style="margin-top:6px">${strengths.map(x=>`<span class="badge">${esc(x.name)} · ${x.s.toFixed(1)}/5</span>`).join("")||"—"}</div></div>
+ <div class="summary-box"><strong>Prioritats d'observació / suport</strong><div style="margin-top:6px">${priorities.map(x=>`<span class="badge">${esc(x.name)} · ${x.s.toFixed(1)}/5</span>`).join("")||"—"}</div></div>
+ </div>
+ <div class="summary-grid" style="margin-top:10px">
+ <div class="summary-box"><strong>Condicions que faciliten l'èxit</strong><div style="margin-top:6px">${topF.map(x=>`<span class="badge">${esc(x)}</span>`).join("")||"Encara no hi ha prou dades."}</div></div>
+ <div class="summary-box"><strong>Barreres recurrents</strong><div style="margin-top:6px">${topB.map(x=>`<span class="badge">${esc(x)}</span>`).join("")||"Encara no hi ha prou dades."}</div></div>
+ </div>
+ <div class="summary-box" style="margin-top:10px"><strong>Lectura funcional</strong><p style="margin-bottom:0">Aquest perfil resumeix patrons observats en contextos educatius. Les puntuacions expressen el grau d'autonomia amb què apareixen les conductes observades i no tenen valor diagnòstic.</p></div>`
+}
+
+function renderHistory(){
+ const box=$("historyList");if(!activeId){box.textContent="Selecciona un alumne.";return}
+ const arr=[...(records()[activeId]||[])].reverse();if(!arr.length){box.textContent="Encara no hi ha observacions.";return}
+ box.innerHTML=arr.map(r=>{
+   const ds=Object.values(r.domainAgg||{}).filter(x=>x.supportAvg!=null).map(x=>`${x.name}: ${Number(x.supportAvg).toFixed(1)}/5`);
+   return `<div class="history-item"><strong>${new Date(r.date).toLocaleString("ca-ES")}</strong> · ${r.mode==="quick"?"Ràpida":"Completa"}<br>
+   <span class="muted">${esc(r.context.space)} · ${esc(r.context.grouping)} · demanda ${esc(r.context.demand)}${r.context.activity?" · "+esc(r.context.activity):""}</span>
+   <div style="margin-top:5px">${ds.map(x=>`<span class="badge">${esc(x)}</span>`).join("")}</div>
+   ${r.facilitators?.length?`<div class="muted" style="margin-top:5px">Facilitadors: ${esc(r.facilitators.join(", "))}</div>`:""}
+   ${r.qualitative?.notes?`<div class="muted" style="margin-top:5px">${esc(r.qualitative.notes)}</div>`:""}
+   ${r.mode==="quick" && Object.values(r.domainAgg||{}).some(x=>x.supportAvg!=null && x.supportAvg<3)
+     ? `<div class="followup"><strong>Cal aprofundir?</strong><div class="muted">En aquesta observació ràpida s'han detectat dificultats. Pots obrir una observació completa focalitzada en ${esc(r.quickFocus?.domainName||"aquest àmbit")}.</div><button type="button" data-follow-domain="${esc(r.quickFocus?.domainId||"")}">Aprofundir en aquest àmbit</button></div>`:""}
+   </div>`
+ }).join("");
+ box.querySelectorAll("[data-follow-domain]").forEach(btn=>btn.onclick=()=>{
+   mode="full";
+   $("fullModeBtn").classList.add("active");$("quickModeBtn").classList.remove("active");
+   $("modeStatus").textContent="Completa: aprofundiment estructurat. Pots valorar especialment l'àmbit detectat a l'observació ràpida.";
+   $("quickFocusBox").classList.add("hidden");
+   ratings={};renderItems();
+   const domainId=btn.dataset.followDomain;
+   setTimeout(()=>{
+     document.querySelectorAll(".domain").forEach(el=>{
+       const title=el.querySelector(".domain-head span")?.textContent||"";
+       const d=DOMAINS.find(x=>x.id===domainId);
+       if(d && title!==d.name) el.querySelector(".domain-body")?.classList.add("hidden");
+     });
+     $("observationItems").scrollIntoView({behavior:"smooth",block:"start"});
+   },20);
+ });
+}
+
+$("addStudentBtn").onclick=addStudent;
+$("quickModeBtn").onclick=()=>{mode="quick";$("quickModeBtn").classList.add("active");$("fullModeBtn").classList.remove("active");$("quickFocusBox").classList.remove("hidden");$("modeStatus").textContent="Ràpida: selecciona un àmbit i observa només 3–6 indicadors.";ratings={};renderItems()};
+$("fullModeBtn").onclick=()=>{mode="full";$("fullModeBtn").classList.add("active");$("quickModeBtn").classList.remove("active");$("quickFocusBox").classList.add("hidden");$("modeStatus").textContent="Completa: exploració estructurada dels 10 àmbits i subàmbits funcionals.";ratings={};renderItems()};
+$("saveObservationBtn").onclick=saveObservation;
+$("resetObservationBtn").onclick=resetForm;
+
+
+$("studentDashboardBtn").onclick=()=>{
+ const dash=$("studentDashboard"), chev=$("studentDashboardChevron");
+ const hidden=dash.classList.toggle("hidden");
+ chev.textContent=hidden?"▾":"▴";
+ if(!hidden)renderStudentDashboard();
+};
+
+renderStudentDashboard();populateImpact();populateQuickDomains();tagRender("barrierTags",BARRIERS,barriers);tagRender("facilitatorTags",FACILITATORS,facilitators);renderItems();renderStudents();renderProfile();renderHistory();
+</script>
+</body>
+</html>

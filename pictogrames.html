@@ -1,0 +1,2467 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gestor de pictogrames · Educació v18</title>
+<style>
+:root {
+  --bg:#f4f6f8; --panel:#fff; --ink:#203040; --muted:#6c7b89; --line:#dce3e8;
+  --soft:#eef3f6; --accent:#325f7d; --ok:#2f6f55; --warn:#8a6523;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
+header{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line)}
+.top{max-width:1280px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand h1{font-size:20px;margin:0} .brand p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.badge{font-size:12px;background:var(--soft);padding:7px 10px;border-radius:999px;color:var(--accent)}
+main{max-width:1280px;margin:auto;padding:18px;display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
+.searchrow{display:grid;grid-template-columns:1fr 220px 110px;gap:10px}
+input,select,button{font:inherit}
+input,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:white}
+button{border:0;border-radius:10px;padding:11px 14px;cursor:pointer;background:var(--accent);color:white}
+button.secondary{background:var(--soft);color:var(--ink)}
+button.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{border:1px solid var(--line);background:#fff;color:var(--ink);padding:6px 9px;border-radius:999px;font-size:12px}
+.status{min-height:20px;margin:10px 0;color:var(--muted);font-size:13px}
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}
+.picto{border:1px solid var(--line);border-radius:12px;background:white;padding:10px;text-align:center;cursor:pointer}
+.picto:hover{box-shadow:0 4px 14px rgba(0,0,0,.08)}
+.picto img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff}
+.picto b{display:block;margin-top:7px;font-size:14px}
+.picto small{color:var(--muted);font-size:11px}
+.side h2,.panel h2{font-size:15px;margin:0 0 12px}
+.preview{min-height:220px;display:grid;place-items:center;border:1px dashed var(--line);border-radius:12px;background:#fbfcfd}
+.preview img{max-width:190px;max-height:190px}
+.previewEmpty{color:var(--muted);text-align:center;font-size:13px;padding:20px}
+.previewMeta{margin-top:10px;font-size:13px}
+.previewMeta b{font-size:17px}
+.actions{display:flex;gap:8px;margin-top:10px}
+.selected{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow:auto}
+.sel{display:grid;grid-template-columns:48px 1fr auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:7px}
+.sel img{width:48px;height:48px;object-fit:contain} .sel button{padding:6px 8px}
+details{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
+summary{cursor:pointer;font-weight:700;font-size:14px}
+.builderGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.builder{padding:12px;border:1px solid var(--line);border-radius:10px;background:#fbfcfd}
+.builder b{display:block;font-size:13px} .builder small{color:var(--muted)}
+.sheet{margin-top:14px;border:1px solid var(--line);border-radius:14px;padding:16px;background:white}
+.sheet h3{margin:0 0 12px}
+.sheetGrid{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:12px}
+.sheetItem{border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center;break-inside:avoid;background:#fff}
+.sheetItem.noBorder{border-color:transparent}
+.sheetItem img{width:100%;aspect-ratio:1/1;object-fit:contain}
+.sheetItem b{display:block;margin-top:6px;font-size:var(--labelSize,18px)}
+.fitxaControls{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;margin:12px 0}
+.fitxaControls label{font-size:12px;color:var(--muted)}
+.fitxaControls input,.fitxaControls select{margin-top:5px}
+.fitxaOptions{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:8px 0 12px;font-size:13px}
+.fitxaOptions label{display:flex;gap:6px;align-items:center}
+.fitxaOptions input{width:auto}
+.sheetHeader{text-align:center;margin-bottom:16px}
+.sheetHeader h3{font-size:26px;margin:0 0 4px}
+.sheetHeader p{margin:0;color:var(--muted);font-size:13px}
+.printOnly{display:none}
+.footerNote{font-size:11px;color:var(--muted);margin-top:14px;line-height:1.4}
+@media(max-width:900px){
+  main{grid-template-columns:1fr} .searchrow{grid-template-columns:1fr} .side{order:-1}
+  .fitxaControls{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .fitxaControls{grid-template-columns:1fr}
+  .sheetGrid{grid-template-columns:repeat(2,1fr)!important}
+}
+
+.activityTabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.activityTab{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:10px 14px;font-weight:700}
+.activityTab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.activityConfig{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.sequenceList{display:grid;gap:8px;margin:12px 0}
+.sequenceRow{display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:8px;background:#fff}
+.sequenceRow img{width:54px;height:54px;object-fit:contain}
+.sequenceRow .seqText{min-width:0}
+.sequenceRow .seqText b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sequenceRow .seqText small{color:var(--muted)}
+.sequenceButtons{display:flex;gap:5px}
+.sequenceButtons button{padding:6px 9px;min-width:34px}
+.sequenceSheet{margin-top:14px;border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff}
+.sequenceHeader{text-align:center;margin-bottom:16px}
+.sequenceHeader h3{font-size:26px;margin:0 0 4px}
+.sequenceHeader p{margin:0;color:var(--muted);font-size:13px}
+.sequenceSteps{display:grid;gap:12px}
+.sequenceSteps.horizontal{grid-template-columns:repeat(var(--seqCols,4),1fr);align-items:stretch}
+.sequenceStep{display:grid;grid-template-columns:42px 110px minmax(0,1fr);gap:12px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:12px;break-inside:avoid;background:#fff}
+.sequenceSteps.horizontal .sequenceStep{grid-template-columns:1fr;text-align:center;position:relative;padding-top:42px}
+.sequenceStep img{width:100%;max-width:110px;aspect-ratio:1/1;object-fit:contain;justify-self:center}
+.sequenceNum{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-weight:800}
+.sequenceSteps.horizontal .sequenceNum{position:absolute;top:8px;left:8px}
+.sequenceLabel b{display:block;font-size:var(--seqLabelSize,20px)}
+.sequenceArrow{font-size:24px;text-align:center;color:var(--muted)}
+.sequenceSteps.horizontal .sequenceArrow{display:none}
+.sequenceNote{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--soft);font-size:13px}
+
+
+.vocabSheet,.referentSheet{margin-top:14px;border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff}
+.vocabHeader,.referentHeader{text-align:center;margin-bottom:16px}
+.vocabHeader h3,.referentHeader h3{font-size:26px;margin:0 0 4px}
+.vocabHeader p,.referentHeader p{margin:0;color:var(--muted);font-size:13px}
+.vocabGrid{display:grid;grid-template-columns:repeat(var(--vocabCols,4),1fr);gap:12px}
+.vocabCard{border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;background:#fff;break-inside:avoid}
+.vocabCard.noBorder{border-color:transparent}
+.vocabCard img{width:100%;aspect-ratio:1/1;object-fit:contain}
+.vocabCard b{display:block;margin-top:7px;font-size:var(--vocabLabelSize,18px)}
+.vocabCard small{display:block;margin-top:3px;color:var(--muted);font-size:11px}
+.referentBoard{display:grid;grid-template-columns:repeat(var(--refCols,3),1fr);gap:12px}
+.referentCard{border:2px solid #cfd9e2;border-radius:16px;padding:12px;background:#fff;break-inside:avoid}
+.referentCard.noBorder{border-color:transparent}
+.referentCard img{display:block;width:100%;aspect-ratio:1/1;object-fit:contain}
+.referentCard .refLabel{display:block;text-align:center;margin-top:8px;font-size:var(--refLabelSize,22px);font-weight:800}
+.referentCard .refSub{display:block;text-align:center;margin-top:3px;font-size:12px;color:var(--muted)}
+.referentNote{margin-top:14px;padding:10px 12px;border-radius:10px;background:var(--soft);font-size:13px}
+
+
+.templatePicker{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}
+.templateOption{border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px 12px;min-width:145px;text-align:left}
+.templateOption.active{border-color:#9fc1c8;background:var(--accent-soft)}
+.templateOption b{display:block;font-size:13px;margin-bottom:3px}
+.templateOption small{display:block;color:var(--muted);font-size:11px;line-height:1.35}
+.sequencePages{display:grid;gap:16px}
+.sequencePage{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;break-after:page}
+.sequencePage:last-child{break-after:auto}
+.sequenceStrip{display:grid;gap:10px;align-items:stretch}
+.sequenceStrip.horizontal{grid-template-columns:repeat(var(--seqCount,6),minmax(0,1fr))}
+.sequenceStrip.vertical{grid-template-columns:1fr}
+.sequenceStrip.vertical .sequenceStep{grid-template-columns:42px 96px 1fr}
+.sequenceStrip.horizontal .sequenceStep{grid-template-columns:1fr;text-align:center;position:relative;padding-top:42px}
+.sequenceStrip.horizontal .sequenceStep img{max-width:120px}
+.sequenceStrip.horizontal .sequenceNum{position:absolute;top:8px;left:8px}
+.sequenceConnector{display:grid;place-items:center;color:#7b8a98;font-size:22px;font-weight:700}
+.sequenceStrip.horizontal .sequenceConnector{display:none}
+.sequencePage.compact{padding:10px}
+.sequencePage.compact .sequenceHeader{margin-bottom:10px}
+.sequencePage.compact .sequenceHeader h3{font-size:20px}
+.sequencePage.compact .sequenceStep{padding:8px}
+.sequencePage.compact .sequenceStep img{max-width:92px}
+.sequencePage.thirdA4{min-height:90mm}
+.sequencePage.fullA4{min-height:270mm}
+.sequencePage.doubleA4{min-height:270mm}
+.visualFrame{position:relative;overflow:hidden}
+.visualFrame:before{content:"";position:absolute;inset:0 0 auto 0;height:8px;background:linear-gradient(90deg,#d9e8ec,#eef4f6,#d9e8ec)}
+.visualFrame .sequenceHeader,.visualFrame .referentHeader{padding-top:8px}
+.referentSheet.themeSoft{background:linear-gradient(180deg,#f9fcfd,#fff 36%)}
+.referentSheet.themeSoft .referentCard{box-shadow:0 4px 14px rgba(38,62,79,.06)}
+.referentSheet.themeCards .referentCard{border-radius:22px;padding:16px}
+.referentSheet.themeClean .referentCard{border-width:1px}
+.referentSheet.themeBand .referentHeader{background:var(--accent-soft);border-radius:14px;padding:14px}
+.sequencePage.themeSoft{background:linear-gradient(180deg,#f8fbfc,#fff 38%)}
+.sequencePage.themeBand .sequenceHeader{background:var(--accent-soft);border-radius:14px;padding:12px}
+.sequencePage.themeCards .sequenceStep{border-radius:22px;box-shadow:0 4px 14px rgba(38,62,79,.06)}
+.sequenceMeta{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:4px}
+.sequenceMeta span{font-size:11px;color:var(--muted);background:#f3f6f8;border-radius:999px;padding:4px 7px}
+
+
+#printPortal{display:none}
+.utilityHint{margin:8px 0 14px;padding:10px 12px;border-radius:11px;background:#f5f8fa;color:var(--muted);font-size:12px;line-height:1.45}
+.sheet.fitxaMode .sheetItem{border-style:dashed}
+.sheet.fitxaMode .sheetItem:after{content:"retalla";display:block;margin-top:5px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#9aa6b2}
+.vocabSheet .vocabCard{border-width:1px}
+.vocabSheet .vocabCard b{text-transform:none}
+.referentSheet .referentCard{min-height:180px;display:flex;flex-direction:column;justify-content:center}
+
+/* === v8 · Sistema visual de sortida PDF === */
+:root{
+  --pdf-ink:#24323d;
+  --pdf-muted:#657784;
+  --pdf-line:#d8e1e6;
+  --pdf-soft:#eef5f7;
+  --pdf-accent:#5d8792;
+  --pdf-accent-2:#dfecef;
+}
+.pdfDocument{
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--pdf-ink);
+  background:#fff;
+}
+.pdfMasthead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  border-bottom:2px solid var(--pdf-accent);
+  padding:0 0 10px;
+  margin-bottom:14px;
+}
+.pdfMasthead .pdfEyebrow{
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--pdf-accent);
+  margin-bottom:3px;
+}
+.pdfMasthead h3{
+  margin:0;
+  font-size:24px;
+  line-height:1.1;
+}
+.pdfMasthead .pdfCount{
+  flex:0 0 auto;
+  min-width:56px;
+  padding:7px 10px;
+  border-radius:999px;
+  background:var(--pdf-soft);
+  text-align:center;
+  font-size:11px;
+  font-weight:800;
+  color:var(--pdf-accent);
+}
+.pdfFooter{
+  margin-top:12px;
+  padding-top:7px;
+  border-top:1px solid var(--pdf-line);
+  font-size:8.5px;
+  color:#778791;
+  text-align:center;
+}
+.sequencePage.pdfDocument{
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--pdf-line);
+  border-radius:18px;
+  padding:16px;
+  background:
+    linear-gradient(180deg,rgba(238,245,247,.8),rgba(255,255,255,0) 34%),
+    #fff;
+}
+.sequencePage.pdfDocument:after{
+  content:"";
+  position:absolute;
+  right:-40px; top:-52px;
+  width:150px; height:150px;
+  border:18px solid rgba(93,135,146,.08);
+  border-radius:50%;
+  pointer-events:none;
+}
+.sequenceRail{
+  display:grid;
+  align-items:stretch;
+  gap:0;
+}
+.sequenceRail.horizontal{
+  grid-template-columns:repeat(var(--seqItems),minmax(0,1fr));
+}
+.sequenceRail.vertical{
+  grid-template-columns:1fr;
+  gap:9px;
+}
+.seqUnit{
+  position:relative;
+  display:flex;
+  align-items:center;
+  min-width:0;
+}
+.sequenceRail.horizontal .seqUnit{
+  justify-content:center;
+}
+.seqCard{
+  position:relative;
+  z-index:1;
+  width:100%;
+  min-width:0;
+  border:1.5px solid var(--pdf-line);
+  border-radius:16px;
+  background:#fff;
+  padding:10px 8px 9px;
+  text-align:center;
+  box-shadow:0 3px 12px rgba(38,62,79,.055);
+  break-inside:avoid;
+}
+.sequenceRail.horizontal .seqCard{
+  min-height:150px;
+}
+.sequenceRail.vertical .seqCard{
+  display:grid;
+  grid-template-columns:40px 92px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+  text-align:left;
+  padding:9px 12px;
+}
+.seqStepTag{
+  width:34px;height:34px;
+  display:grid;place-items:center;
+  border-radius:50%;
+  background:var(--pdf-accent);
+  color:#fff;
+  font-weight:800;
+  font-size:15px;
+  margin:0 auto 5px;
+}
+.sequenceRail.vertical .seqStepTag{margin:0}
+.seqCard img{
+  display:block;
+  width:100%;
+  max-width:112px;
+  aspect-ratio:1/1;
+  object-fit:contain;
+  margin:0 auto;
+}
+.sequenceRail.vertical .seqCard img{max-width:92px}
+.seqCard .seqWord{
+  display:block;
+  margin-top:6px;
+  font-size:var(--seqLabelSize,20px);
+  line-height:1.05;
+  font-weight:800;
+}
+.sequenceRail.vertical .seqCard .seqWord{
+  margin:0;
+}
+.seqArrow{
+  position:absolute;
+  z-index:2;
+  display:grid;
+  place-items:center;
+  color:var(--pdf-accent);
+  background:#fff;
+  border:1px solid var(--pdf-line);
+  font-weight:900;
+}
+.sequenceRail.horizontal .seqArrow{
+  right:-12px;
+  top:50%;
+  transform:translateY(-50%);
+  width:24px;height:24px;
+  border-radius:50%;
+}
+.sequenceRail.vertical .seqArrow{
+  left:19px;
+  bottom:-15px;
+  width:24px;height:24px;
+  border-radius:50%;
+}
+.sequenceRail.horizontal .seqUnit:last-child .seqArrow,
+.sequenceRail.vertical .seqUnit:last-child .seqArrow{display:none}
+.sequencePage.thirdA4.pdfDocument{
+  min-height:88mm;
+  padding:11px 13px;
+}
+.sequencePage.thirdA4 .pdfMasthead{
+  margin-bottom:9px;
+  padding-bottom:7px;
+}
+.sequencePage.thirdA4 .pdfMasthead h3{font-size:19px}
+.sequencePage.thirdA4 .sequenceRail.horizontal .seqCard{
+  min-height:112px;
+  padding:7px 5px;
+}
+.sequencePage.thirdA4 .seqCard img{max-width:78px}
+.sequencePage.thirdA4 .seqCard .seqWord{font-size:14px}
+.sequencePage.thirdA4 .seqStepTag{
+  width:25px;height:25px;font-size:12px;margin-bottom:3px;
+}
+.sequenceNote.pdfNote{
+  margin-top:10px;
+  border-left:4px solid var(--pdf-accent);
+  background:var(--pdf-soft);
+  padding:8px 10px;
+  border-radius:0 10px 10px 0;
+  font-size:12px;
+}
+.vocabSheet.pdfDocument{
+  border:1px solid var(--pdf-line);
+  border-radius:18px;
+  padding:18px;
+  background:
+    linear-gradient(180deg,rgba(238,245,247,.8),rgba(255,255,255,0) 25%),
+    #fff;
+}
+.vocabGrid.pdfGrid{
+  display:grid;
+  grid-template-columns:repeat(var(--vocabCols),minmax(0,1fr));
+  gap:10px;
+}
+.vocabCard.pdfCard{
+  position:relative;
+  border:1.5px solid var(--pdf-line);
+  border-radius:15px;
+  padding:10px 8px;
+  background:#fff;
+  text-align:center;
+  break-inside:avoid;
+  box-shadow:0 3px 10px rgba(38,62,79,.04);
+}
+.vocabCard.pdfCard:before{
+  content:"";
+  position:absolute;
+  top:0;left:12%;right:12%;
+  height:3px;
+  border-radius:0 0 5px 5px;
+  background:var(--pdf-accent-2);
+}
+.vocabCard.pdfCard img{
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:contain;
+  max-height:120px;
+}
+.vocabCard.pdfCard b{
+  display:block;
+  margin-top:6px;
+  font-size:var(--vocabLabelSize);
+  line-height:1.05;
+}
+.vocabCard.pdfCard small{
+  display:block;
+  margin-top:3px;
+  color:var(--pdf-muted);
+  font-size:9px;
+}
+.vocabSectionLabel{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin:-3px 0 10px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:var(--pdf-soft);
+  color:var(--pdf-accent);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+/* === v9 · Referent visual PDF === */
+.referentSheet.pdfDocument{
+  border:1px solid var(--pdf-line);
+  border-radius:18px;
+  padding:18px;
+  background:
+    linear-gradient(180deg,rgba(238,245,247,.9),rgba(255,255,255,0) 30%),
+    #fff;
+}
+.referentIntro{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:10px;
+  align-items:center;
+  margin:-2px 0 14px;
+  padding:9px 11px;
+  border-radius:12px;
+  background:var(--pdf-soft);
+  border:1px solid var(--pdf-line);
+}
+.referentIntro .refDot{
+  width:30px;height:30px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--pdf-accent);
+  color:#fff;
+  font-weight:800;
+  font-size:14px;
+}
+.referentIntro b{
+  display:block;
+  font-size:12px;
+  margin-bottom:2px;
+}
+.referentIntro span{
+  display:block;
+  color:var(--pdf-muted);
+  font-size:10px;
+  line-height:1.35;
+}
+.referentBoard.pdfBoard{
+  display:grid;
+  grid-template-columns:repeat(var(--refCols),minmax(0,1fr));
+  gap:12px;
+}
+.referentCard.pdfRefCard{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:stretch;
+  min-height:190px;
+  border:1.5px solid var(--pdf-line);
+  border-radius:18px;
+  padding:12px;
+  background:#fff;
+  break-inside:avoid;
+  box-shadow:0 4px 14px rgba(38,62,79,.05);
+  overflow:hidden;
+}
+.referentCard.pdfRefCard:before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:5px;
+  background:var(--pdf-accent-2);
+}
+.referentCard.pdfRefCard img{
+  display:block;
+  width:100%;
+  max-height:145px;
+  aspect-ratio:1/1;
+  object-fit:contain;
+  margin:auto auto 8px;
+}
+.referentCard.pdfRefCard .refLabel{
+  display:block;
+  text-align:center;
+  font-size:var(--refLabelSize,22px);
+  font-weight:800;
+  line-height:1.05;
+  margin-top:4px;
+}
+.referentCard.pdfRefCard .refCategory{
+  display:block;
+  text-align:center;
+  margin-top:4px;
+  color:var(--pdf-muted);
+  font-size:9px;
+}
+.referentNote.pdfRefNote{
+  margin-top:14px;
+  padding:10px 12px;
+  border-radius:12px;
+  border-left:4px solid var(--pdf-accent);
+  background:#f7fafb;
+  font-size:12px;
+  line-height:1.4;
+}
+.referentSheet.posterMode .referentBoard.pdfBoard{
+  grid-template-columns:repeat(var(--refCols),minmax(0,1fr));
+}
+.referentSheet.posterMode .referentCard.pdfRefCard{
+  min-height:230px;
+  padding:16px;
+}
+.referentSheet.posterMode .referentCard.pdfRefCard img{
+  max-height:175px;
+}
+.referentSheet.compactMode .referentCard.pdfRefCard{
+  min-height:150px;
+  padding:9px;
+}
+.referentSheet.compactMode .referentCard.pdfRefCard img{
+  max-height:105px;
+}
+
+/* === v11 · Selector únic + sistema editorial PDF === */
+.hidden{display:none!important}
+.activityChooser{
+  margin:14px 0 18px;padding:14px;border:1px solid var(--line);
+  border-radius:16px;background:linear-gradient(180deg,#f8fbfc,#fff);
+}
+.activityChooser>label{display:block;margin-bottom:6px;font-size:12px;font-weight:800;color:var(--muted)}
+.activityChooser select{width:100%;min-height:44px;font-weight:700;border-radius:12px}
+.activityIdentity{
+  display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;align-items:center;
+  margin-top:10px;padding:10px 12px;border-radius:12px;background:#eef5f7;
+}
+.activityIcon{
+  width:38px;height:38px;display:grid;place-items:center;border-radius:11px;background:#fff;
+  border:1px solid #d8e1e6;font-size:20px;font-weight:900;color:#5d8792;
+}
+.activityIdentity b{display:block;font-size:14px}
+.activityIdentity span{display:block;margin-top:2px;font-size:11px;color:var(--muted);line-height:1.35}
+.activityConfig{animation:activityIn .16s ease-out}
+@keyframes activityIn{from{opacity:.45;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* Fitxa visual: targetes manipulatives, no panell de vocabulari */
+.sheet.fitxaMode.pdfDocument{
+  border:1px solid var(--pdf-line);border-radius:18px;padding:18px;
+  background:linear-gradient(180deg,rgba(238,245,247,.85),rgba(255,255,255,0) 24%),#fff;
+}
+.fitxaIntro{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-2px 0 14px;
+  padding:8px 11px;border-radius:12px;background:#f7fafb;border:1px solid var(--pdf-line);
+  font-size:10px;color:var(--pdf-muted);
+}
+.fitxaIntro b{font-size:11px;color:var(--pdf-ink)}
+.sheet.fitxaMode .sheetGrid{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:12px}
+.sheet.fitxaMode .sheetItem{
+  position:relative;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:1.5px dashed #b9c8cf;border-radius:14px;padding:12px 9px 24px;background:#fff;
+  break-inside:avoid;box-shadow:0 3px 10px rgba(38,62,79,.035);
+}
+.sheet.fitxaMode .sheetItem:after{
+  content:"retalla";position:absolute;left:0;right:0;bottom:6px;text-align:center;
+  font-size:8px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:#9aa8b0;
+}
+.sheet.fitxaMode .sheetItem img{display:block;width:100%;max-width:135px;aspect-ratio:1/1;object-fit:contain}
+.sheet.fitxaMode .sheetItem b{display:block;margin-top:7px;font-size:var(--labelSize,18px);line-height:1.05;text-align:center}
+
+/* Seqüència: reforç visual de procés */
+.sequencePage.pdfDocument .pdfMasthead{border-bottom-color:#6f8f98}
+.sequencePage.pdfDocument .seqStepTag{box-shadow:0 0 0 4px #edf4f6}
+.sequenceRail.horizontal .seqUnit:not(:last-child):before{
+  content:"";position:absolute;right:-1px;top:50%;width:18px;border-top:2px solid #d6e2e6;z-index:0;
+}
+.sequenceRail.vertical .seqUnit:not(:last-child):before{
+  content:"";position:absolute;left:29px;bottom:-10px;height:19px;border-left:2px solid #d6e2e6;z-index:0;
+}
+
+/* Vocabulari: aspecte de diccionari visual */
+.vocabSheet.pdfDocument .pdfMasthead{border-bottom-color:#7896a0}
+.vocabSectionLabel{background:#f1f6f7!important;border:1px solid #dbe6e9}
+.vocabCard.pdfCard{min-height:150px}
+.vocabCard.pdfCard b{padding-top:5px;border-top:1px solid #edf1f3}
+
+/* Referent: cartell de consulta */
+.referentSheet.posterMode .pdfMasthead h3{font-size:28px}
+.referentSheet.posterMode .referentIntro{margin-bottom:16px}
+.referentSheet.posterMode .referentCard.pdfRefCard{border-width:2px}
+
+
+/* === v12 · Estils visuals pedagògics === */
+.seqStyleBadge{
+  display:inline-flex;align-items:center;gap:6px;margin:-3px 0 11px;
+  padding:5px 9px;border-radius:999px;background:#edf4f6;color:#5d7f88;
+  font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+}
+.sequencePage.stylePath .sequenceRail.horizontal{
+  position:relative;padding:18px 8px 4px;
+}
+.sequencePage.stylePath .sequenceRail.horizontal:before{
+  content:"";position:absolute;left:5%;right:5%;top:50%;
+  height:5px;border-radius:999px;background:#dfeaec;transform:translateY(-50%);
+}
+.sequencePage.stylePath .seqUnit:nth-child(even){transform:translateY(13px)}
+.sequencePage.stylePath .seqCard{
+  border-radius:22px;border-width:2px;
+}
+.sequencePage.stylePath .seqStepTag{
+  background:#6b8e97;box-shadow:0 0 0 5px #edf4f6;
+}
+.sequencePage.styleChecklist .sequenceRail{
+  display:grid!important;grid-template-columns:1fr!important;gap:8px!important;
+}
+.sequencePage.styleChecklist .seqUnit{display:block!important;transform:none!important}
+.sequencePage.styleChecklist .seqCard{
+  display:grid!important;grid-template-columns:38px 84px minmax(0,1fr) 34px!important;
+  gap:10px;align-items:center;text-align:left!important;min-height:92px!important;padding:8px 10px!important;
+}
+.sequencePage.styleChecklist .seqCard img{max-width:84px!important;margin:0!important}
+.sequencePage.styleChecklist .seqCard .seqWord{margin:0!important;font-size:16px!important}
+.sequencePage.styleChecklist .seqStepTag{margin:0!important;width:30px;height:30px;font-size:13px}
+.seqCheck{
+  width:24px;height:24px;border:2px solid #93a8af;border-radius:6px;background:#fff;
+}
+.sequencePage.styleChecklist .seqArrow{display:none!important}
+.sequencePage.styleFirstThen .firstThenBoard{
+  display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch;
+}
+.firstThenPanel{
+  min-height:220px;border:2px solid var(--pdf-line);border-radius:20px;padding:14px;background:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+}
+.firstThenPanel .ftLabel{
+  align-self:flex-start;padding:5px 10px;border-radius:999px;background:var(--pdf-accent);
+  color:#fff;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+}
+.firstThenPanel img{width:100%;max-width:170px;aspect-ratio:1/1;object-fit:contain}
+.firstThenPanel b{font-size:24px;line-height:1.05}
+.firstThenArrow{
+  align-self:center;font-size:34px;font-weight:900;color:var(--pdf-accent);
+}
+.firstThenOverflow{
+  margin-top:12px;padding:9px 11px;border-radius:12px;background:#f7fafb;color:var(--pdf-muted);
+  font-size:10px;border:1px solid var(--pdf-line);
+}
+
+/* Vocabulari: tres composicions clarament diferenciades */
+.vocabSheet.styleCards .vocabGrid.pdfGrid{gap:14px}
+.vocabSheet.styleCards .vocabCard.pdfCard{
+  border-radius:20px;min-height:180px;padding:14px;
+}
+.vocabSheet.styleCards .vocabCard.pdfCard img{max-height:140px}
+.vocabSheet.styleBands .vocabGrid.pdfGrid{
+  grid-template-columns:1fr!important;gap:8px;
+}
+.vocabSheet.styleBands .vocabCard.pdfCard{
+  display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:12px;align-items:center;
+  text-align:left;min-height:96px;padding:8px 12px;border-radius:14px;
+}
+.vocabSheet.styleBands .vocabCard.pdfCard img{width:92px;max-height:82px;margin:0}
+.vocabSheet.styleBands .vocabCard.pdfCard b{
+  border:0;padding:0;margin:0;font-size:20px!important;text-align:left;
+}
+.vocabSheet.styleBands .vocabCard.pdfCard small{margin:0}
+
+
+/* === v13 · Banc de vocabulari pictogràfic === */
+#builtinBankResults{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:12px;
+}
+.bankWord{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:9px 10px;border:1px solid var(--line);border-radius:11px;background:#fff;
+}
+.bankWord b{font-size:12px;line-height:1.2}
+.bankWord small{display:block;color:var(--muted);font-size:9px;margin-top:2px}
+.bankWord button{
+  flex:0 0 auto;padding:6px 8px;border-radius:8px;font-size:11px;
+}
+
+
+/* === v14 · Paquets i selecció massiva de vocabulari === */
+.packBlock{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.packChips{display:flex;flex-wrap:wrap;gap:6px}
+.packChips button{
+  padding:7px 9px;border-radius:999px;background:#eef5f7;color:#385b65;border:1px solid #d7e4e8;
+  font-size:11px;font-weight:700;
+}
+.batchQueueWrap{
+  margin-top:12px;padding:11px;border:1px solid #d9e4e7;border-radius:13px;background:#f8fbfc;
+}
+.batchQueueHeader{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12px}
+.batchQueue{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}
+.batchQueue span{
+  display:inline-flex;align-items:center;gap:5px;padding:5px 7px;border-radius:999px;background:#fff;
+  border:1px solid #dbe4e7;font-size:10px;
+}
+.batchQueue span button{padding:0;border:0;background:transparent;color:#7d8d94;font-size:13px}
+
+
+/* === v15 · Paquets ràpids intel·ligents === */
+.smartPackGrid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:12px;
+}
+.smartPackCard{
+  border:1px solid #d9e4e7;border-radius:15px;background:#fff;padding:12px;
+  display:flex;flex-direction:column;gap:9px;min-height:150px;
+}
+.smartPackCard .spTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.smartPackCard h4{margin:0;font-size:14px;line-height:1.2;color:#294750}
+.smartPackTag{
+  flex:0 0 auto;padding:4px 7px;border-radius:999px;background:#edf4f6;color:#5b7a83;
+  font-size:9px;font-weight:800;white-space:nowrap;
+}
+.smartPackTerms{font-size:10px;color:var(--muted);line-height:1.4;min-height:42px}
+.smartPackActions{display:flex;gap:6px;margin-top:auto}
+.smartPackActions button{flex:1}
+.smartPackActions .secondary{background:#fff}
+
+
+/* === v16 · Paquets ràpids adaptats a Primària === */
+.primaryPackNote{margin:10px 0 4px;padding:10px 12px;border-radius:12px;background:#f4f8f9;border:1px solid #dce7ea;color:#536a72;font-size:11px;line-height:1.45}
+.smartPackCard{min-height:164px}
+
+
+/* === v17 · Arquitectura pedagògica de Primària === */
+.smartPackCard[data-kind="work"]{border-left:4px solid #6f8f98}
+.smartPackCard[data-kind="routine"]{border-left:4px solid #8ba3a9}
+.smartPackCard[data-kind="strategy"]{border-left:4px solid #a3b5b9}
+.smartPackCard[data-kind="content"]{border-left:4px solid #bcc9cc}
+.packTypeLine{font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#72878e}
+
+
+/* === v18 · Auditoria de correspondència pictogràfica === */
+.queryAudit{margin-top:2px;border-top:1px solid #edf1f2;padding-top:6px}
+.queryAudit summary{cursor:pointer;font-size:9px;color:#73868d;font-weight:700}
+.queryAudit div{display:grid;gap:3px;margin-top:5px}
+.queryAudit span{font-size:9px;line-height:1.3;color:#536970}
+.queryAudit i{font-style:normal;color:#7b8f95}
+
+@media print{
+  .sheet.fitxaMode.pdfDocument,.sequencePage.pdfDocument,.vocabSheet.pdfDocument,.referentSheet.pdfDocument{margin:0!important}
+  .sheet.fitxaMode.pdfDocument{border:0!important;border-radius:0!important}
+}
+
+@media print{
+  .referentSheet.pdfDocument{
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+  }
+}
+
+@media print{
+  .pdfDocument{
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+  .sequencePage.pdfDocument,
+  .vocabSheet.pdfDocument,
+  .referentSheet.pdfDocument{
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+  }
+}
+
+@media print{
+  body.printing > *:not(#printPortal){display:none!important}
+  body.printing #printPortal{display:block!important}
+  body.printing #printPortal .printDocument{display:block!important}
+  body.printing #printPortal .printDocument>*{visibility:visible!important}
+}
+
+@media print{
+  body{background:#fff}
+  header,.side,.panel>h2,.searchrow,.quick,.status,.results,details.panel summary,.builderGrid,.fitxaControls,.fitxaOptions,.actions,.footerNote{display:none!important}
+  main{display:block;max-width:none;padding:0}
+  details.panel{display:block!important;border:0!important;margin:0!important;padding:0!important}
+  details.panel[open]{display:block!important}
+  #sheet{display:block!important}
+  .sheet{border:0!important;border-radius:0!important;padding:10mm!important;margin:0!important}
+  .sheetGrid{gap:8mm}
+  .sheetItem{border:1px solid #bbb;border-radius:5mm;padding:5mm}
+  .sheetItem.noBorder{border-color:transparent}
+  .sequencePages{display:block!important}.sequencePage{border:0!important;border-radius:0!important;box-shadow:none!important}
+  .sequencePage.thirdA4{min-height:90mm}.sequencePage.fullA4,.sequencePage.doubleA4{min-height:270mm}
+  .printOnly{display:block}
+  @page{size:A4 portrait;margin:8mm}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div class="brand">
+      <h1>Gestor de pictogrames · Educació <span style="font-size:12px;color:#6c7b89">v18</span></h1>
+      <p>ARASAAC · català · banc central per a activitats i referents visuals</p>
+    </div>
+    <span class="badge" id="badgeSel">0 seleccionats</span>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="panel">
+      <h2>Cercar pictograma</h2>
+      <div class="searchrow">
+        <input id="q" type="search" placeholder="Escriu una paraula: gos, rentar, escola..." autocomplete="off">
+        <select id="cat"><option value="">Totes les categories</option></select>
+        <button id="btnSearch">Cercar</button>
+      </div>
+      <div class="quick" id="quick"></div>
+      <div class="status" id="status">Escriu una paraula o tria una categoria.</div>
+      <div class="results" id="results"></div>
+    </div>
+
+    
+    <details class="panel" id="smartPackPanel" open style="margin-top:16px">
+      <summary><b>Biblioteca visual · Primària</b> <span class="helper">seqüències de treball, rutines, estratègies i referents de contingut</span></summary>
+      <div style="padding-top:10px">
+        <div class="fitxaControls">
+          <label>Àmbit
+            <select id="smartPackGroup">
+              <option value="">Tots els àmbits</option>
+            </select>
+          </label>
+          <label>Cerca
+            <input id="smartPackSearch" placeholder="Ex.: lavabo, calma, aula...">
+          </label>
+        </div>
+        <div class="primaryPackNote">Cada recurs té una funció concreta: les seqüències mostren accions que l'alumne executa en ordre; les rutines estructuren moments escolars; les estratègies indiquen què fer davant una dificultat; i els referents organitzen continguts sense convertir-los artificialment en una seqüència.</div><div id="smartPackGrid" class="smartPackGrid"></div>
+        <div id="smartPackStatus" class="helper" style="margin-top:8px"></div>
+      </div>
+    </details>
+
+    <details class="panel" id="builtinBankPanel" style="margin-top:16px">
+      <summary><b>Banc de vocabulari català</b> <span class="helper">800 termes funcionals i escolars</span></summary>
+      <div style="padding-top:10px">
+        <div class="fitxaControls">
+          <label>Categoria
+            <select id="builtinBankCategory">
+              <option value="">Totes les categories</option>
+            </select>
+          </label>
+          <label>Cerca al banc
+            <input id="builtinBankSearch" placeholder="Ex.: lavabo, esperar, trist...">
+          </label>
+        </div>
+        <div class="actions">
+          <button id="btnBuiltinBankSearch" type="button">Mostrar vocabulari</button>
+          <button id="btnBuiltinBankClear" type="button" class="secondary">Netejar</button>
+        </div>
+        <div class="packBlock">
+          <div class="helper" style="margin-bottom:6px"><b>Paquets ràpids</b> · prepara vocabulari funcional d'una activitat concreta.</div>
+          <div id="vocabPacks" class="packChips"></div>
+        </div>
+        <div id="batchQueueWrap" class="batchQueueWrap hidden">
+          <div class="batchQueueHeader">
+            <b>Cua de pictogrames</b>
+            <span id="batchQueueCount"></span>
+          </div>
+          <div id="batchQueue" class="batchQueue"></div>
+          <div class="actions">
+            <button id="btnBatchAdd" type="button">Afegir pictogrames del paquet</button>
+            <button id="btnBatchClear" type="button" class="secondary">Buidar cua</button>
+          </div>
+          <div id="batchStatus" class="helper"></div>
+        </div>
+        <div id="builtinBankResults" class="results"></div>
+        <div class="helper" id="builtinBankCount"></div>
+      </div>
+    </details>
+
+    <details class="panel" style="margin-top:16px">
+      <summary>Crear activitat amb la selecció</summary>
+      <div class="activityChooser">
+        <label for="activityType">Tipus d'activitat</label>
+        <select id="activityType">
+          <option value="fitxa">Fitxa visual · targetes per retallar</option>
+          <option value="sequencia">Seqüència visual · passos ordenats</option>
+          <option value="vocabulari">Vocabulari · panell de paraules</option>
+          <option value="referent">Referent visual · cartell de consulta</option>
+        </select>
+        <div class="activityIdentity" id="activityIdentity">
+          <div class="activityIcon" id="activityIcon">▦</div>
+          <div>
+            <b id="activityName">Fitxa visual</b>
+            <span id="activityDescription">Targetes independents per imprimir, retallar i manipular.</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="configFitxa" class="activityConfig">
+        <div class="fitxaControls">
+          <label>Títol de la fitxa
+            <input id="sheetTitle" value="Vocabulari visual" placeholder="Ex.: La roba">
+          </label>
+          <label>Columnes
+            <select id="sheetCols">
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+            </select>
+          </label>
+          <label>Mida del text
+            <select id="sheetLabelSize">
+              <option value="15">Petita</option>
+              <option value="18" selected>Mitjana</option>
+              <option value="22">Gran</option>
+            </select>
+          </label>
+          <label>Ordre
+            <select id="sheetOrder">
+              <option value="selection" selected>Selecció</option>
+              <option value="alpha">Alfabètic</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="fitxaOptions">
+          <label><input id="sheetShowText" type="checkbox" checked> Mostrar paraula</label>
+          <label><input id="sheetShowBorder" type="checkbox" checked> Mostrar marc</label>
+          <label><input id="sheetShowSource" type="checkbox" checked> Peu ARASAAC</label>
+        </div>
+
+        <div class="actions">
+          <button id="btnSheet">Generar / actualitzar fitxa</button>
+          <button id="btnPrint" class="ghost">Imprimir / desar PDF</button>
+          <button id="btnJson" class="secondary">Exportar selecció JSON</button>
+        </div>
+      </div>
+
+      <div id="configSequencia" class="activityConfig hidden">
+        <div class="fitxaControls">
+          <label>Títol de la seqüència
+            <input id="seqTitle" value="Seqüència visual" placeholder="Ex.: Arribem a classe">
+          </label>
+          <label>Orientació
+            <select id="seqLayout">
+              <option value="horizontal" selected>Horitzontal</option>
+              <option value="vertical">Vertical</option>
+            </select>
+          </label>
+          <label>Estil visual
+            <select id="seqVisualStyle">
+              <option value="guided" selected>Tira guiada</option>
+              <option value="path">Camí visual</option>
+              <option value="checklist">Llista de passos</option>
+              <option value="firstthen">Ara / Després</option>
+            </select>
+          </label>
+          <label>Mida / suport
+            <select id="seqSupport">
+              <option value="third" selected>Tira · 1/3 d'A4</option>
+              <option value="full">A4 completa</option>
+              <option value="double">2 pàgines A4</option>
+              <option value="auto">Automàtic segons pictogrames</option>
+            </select>
+          </label>
+          <label>Mida del text
+            <select id="seqLabelSize">
+              <option value="16">Petita</option>
+              <option value="20" selected>Mitjana</option>
+              <option value="24">Gran</option>
+            </select>
+          </label>
+        </div>
+<div class="fitxaOptions">
+          <label><input id="seqShowText" type="checkbox" checked> Mostrar text</label>
+          <label><input id="seqShowNumbers" type="checkbox" checked> Numerar passos</label>
+          <label><input id="seqShowSource" type="checkbox" checked> Peu ARASAAC</label>
+        </div>
+
+        <label style="display:block;font-size:12px;color:var(--muted)">Indicació opcional
+          <input id="seqNote" placeholder="Ex.: Primer ho fem junts; després ho fas tu.">
+        </label>
+
+        <h3 style="font-size:14px;margin:16px 0 6px">Ordre dels passos</h3>
+        <p class="helper">Pots pujar o baixar cada pictograma sense modificar la selecció original.</p>
+        <div id="sequenceOrder" class="sequenceList"></div>
+
+        <div class="actions">
+          <button id="btnSequence">Generar / actualitzar seqüència</button>
+          <button id="btnSequencePrint" class="ghost">Imprimir / desar PDF</button>
+        </div>
+      </div>
+
+
+      <div id="configVocabulari" class="activityConfig hidden">
+        <div class="fitxaControls">
+          <label>Títol
+            <input id="vocabTitle" value="Vocabulari visual" placeholder="Ex.: Material escolar">
+          </label>
+          <label>Estil visual
+            <select id="vocabVisualStyle">
+              <option value="dictionary" selected>Diccionari visual</option>
+              <option value="cards">Targetes de vocabulari</option>
+              <option value="bands">Bandes temàtiques</option>
+            </select>
+          </label>
+          <label>Columnes
+            <select id="vocabCols">
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4" selected>4</option>
+              <option value="5">5</option>
+            </select>
+          </label>
+          <label>Mida del text
+            <select id="vocabLabelSize">
+              <option value="15">Petita</option>
+              <option value="18" selected>Mitjana</option>
+              <option value="22">Gran</option>
+            </select>
+          </label>
+          <label>Ordre
+            <select id="vocabOrder">
+              <option value="selection" selected>Selecció</option>
+              <option value="alpha">Alfabètic</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="fitxaOptions">
+          <label><input id="vocabShowText" type="checkbox" checked> Mostrar paraula</label>
+          <label><input id="vocabShowId" type="checkbox"> Mostrar ID</label>
+          <label><input id="vocabShowBorder" type="checkbox" checked> Mostrar marc</label>
+          <label><input id="vocabShowSource" type="checkbox" checked> Peu ARASAAC</label>
+        </div>
+
+        <div class="actions">
+          <button id="btnVocab">Generar / actualitzar vocabulari</button>
+          <button id="btnVocabPrint" class="ghost">Imprimir / desar PDF</button>
+        </div>
+      </div>
+
+      <div id="configReferent" class="activityConfig hidden">
+        <div class="fitxaControls">
+          <label>Títol del referent
+            <input id="refTitle" value="Referent visual" placeholder="Ex.: Què necessito avui?">
+          </label>
+          <label>Columnes
+            <select id="refCols">
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+            </select>
+          </label>
+          <label>Mida del text
+            <select id="refLabelSize">
+              <option value="18">Petita</option>
+              <option value="22" selected>Mitjana</option>
+              <option value="28">Gran</option>
+            </select>
+          </label>
+          <label>Orientació
+            <select id="refOrientation">
+              <option value="portrait" selected>Vertical</option>
+              <option value="landscape">Horitzontal</option>
+            </select>
+          </label>
+          <label>Tipus de referent
+            <select id="refDensity">
+              <option value="poster" selected>Cartell visual</option>
+              <option value="standard">Referent estàndard</option>
+              <option value="compact">Compacte</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="fitxaOptions">
+          <label><input id="refShowText" type="checkbox" checked> Mostrar paraula</label>
+          <label><input id="refShowBorder" type="checkbox" checked> Mostrar marc</label>
+          <label><input id="refShowSource" type="checkbox" checked> Peu ARASAAC</label>
+        </div>
+<label style="display:block;font-size:12px;color:var(--muted)">Indicació opcional
+          <input id="refNote" placeholder="Ex.: Mira aquest referent abans de començar.">
+        </label>
+
+        <div class="actions">
+          <button id="btnReferent">Generar / actualitzar referent</button>
+          <button id="btnReferentPrint" class="ghost">Imprimir / desar PDF</button>
+        </div>
+      </div>
+
+      <div id="sheet"></div>
+    </details>
+  </section>
+
+  <aside class="side">
+    <div class="panel">
+      <h2>Visualitzador</h2>
+      <div class="preview" id="preview"><div class="previewEmpty">Selecciona un resultat per veure'l aquí.</div></div>
+      <div class="previewMeta" id="previewMeta"></div>
+      <div class="actions">
+        <button id="btnAdd" disabled>Afegir</button>
+        <button id="btnClearPreview" class="ghost">Netejar</button>
+      </div>
+
+      <details open>
+        <summary>Selecció actual</summary>
+        <div class="selected" id="selected"></div>
+        <div class="actions">
+          <button id="btnClearAll" class="secondary">Buidar selecció</button>
+        </div>
+      </details>
+
+      <details id="projectPanel">
+        <summary>Projecte i dades</summary>
+        <div class="footerNote" style="margin-bottom:10px">Desa una activitat completa: pictogrames, ordre, mode i configuració. Les dades es normalitzen per ID ARASAAC.</div>
+        <div id="internalStatus" class="footerNote" style="margin-bottom:10px">Nucli intern v2 · preparat</div>
+        <label style="font-size:12px;color:var(--muted)">Nom del projecte
+          <input id="projectName" value="Projecte visual" placeholder="Ex.: Rutina d'entrada">
+        </label>
+        <label style="font-size:12px;color:var(--muted);display:block;margin-top:8px">Projectes desats
+          <select id="projectList"><option value="">— cap projecte —</option></select>
+        </label>
+        <div class="actions">
+          <button id="btnSaveProject">Desar</button>
+          <button id="btnLoadProject" class="secondary">Carregar</button>
+          <button id="btnDeleteProject" class="ghost">Eliminar</button>
+        </div>
+        <div class="actions">
+          <button id="btnExportProject" class="secondary">Exportar projecte JSON</button>
+          <label class="ghost" style="display:inline-flex;align-items:center;cursor:pointer;padding:10px 12px;border:1px solid var(--line);border-radius:10px">Importar JSON
+            <input id="projectImport" type="file" accept="application/json,.json" style="display:none">
+          </label>
+        </div>
+      </details>
+
+      <details>
+        <summary>Estructura del gestor</summary>
+        <div class="footerNote">
+          Cada element seleccionat conserva el terme català, l'ID d'ARASAAC,
+          la URL de la imatge i la categoria. Les activitats futures utilitzaran
+          aquests identificadors, no còpies independents del mateix pictograma.
+        </div>
+      </details>
+
+      <div class="footerNote">
+        Pictogrames: ARASAAC · Govern d'Aragó · Sergio Palao · CC BY-NC-SA.
+      </div>
+    </div>
+  </aside>
+</main>
+
+<script>
+const CATEGORIES = {"Expressions i comunicació": ["sí", "no", "hola", "adéu", "gràcies", "si us plau", "ajuda", "més", "prou", "espera", "vull", "no vull", "m'agrada", "no m'agrada", "bé", "malament", "perdó", "aquí"], "Persones": ["nen", "nena", "home", "dona", "mare", "pare", "germà", "germana", "avi", "àvia", "mestre", "mestra", "amic", "amiga", "metge", "infermera", "família"], "Animals i plantes": ["gos", "gat", "ocell", "peix", "conill", "cavall", "vaca", "porc", "gallina", "ànec", "lleó", "tigre", "elefant", "girafa", "mona", "ós", "dofí", "tortuga", "granota", "papallona", "arbre", "flor", "herba", "fulla", "planta"], "Cos, higiene i salut": ["cap", "cara", "ulls", "nas", "boca", "orella", "mà", "braç", "cama", "peu", "panxa", "esquena", "dents", "dutxa", "bany", "sabó", "xampú", "raspall de dents", "tovallola", "lavabo", "dolor", "ferida", "febre", "medicina", "metge"], "Roba i complements": ["samarreta", "pantalons", "vestit", "faldilla", "jersei", "jaqueta", "abric", "mitjons", "sabates", "sabatilles", "botes", "gorra", "barret", "bufanda", "guants", "motxilla", "ulleres"], "Aliments i begudes": ["pa", "aigua", "llet", "suc", "arròs", "pasta", "sopa", "carn", "peix", "pollastre", "ou", "formatge", "iogurt", "poma", "plàtan", "taronja", "pera", "maduixa", "tomàquet", "patata", "amanida", "galeta", "pastís", "esmorzar", "dinar", "berenar", "sopar"], "Mobles i casa": ["casa", "porta", "finestra", "taula", "cadira", "llit", "sofà", "armari", "prestatgeria", "cuina", "nevera", "forn", "microones", "plat", "got", "cullera", "forquilla", "ganivet", "habitació", "menjador", "bany"], "Transport": ["cotxe", "autobús", "tren", "metro", "tramvia", "bicicleta", "moto", "avió", "vaixell", "ambulància", "taxi", "camió", "patinet", "estació", "parada"], "Jocs i esports": ["pilota", "nina", "cotxe de joguina", "puzle", "peces de construcció", "conte", "joc", "futbol", "bàsquet", "natació", "córrer", "saltar", "parc", "gronxador", "tobogan"], "Activitats i festes": ["jugar", "pintar", "dibuixar", "retallar", "enganxar", "llegir", "escriure", "escoltar", "mirar", "cantar", "ballar", "cuinar", "passejar", "comprar", "aniversari", "Nadal", "Carnestoltes", "excursió", "festa"], "Verbs i accions": ["anar", "venir", "entrar", "sortir", "seure", "aixecar-se", "obrir", "tancar", "donar", "agafar", "posar", "treure", "menjar", "beure", "dormir", "rentar", "vestir-se", "parlar", "escoltar", "mirar", "esperar", "acabar", "començar", "parar"], "Atributs, colors i formes": ["gran", "petit", "llarg", "curt", "alt", "baix", "ple", "buit", "net", "brut", "calent", "fred", "vermell", "blau", "verd", "groc", "taronja", "lila", "rosa", "negre", "blanc", "marró", "cercle", "quadrat", "triangle"], "Temps i rutines": ["avui", "ahir", "demà", "matí", "migdia", "tarda", "nit", "abans", "després", "ara", "dilluns", "dimarts", "dimecres", "dijous", "divendres", "dissabte", "diumenge", "sol", "pluja", "núvol", "fred", "calor"], "Llocs i escola": ["escola", "classe", "pati", "menjador", "gimnàs", "biblioteca", "lavabo", "casa", "parc", "botiga", "supermercat", "hospital", "centre de salut", "carrer", "plaça", "piscina", "aula", "despatx", "entrada", "sortida"], "Sensacions i emocions": ["content", "trist", "enfadat", "espantat", "nerviós", "tranquil", "cansat", "avorrit", "sorprès", "preocupat", "feliç", "por", "dolor", "gana", "set", "son", "fred", "calor", "bé", "malament"]};
+const API = "https://api.arasaac.org/v1";
+const STATIC = "https://static.arasaac.org/pictograms";
+
+const S = {
+  preview:null,
+  selected:[],
+  lastResults:[],
+  sequenceOrder:[],
+  ui:{
+    seqTheme:"soft",
+    refTheme:"soft"
+  },
+  activeMode:"fitxa",
+  schemaVersion:2
+};
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]));
+
+
+
+const BUILTIN_VOCAB_BANK={"Persones i escola": ["nen", "nena", "noi", "noia", "persona", "mestre", "mestra", "professor", "professora", "educador", "educadora", "monitor", "monitora", "company", "companya", "amic", "amiga", "família", "mare", "pare", "germà", "germana", "avi", "àvia", "director", "directora", "conserge", "cuiner", "cuinera", "infermer", "infermera", "logopeda", "psicòleg", "psicòloga"], "Accions quotidianes": ["entrar", "sortir", "anar", "venir", "arribar", "marxar", "pujar", "baixar", "seure", "aixecar-se", "esperar", "caminar", "córrer", "parar", "mirar", "escoltar", "parlar", "callar", "preguntar", "respondre", "demanar", "donar", "agafar", "deixar", "obrir", "tancar", "buscar", "trobar", "guardar", "treure", "posar", "portar", "recollir", "netejar", "rentar", "assecar", "vestir-se", "desvestir-se", "menjar", "beure", "tastar", "olorar", "dormir", "descansar", "jugar", "treballar", "estudiar", "llegir", "escriure", "dibuixar", "pintar", "retallar", "enganxar", "comptar", "sumar", "restar", "ordenar", "classificar", "escollir", "acabar", "començar", "continuar", "ajudar", "compartir", "esperar torn", "saludar", "acomiadar-se", "abraçar"], "Necessitats i comunicació": ["sí", "no", "potser", "vull", "no vull", "més", "prou", "ajuda", "sol", "sola", "amb tu", "espera", "ara", "després", "primer", "últim", "una altra vegada", "ja està", "no entenc", "ho entenc", "m'agrada", "no m'agrada", "em fa mal", "tinc gana", "tinc set", "tinc son", "necessito anar al lavabo", "necessito descansar", "necessito ajuda", "necessito espai", "puc anar?", "puc jugar?", "puc parlar?", "què?", "qui?", "on?", "quan?", "com?", "per què?"], "Emocions i regulació": ["content", "contenta", "trist", "trista", "enfadat", "enfadada", "nerviós", "nerviosa", "tranquil", "tranquil·la", "cansat", "cansada", "espantat", "espantada", "preocupat", "preocupada", "sorprès", "sorpresa", "avorrit", "avorrida", "feliç", "orgullós", "orgullosa", "gelós", "gelosa", "frustrat", "frustrada", "emocionat", "emocionada", "incòmode", "incòmoda", "calma", "silenci", "respirar", "aturar-se", "demanar ajuda", "anar a un lloc tranquil", "comptar fins a deu", "beure aigua", "descansar", "auriculars", "espai personal"], "Aula i material": ["aula", "taula", "cadira", "pissarra", "porta", "finestra", "ordinador", "tauleta", "llibre", "conte", "quadern", "full", "carpeta", "estoig", "llapis", "bolígraf", "goma", "maquineta", "retolador", "colors", "tisores", "cola", "regle", "motxilla", "agenda", "calculadora", "joc", "peces", "puzle", "pilota", "plastilina", "safata", "capsa", "armari", "prestatgeria", "paperera", "material", "deures", "fitxa", "activitat", "tasca", "examen", "pati", "biblioteca", "gimnàs", "menjador"], "Rutines escolars": ["arribada", "entrada", "penjar la motxilla", "treure l'agenda", "guardar l'abric", "seure al lloc", "assemblea", "passar llista", "mirar l'horari", "treball individual", "treball en grup", "racons", "lectura", "matemàtiques", "llengua", "educació física", "música", "plàstica", "anglès", "pati", "esmorzar", "lavabo", "rentar-se les mans", "menjador", "recollir", "fer fila", "sortida", "anar a casa", "canvi d'activitat", "esperar el torn", "demanar material", "entregar la feina"], "Menjar i begudes": ["aigua", "llet", "suc", "pa", "entrepà", "galeta", "fruita", "poma", "pera", "plàtan", "taronja", "maduixa", "raïm", "iogurt", "formatge", "arròs", "pasta", "sopa", "amanida", "carn", "pollastre", "peix", "ou", "patata", "tomàquet", "pastanaga", "verdura", "xocolata", "cereals", "esmorzar", "dinar", "berenar", "sopar", "got", "plat", "cullera", "forquilla", "ganivet", "tovalló"], "Cos i higiene": ["cap", "cara", "ull", "ulls", "nas", "boca", "orella", "orelles", "cabell", "coll", "braç", "mà", "dit", "pit", "panxa", "esquena", "cama", "genoll", "peu", "dents", "llengua", "pell", "sabó", "tovallola", "raspall de dents", "pasta de dents", "paper de vàter", "lavabo", "dutxa", "bany", "rentar-se", "pentinar-se", "mocar-se", "tossir", "esternudar", "fer pipí", "fer caca", "ferida", "tirita", "febre", "mal de cap", "mal de panxa"], "Roba": ["samarreta", "jersei", "dessuadora", "pantalons", "faldilla", "vestit", "jaqueta", "abric", "mitjons", "sabates", "sabatilles", "botes", "gorra", "barret", "bufanda", "guants", "motxilla", "pijama", "roba interior", "posar-se la jaqueta", "treure's l'abric"], "Casa i espais": ["casa", "habitació", "menjador", "cuina", "bany", "passadís", "terrassa", "jardí", "llit", "sofà", "taula", "cadira", "armari", "nevera", "forn", "microones", "televisió", "llum", "porta", "finestra", "escala", "ascensor", "carrer", "parc", "botiga", "supermercat", "farmàcia", "hospital", "escola", "biblioteca", "piscina", "poliesportiu", "estació", "parada d'autobús"], "Transport": ["cotxe", "autobús", "metro", "tren", "tramvia", "bicicleta", "patinet", "moto", "taxi", "ambulància", "camió", "avió", "vaixell", "parada", "estació", "bitllet", "cinturó", "seient", "pujar", "baixar", "esperar", "arribar", "marxar"], "Temps i calendari": ["avui", "demà", "ahir", "matí", "migdia", "tarda", "vespre", "nit", "dilluns", "dimarts", "dimecres", "dijous", "divendres", "dissabte", "diumenge", "gener", "febrer", "març", "abril", "maig", "juny", "juliol", "agost", "setembre", "octubre", "novembre", "desembre", "primavera", "estiu", "tardor", "hivern", "sol", "núvol", "pluja", "vent", "fred", "calor", "hora", "minut", "dia", "setmana", "mes", "abans", "després", "aviat", "tard"], "Conceptes bàsics": ["gran", "petit", "petita", "llarg", "curt", "curta", "alt", "baix", "baixa", "ple", "buit", "obert", "tancat", "net", "brut", "ràpid", "lent", "fort", "fluix", "calent", "fred", "dins", "fora", "sobre", "sota", "davant", "darrere", "al costat", "entre", "esquerra", "dreta", "amunt", "avall", "igual", "diferent", "molt", "poc", "tots", "cap", "un", "dos", "tres", "primer", "segon", "últim", "vermell", "blau", "groc", "verd", "taronja", "lila", "rosa", "negre", "blanc", "gris", "rodó", "quadrat", "triangle"], "Joc i lleure": ["jugar", "pilota", "nina", "cotxe de joguina", "construccions", "puzle", "memory", "cartes", "dibuix", "pintura", "plastilina", "conte", "música", "ballar", "cantar", "televisió", "tauleta", "videojoc", "parc", "tobogan", "gronxador", "sorra", "bicicleta", "patinet", "futbol", "bàsquet", "natació", "excursió", "festa", "aniversari", "regal"], "Animals i natura": ["gos", "gat", "ocell", "peix", "conill", "cavall", "vaca", "porc", "ovella", "gallina", "ànec", "ratolí", "tortuga", "papallona", "abella", "formiga", "arbre", "flor", "herba", "fulla", "bosc", "muntanya", "riu", "mar", "platja", "pedra", "sorra", "sol", "lluna", "estrella", "pluja", "neu", "vent"], "Aprenentatge i tasques": ["copiar", "subratllar", "encerclar", "relacionar", "unir", "completar", "assenyalar", "marcar", "esborrar", "repassar", "repetir", "recordar", "memoritzar", "comparar", "mesurar", "pesar", "observar", "experimentar", "construir", "resoldre", "corregir", "revisar", "explicar", "descriure", "inventar", "crear", "escollir resposta", "treballar sol", "treballar amb ajuda", "acabar la feina", "comprovar", "entregar", "guardar la fitxa", "preparar el material", "seguir instruccions"], "Autonomia personal": ["preparar la motxilla", "fer el llit", "endreçar l'habitació", "parar taula", "desparar taula", "posar la roba bruta", "guardar la roba", "preparar l'esmorzar", "obrir l'ampolla", "tancar l'ampolla", "pelar fruita", "untar pa", "servir aigua", "rentar el plat", "guardar el menjar", "posar-se les sabates", "cordar-se les sabates", "posar-se els mitjons", "pujar la cremallera", "baixar la cremallera", "cordar botons", "descordar botons", "posar-se la motxilla", "agafar les claus", "tancar amb clau", "obrir amb clau", "creuar el carrer", "mirar a dreta i esquerra"], "Convivència i habilitats socials": ["compartir material", "demanar torn", "respectar el torn", "deixar passar", "fer una pregunta", "demanar perdó", "perdonar", "donar les gràcies", "dir si us plau", "felicitar", "convidar a jugar", "acceptar", "rebutjar", "negociar", "arribar a un acord", "escoltar l'altre", "mirar la persona", "respectar l'espai", "respectar una norma", "seguir una norma", "avisar un adult", "explicar un problema", "resoldre un conflicte", "fer les paus", "esperar resposta", "participar", "col·laborar", "treballar en equip", "respectar", "cuidar"], "Seguretat i salut": ["perill", "prohibit", "precaució", "emergència", "sortida d'emergència", "alarma", "foc", "fum", "cremada", "caiguda", "cop", "sang", "dolor", "mareig", "nàusees", "tos", "moc", "refredat", "medicina", "metge", "metgessa", "centre de salut", "urgències", "farmaciola", "gel", "termòmetre", "mascareta", "guants", "desinfectar", "rentar una ferida", "avisar"], "Sentits i percepció": ["veure", "sentir", "tocar", "tastar", "olorar", "llum", "foscor", "soroll", "silenci", "fort", "fluix", "suau", "aspre", "dur", "tou", "dolç", "salat", "àcid", "amarg", "calent", "fred", "olor forta", "olor agradable", "música", "veu", "campana"], "Matemàtiques": ["nombre", "xifra", "quantitat", "comptar", "sumar", "restar", "multiplicar", "dividir", "igual", "més gran", "més petit", "parell", "senar", "unitat", "desena", "centena", "meitat", "doble", "triple", "problema", "solució", "operació", "resultat", "figura", "cercle", "quadrat", "rectangle", "triangle", "línia", "punt", "mesura", "metre", "centímetre", "quilo", "gram", "moneda", "euro", "cèntim", "rellotge", "calendari"], "Lectura i llenguatge": ["lletra", "paraula", "frase", "text", "títol", "nom", "verb", "article", "singular", "plural", "masculí", "femení", "síl·laba", "so", "rima", "vocal", "consonant", "majúscula", "minúscula", "punt", "coma", "pregunta", "resposta", "llegir en veu alta", "llegir en silenci", "escoltar un conte", "explicar un conte", "ordenar frases", "copiar una paraula", "escriure el nom", "buscar una paraula", "comprendre", "resumir", "dictat"], "Tecnologia": ["ordinador", "pantalla", "teclat", "ratolí", "tauleta", "mòbil", "auriculars", "altaveu", "càmera", "micròfon", "carregador", "cable", "endoll", "internet", "wifi", "contrasenya", "obrir aplicació", "tancar aplicació", "clic", "doble clic", "arrossegar", "escriure", "esborrar", "guardar", "imprimir", "fer una foto", "gravar", "vídeo", "àudio", "volum", "encendre", "apagar"], "Comunitat i serveis": ["ajuntament", "policia", "bombers", "correus", "banc", "mercat", "fleca", "carnisseria", "fruiteria", "restaurant", "cafeteria", "perruqueria", "biblioteca", "museu", "cinema", "teatre", "parc", "plaça", "església", "centre cívic", "escola", "institut", "hospital", "farmàcia", "comissaria", "estació", "aeroport", "port", "semàfor", "pas de vianants", "carrer", "avinguda"]};
+const BUILTIN_VOCAB_FLAT=[{"term": "nen", "category": "Persones i escola"}, {"term": "nena", "category": "Persones i escola"}, {"term": "noi", "category": "Persones i escola"}, {"term": "noia", "category": "Persones i escola"}, {"term": "persona", "category": "Persones i escola"}, {"term": "mestre", "category": "Persones i escola"}, {"term": "mestra", "category": "Persones i escola"}, {"term": "professor", "category": "Persones i escola"}, {"term": "professora", "category": "Persones i escola"}, {"term": "educador", "category": "Persones i escola"}, {"term": "educadora", "category": "Persones i escola"}, {"term": "monitor", "category": "Persones i escola"}, {"term": "monitora", "category": "Persones i escola"}, {"term": "company", "category": "Persones i escola"}, {"term": "companya", "category": "Persones i escola"}, {"term": "amic", "category": "Persones i escola"}, {"term": "amiga", "category": "Persones i escola"}, {"term": "família", "category": "Persones i escola"}, {"term": "mare", "category": "Persones i escola"}, {"term": "pare", "category": "Persones i escola"}, {"term": "germà", "category": "Persones i escola"}, {"term": "germana", "category": "Persones i escola"}, {"term": "avi", "category": "Persones i escola"}, {"term": "àvia", "category": "Persones i escola"}, {"term": "director", "category": "Persones i escola"}, {"term": "directora", "category": "Persones i escola"}, {"term": "conserge", "category": "Persones i escola"}, {"term": "cuiner", "category": "Persones i escola"}, {"term": "cuinera", "category": "Persones i escola"}, {"term": "infermer", "category": "Persones i escola"}, {"term": "infermera", "category": "Persones i escola"}, {"term": "logopeda", "category": "Persones i escola"}, {"term": "psicòleg", "category": "Persones i escola"}, {"term": "psicòloga", "category": "Persones i escola"}, {"term": "entrar", "category": "Accions quotidianes"}, {"term": "sortir", "category": "Accions quotidianes"}, {"term": "anar", "category": "Accions quotidianes"}, {"term": "venir", "category": "Accions quotidianes"}, {"term": "arribar", "category": "Accions quotidianes"}, {"term": "marxar", "category": "Accions quotidianes"}, {"term": "pujar", "category": "Accions quotidianes"}, {"term": "baixar", "category": "Accions quotidianes"}, {"term": "seure", "category": "Accions quotidianes"}, {"term": "aixecar-se", "category": "Accions quotidianes"}, {"term": "esperar", "category": "Accions quotidianes"}, {"term": "caminar", "category": "Accions quotidianes"}, {"term": "córrer", "category": "Accions quotidianes"}, {"term": "parar", "category": "Accions quotidianes"}, {"term": "mirar", "category": "Accions quotidianes"}, {"term": "escoltar", "category": "Accions quotidianes"}, {"term": "parlar", "category": "Accions quotidianes"}, {"term": "callar", "category": "Accions quotidianes"}, {"term": "preguntar", "category": "Accions quotidianes"}, {"term": "respondre", "category": "Accions quotidianes"}, {"term": "demanar", "category": "Accions quotidianes"}, {"term": "donar", "category": "Accions quotidianes"}, {"term": "agafar", "category": "Accions quotidianes"}, {"term": "deixar", "category": "Accions quotidianes"}, {"term": "obrir", "category": "Accions quotidianes"}, {"term": "tancar", "category": "Accions quotidianes"}, {"term": "buscar", "category": "Accions quotidianes"}, {"term": "trobar", "category": "Accions quotidianes"}, {"term": "guardar", "category": "Accions quotidianes"}, {"term": "treure", "category": "Accions quotidianes"}, {"term": "posar", "category": "Accions quotidianes"}, {"term": "portar", "category": "Accions quotidianes"}, {"term": "recollir", "category": "Accions quotidianes"}, {"term": "netejar", "category": "Accions quotidianes"}, {"term": "rentar", "category": "Accions quotidianes"}, {"term": "assecar", "category": "Accions quotidianes"}, {"term": "vestir-se", "category": "Accions quotidianes"}, {"term": "desvestir-se", "category": "Accions quotidianes"}, {"term": "menjar", "category": "Accions quotidianes"}, {"term": "beure", "category": "Accions quotidianes"}, {"term": "tastar", "category": "Accions quotidianes"}, {"term": "olorar", "category": "Accions quotidianes"}, {"term": "dormir", "category": "Accions quotidianes"}, {"term": "descansar", "category": "Accions quotidianes"}, {"term": "jugar", "category": "Accions quotidianes"}, {"term": "treballar", "category": "Accions quotidianes"}, {"term": "estudiar", "category": "Accions quotidianes"}, {"term": "llegir", "category": "Accions quotidianes"}, {"term": "escriure", "category": "Accions quotidianes"}, {"term": "dibuixar", "category": "Accions quotidianes"}, {"term": "pintar", "category": "Accions quotidianes"}, {"term": "retallar", "category": "Accions quotidianes"}, {"term": "enganxar", "category": "Accions quotidianes"}, {"term": "comptar", "category": "Accions quotidianes"}, {"term": "sumar", "category": "Accions quotidianes"}, {"term": "restar", "category": "Accions quotidianes"}, {"term": "ordenar", "category": "Accions quotidianes"}, {"term": "classificar", "category": "Accions quotidianes"}, {"term": "escollir", "category": "Accions quotidianes"}, {"term": "acabar", "category": "Accions quotidianes"}, {"term": "començar", "category": "Accions quotidianes"}, {"term": "continuar", "category": "Accions quotidianes"}, {"term": "ajudar", "category": "Accions quotidianes"}, {"term": "compartir", "category": "Accions quotidianes"}, {"term": "esperar torn", "category": "Accions quotidianes"}, {"term": "saludar", "category": "Accions quotidianes"}, {"term": "acomiadar-se", "category": "Accions quotidianes"}, {"term": "abraçar", "category": "Accions quotidianes"}, {"term": "sí", "category": "Necessitats i comunicació"}, {"term": "no", "category": "Necessitats i comunicació"}, {"term": "potser", "category": "Necessitats i comunicació"}, {"term": "vull", "category": "Necessitats i comunicació"}, {"term": "no vull", "category": "Necessitats i comunicació"}, {"term": "més", "category": "Necessitats i comunicació"}, {"term": "prou", "category": "Necessitats i comunicació"}, {"term": "ajuda", "category": "Necessitats i comunicació"}, {"term": "sol", "category": "Necessitats i comunicació"}, {"term": "sola", "category": "Necessitats i comunicació"}, {"term": "amb tu", "category": "Necessitats i comunicació"}, {"term": "espera", "category": "Necessitats i comunicació"}, {"term": "ara", "category": "Necessitats i comunicació"}, {"term": "després", "category": "Necessitats i comunicació"}, {"term": "primer", "category": "Necessitats i comunicació"}, {"term": "últim", "category": "Necessitats i comunicació"}, {"term": "una altra vegada", "category": "Necessitats i comunicació"}, {"term": "ja està", "category": "Necessitats i comunicació"}, {"term": "no entenc", "category": "Necessitats i comunicació"}, {"term": "ho entenc", "category": "Necessitats i comunicació"}, {"term": "m'agrada", "category": "Necessitats i comunicació"}, {"term": "no m'agrada", "category": "Necessitats i comunicació"}, {"term": "em fa mal", "category": "Necessitats i comunicació"}, {"term": "tinc gana", "category": "Necessitats i comunicació"}, {"term": "tinc set", "category": "Necessitats i comunicació"}, {"term": "tinc son", "category": "Necessitats i comunicació"}, {"term": "necessito anar al lavabo", "category": "Necessitats i comunicació"}, {"term": "necessito descansar", "category": "Necessitats i comunicació"}, {"term": "necessito ajuda", "category": "Necessitats i comunicació"}, {"term": "necessito espai", "category": "Necessitats i comunicació"}, {"term": "puc anar?", "category": "Necessitats i comunicació"}, {"term": "puc jugar?", "category": "Necessitats i comunicació"}, {"term": "puc parlar?", "category": "Necessitats i comunicació"}, {"term": "què?", "category": "Necessitats i comunicació"}, {"term": "qui?", "category": "Necessitats i comunicació"}, {"term": "on?", "category": "Necessitats i comunicació"}, {"term": "quan?", "category": "Necessitats i comunicació"}, {"term": "com?", "category": "Necessitats i comunicació"}, {"term": "per què?", "category": "Necessitats i comunicació"}, {"term": "content", "category": "Emocions i regulació"}, {"term": "contenta", "category": "Emocions i regulació"}, {"term": "trist", "category": "Emocions i regulació"}, {"term": "trista", "category": "Emocions i regulació"}, {"term": "enfadat", "category": "Emocions i regulació"}, {"term": "enfadada", "category": "Emocions i regulació"}, {"term": "nerviós", "category": "Emocions i regulació"}, {"term": "nerviosa", "category": "Emocions i regulació"}, {"term": "tranquil", "category": "Emocions i regulació"}, {"term": "tranquil·la", "category": "Emocions i regulació"}, {"term": "cansat", "category": "Emocions i regulació"}, {"term": "cansada", "category": "Emocions i regulació"}, {"term": "espantat", "category": "Emocions i regulació"}, {"term": "espantada", "category": "Emocions i regulació"}, {"term": "preocupat", "category": "Emocions i regulació"}, {"term": "preocupada", "category": "Emocions i regulació"}, {"term": "sorprès", "category": "Emocions i regulació"}, {"term": "sorpresa", "category": "Emocions i regulació"}, {"term": "avorrit", "category": "Emocions i regulació"}, {"term": "avorrida", "category": "Emocions i regulació"}, {"term": "feliç", "category": "Emocions i regulació"}, {"term": "orgullós", "category": "Emocions i regulació"}, {"term": "orgullosa", "category": "Emocions i regulació"}, {"term": "gelós", "category": "Emocions i regulació"}, {"term": "gelosa", "category": "Emocions i regulació"}, {"term": "frustrat", "category": "Emocions i regulació"}, {"term": "frustrada", "category": "Emocions i regulació"}, {"term": "emocionat", "category": "Emocions i regulació"}, {"term": "emocionada", "category": "Emocions i regulació"}, {"term": "incòmode", "category": "Emocions i regulació"}, {"term": "incòmoda", "category": "Emocions i regulació"}, {"term": "calma", "category": "Emocions i regulació"}, {"term": "silenci", "category": "Emocions i regulació"}, {"term": "respirar", "category": "Emocions i regulació"}, {"term": "aturar-se", "category": "Emocions i regulació"}, {"term": "demanar ajuda", "category": "Emocions i regulació"}, {"term": "anar a un lloc tranquil", "category": "Emocions i regulació"}, {"term": "comptar fins a deu", "category": "Emocions i regulació"}, {"term": "beure aigua", "category": "Emocions i regulació"}, {"term": "auriculars", "category": "Emocions i regulació"}, {"term": "espai personal", "category": "Emocions i regulació"}, {"term": "aula", "category": "Aula i material"}, {"term": "taula", "category": "Aula i material"}, {"term": "cadira", "category": "Aula i material"}, {"term": "pissarra", "category": "Aula i material"}, {"term": "porta", "category": "Aula i material"}, {"term": "finestra", "category": "Aula i material"}, {"term": "ordinador", "category": "Aula i material"}, {"term": "tauleta", "category": "Aula i material"}, {"term": "llibre", "category": "Aula i material"}, {"term": "conte", "category": "Aula i material"}, {"term": "quadern", "category": "Aula i material"}, {"term": "full", "category": "Aula i material"}, {"term": "carpeta", "category": "Aula i material"}, {"term": "estoig", "category": "Aula i material"}, {"term": "llapis", "category": "Aula i material"}, {"term": "bolígraf", "category": "Aula i material"}, {"term": "goma", "category": "Aula i material"}, {"term": "maquineta", "category": "Aula i material"}, {"term": "retolador", "category": "Aula i material"}, {"term": "colors", "category": "Aula i material"}, {"term": "tisores", "category": "Aula i material"}, {"term": "cola", "category": "Aula i material"}, {"term": "regle", "category": "Aula i material"}, {"term": "motxilla", "category": "Aula i material"}, {"term": "agenda", "category": "Aula i material"}, {"term": "calculadora", "category": "Aula i material"}, {"term": "joc", "category": "Aula i material"}, {"term": "peces", "category": "Aula i material"}, {"term": "puzle", "category": "Aula i material"}, {"term": "pilota", "category": "Aula i material"}, {"term": "plastilina", "category": "Aula i material"}, {"term": "safata", "category": "Aula i material"}, {"term": "capsa", "category": "Aula i material"}, {"term": "armari", "category": "Aula i material"}, {"term": "prestatgeria", "category": "Aula i material"}, {"term": "paperera", "category": "Aula i material"}, {"term": "material", "category": "Aula i material"}, {"term": "deures", "category": "Aula i material"}, {"term": "fitxa", "category": "Aula i material"}, {"term": "activitat", "category": "Aula i material"}, {"term": "tasca", "category": "Aula i material"}, {"term": "examen", "category": "Aula i material"}, {"term": "pati", "category": "Aula i material"}, {"term": "biblioteca", "category": "Aula i material"}, {"term": "gimnàs", "category": "Aula i material"}, {"term": "menjador", "category": "Aula i material"}, {"term": "arribada", "category": "Rutines escolars"}, {"term": "entrada", "category": "Rutines escolars"}, {"term": "penjar la motxilla", "category": "Rutines escolars"}, {"term": "treure l'agenda", "category": "Rutines escolars"}, {"term": "guardar l'abric", "category": "Rutines escolars"}, {"term": "seure al lloc", "category": "Rutines escolars"}, {"term": "assemblea", "category": "Rutines escolars"}, {"term": "passar llista", "category": "Rutines escolars"}, {"term": "mirar l'horari", "category": "Rutines escolars"}, {"term": "treball individual", "category": "Rutines escolars"}, {"term": "treball en grup", "category": "Rutines escolars"}, {"term": "racons", "category": "Rutines escolars"}, {"term": "lectura", "category": "Rutines escolars"}, {"term": "matemàtiques", "category": "Rutines escolars"}, {"term": "llengua", "category": "Rutines escolars"}, {"term": "educació física", "category": "Rutines escolars"}, {"term": "música", "category": "Rutines escolars"}, {"term": "plàstica", "category": "Rutines escolars"}, {"term": "anglès", "category": "Rutines escolars"}, {"term": "esmorzar", "category": "Rutines escolars"}, {"term": "lavabo", "category": "Rutines escolars"}, {"term": "rentar-se les mans", "category": "Rutines escolars"}, {"term": "fer fila", "category": "Rutines escolars"}, {"term": "sortida", "category": "Rutines escolars"}, {"term": "anar a casa", "category": "Rutines escolars"}, {"term": "canvi d'activitat", "category": "Rutines escolars"}, {"term": "esperar el torn", "category": "Rutines escolars"}, {"term": "demanar material", "category": "Rutines escolars"}, {"term": "entregar la feina", "category": "Rutines escolars"}, {"term": "aigua", "category": "Menjar i begudes"}, {"term": "llet", "category": "Menjar i begudes"}, {"term": "suc", "category": "Menjar i begudes"}, {"term": "pa", "category": "Menjar i begudes"}, {"term": "entrepà", "category": "Menjar i begudes"}, {"term": "galeta", "category": "Menjar i begudes"}, {"term": "fruita", "category": "Menjar i begudes"}, {"term": "poma", "category": "Menjar i begudes"}, {"term": "pera", "category": "Menjar i begudes"}, {"term": "plàtan", "category": "Menjar i begudes"}, {"term": "taronja", "category": "Menjar i begudes"}, {"term": "maduixa", "category": "Menjar i begudes"}, {"term": "raïm", "category": "Menjar i begudes"}, {"term": "iogurt", "category": "Menjar i begudes"}, {"term": "formatge", "category": "Menjar i begudes"}, {"term": "arròs", "category": "Menjar i begudes"}, {"term": "pasta", "category": "Menjar i begudes"}, {"term": "sopa", "category": "Menjar i begudes"}, {"term": "amanida", "category": "Menjar i begudes"}, {"term": "carn", "category": "Menjar i begudes"}, {"term": "pollastre", "category": "Menjar i begudes"}, {"term": "peix", "category": "Menjar i begudes"}, {"term": "ou", "category": "Menjar i begudes"}, {"term": "patata", "category": "Menjar i begudes"}, {"term": "tomàquet", "category": "Menjar i begudes"}, {"term": "pastanaga", "category": "Menjar i begudes"}, {"term": "verdura", "category": "Menjar i begudes"}, {"term": "xocolata", "category": "Menjar i begudes"}, {"term": "cereals", "category": "Menjar i begudes"}, {"term": "dinar", "category": "Menjar i begudes"}, {"term": "berenar", "category": "Menjar i begudes"}, {"term": "sopar", "category": "Menjar i begudes"}, {"term": "got", "category": "Menjar i begudes"}, {"term": "plat", "category": "Menjar i begudes"}, {"term": "cullera", "category": "Menjar i begudes"}, {"term": "forquilla", "category": "Menjar i begudes"}, {"term": "ganivet", "category": "Menjar i begudes"}, {"term": "tovalló", "category": "Menjar i begudes"}, {"term": "cap", "category": "Cos i higiene"}, {"term": "cara", "category": "Cos i higiene"}, {"term": "ull", "category": "Cos i higiene"}, {"term": "ulls", "category": "Cos i higiene"}, {"term": "nas", "category": "Cos i higiene"}, {"term": "boca", "category": "Cos i higiene"}, {"term": "orella", "category": "Cos i higiene"}, {"term": "orelles", "category": "Cos i higiene"}, {"term": "cabell", "category": "Cos i higiene"}, {"term": "coll", "category": "Cos i higiene"}, {"term": "braç", "category": "Cos i higiene"}, {"term": "mà", "category": "Cos i higiene"}, {"term": "dit", "category": "Cos i higiene"}, {"term": "pit", "category": "Cos i higiene"}, {"term": "panxa", "category": "Cos i higiene"}, {"term": "esquena", "category": "Cos i higiene"}, {"term": "cama", "category": "Cos i higiene"}, {"term": "genoll", "category": "Cos i higiene"}, {"term": "peu", "category": "Cos i higiene"}, {"term": "dents", "category": "Cos i higiene"}, {"term": "pell", "category": "Cos i higiene"}, {"term": "sabó", "category": "Cos i higiene"}, {"term": "tovallola", "category": "Cos i higiene"}, {"term": "raspall de dents", "category": "Cos i higiene"}, {"term": "pasta de dents", "category": "Cos i higiene"}, {"term": "paper de vàter", "category": "Cos i higiene"}, {"term": "dutxa", "category": "Cos i higiene"}, {"term": "bany", "category": "Cos i higiene"}, {"term": "rentar-se", "category": "Cos i higiene"}, {"term": "pentinar-se", "category": "Cos i higiene"}, {"term": "mocar-se", "category": "Cos i higiene"}, {"term": "tossir", "category": "Cos i higiene"}, {"term": "esternudar", "category": "Cos i higiene"}, {"term": "fer pipí", "category": "Cos i higiene"}, {"term": "fer caca", "category": "Cos i higiene"}, {"term": "ferida", "category": "Cos i higiene"}, {"term": "tirita", "category": "Cos i higiene"}, {"term": "febre", "category": "Cos i higiene"}, {"term": "mal de cap", "category": "Cos i higiene"}, {"term": "mal de panxa", "category": "Cos i higiene"}, {"term": "samarreta", "category": "Roba"}, {"term": "jersei", "category": "Roba"}, {"term": "dessuadora", "category": "Roba"}, {"term": "pantalons", "category": "Roba"}, {"term": "faldilla", "category": "Roba"}, {"term": "vestit", "category": "Roba"}, {"term": "jaqueta", "category": "Roba"}, {"term": "abric", "category": "Roba"}, {"term": "mitjons", "category": "Roba"}, {"term": "sabates", "category": "Roba"}, {"term": "sabatilles", "category": "Roba"}, {"term": "botes", "category": "Roba"}, {"term": "gorra", "category": "Roba"}, {"term": "barret", "category": "Roba"}, {"term": "bufanda", "category": "Roba"}, {"term": "guants", "category": "Roba"}, {"term": "pijama", "category": "Roba"}, {"term": "roba interior", "category": "Roba"}, {"term": "posar-se la jaqueta", "category": "Roba"}, {"term": "treure's l'abric", "category": "Roba"}, {"term": "casa", "category": "Casa i espais"}, {"term": "habitació", "category": "Casa i espais"}, {"term": "cuina", "category": "Casa i espais"}, {"term": "passadís", "category": "Casa i espais"}, {"term": "terrassa", "category": "Casa i espais"}, {"term": "jardí", "category": "Casa i espais"}, {"term": "llit", "category": "Casa i espais"}, {"term": "sofà", "category": "Casa i espais"}, {"term": "nevera", "category": "Casa i espais"}, {"term": "forn", "category": "Casa i espais"}, {"term": "microones", "category": "Casa i espais"}, {"term": "televisió", "category": "Casa i espais"}, {"term": "llum", "category": "Casa i espais"}, {"term": "escala", "category": "Casa i espais"}, {"term": "ascensor", "category": "Casa i espais"}, {"term": "carrer", "category": "Casa i espais"}, {"term": "parc", "category": "Casa i espais"}, {"term": "botiga", "category": "Casa i espais"}, {"term": "supermercat", "category": "Casa i espais"}, {"term": "farmàcia", "category": "Casa i espais"}, {"term": "hospital", "category": "Casa i espais"}, {"term": "escola", "category": "Casa i espais"}, {"term": "piscina", "category": "Casa i espais"}, {"term": "poliesportiu", "category": "Casa i espais"}, {"term": "estació", "category": "Casa i espais"}, {"term": "parada d'autobús", "category": "Casa i espais"}, {"term": "cotxe", "category": "Transport"}, {"term": "autobús", "category": "Transport"}, {"term": "metro", "category": "Transport"}, {"term": "tren", "category": "Transport"}, {"term": "tramvia", "category": "Transport"}, {"term": "bicicleta", "category": "Transport"}, {"term": "patinet", "category": "Transport"}, {"term": "moto", "category": "Transport"}, {"term": "taxi", "category": "Transport"}, {"term": "ambulància", "category": "Transport"}, {"term": "camió", "category": "Transport"}, {"term": "avió", "category": "Transport"}, {"term": "vaixell", "category": "Transport"}, {"term": "parada", "category": "Transport"}, {"term": "bitllet", "category": "Transport"}, {"term": "cinturó", "category": "Transport"}, {"term": "seient", "category": "Transport"}, {"term": "avui", "category": "Temps i calendari"}, {"term": "demà", "category": "Temps i calendari"}, {"term": "ahir", "category": "Temps i calendari"}, {"term": "matí", "category": "Temps i calendari"}, {"term": "migdia", "category": "Temps i calendari"}, {"term": "tarda", "category": "Temps i calendari"}, {"term": "vespre", "category": "Temps i calendari"}, {"term": "nit", "category": "Temps i calendari"}, {"term": "dilluns", "category": "Temps i calendari"}, {"term": "dimarts", "category": "Temps i calendari"}, {"term": "dimecres", "category": "Temps i calendari"}, {"term": "dijous", "category": "Temps i calendari"}, {"term": "divendres", "category": "Temps i calendari"}, {"term": "dissabte", "category": "Temps i calendari"}, {"term": "diumenge", "category": "Temps i calendari"}, {"term": "gener", "category": "Temps i calendari"}, {"term": "febrer", "category": "Temps i calendari"}, {"term": "març", "category": "Temps i calendari"}, {"term": "abril", "category": "Temps i calendari"}, {"term": "maig", "category": "Temps i calendari"}, {"term": "juny", "category": "Temps i calendari"}, {"term": "juliol", "category": "Temps i calendari"}, {"term": "agost", "category": "Temps i calendari"}, {"term": "setembre", "category": "Temps i calendari"}, {"term": "octubre", "category": "Temps i calendari"}, {"term": "novembre", "category": "Temps i calendari"}, {"term": "desembre", "category": "Temps i calendari"}, {"term": "primavera", "category": "Temps i calendari"}, {"term": "estiu", "category": "Temps i calendari"}, {"term": "tardor", "category": "Temps i calendari"}, {"term": "hivern", "category": "Temps i calendari"}, {"term": "núvol", "category": "Temps i calendari"}, {"term": "pluja", "category": "Temps i calendari"}, {"term": "vent", "category": "Temps i calendari"}, {"term": "fred", "category": "Temps i calendari"}, {"term": "calor", "category": "Temps i calendari"}, {"term": "hora", "category": "Temps i calendari"}, {"term": "minut", "category": "Temps i calendari"}, {"term": "dia", "category": "Temps i calendari"}, {"term": "setmana", "category": "Temps i calendari"}, {"term": "mes", "category": "Temps i calendari"}, {"term": "abans", "category": "Temps i calendari"}, {"term": "aviat", "category": "Temps i calendari"}, {"term": "tard", "category": "Temps i calendari"}, {"term": "gran", "category": "Conceptes bàsics"}, {"term": "petit", "category": "Conceptes bàsics"}, {"term": "petita", "category": "Conceptes bàsics"}, {"term": "llarg", "category": "Conceptes bàsics"}, {"term": "curt", "category": "Conceptes bàsics"}, {"term": "curta", "category": "Conceptes bàsics"}, {"term": "alt", "category": "Conceptes bàsics"}, {"term": "baix", "category": "Conceptes bàsics"}, {"term": "baixa", "category": "Conceptes bàsics"}, {"term": "ple", "category": "Conceptes bàsics"}, {"term": "buit", "category": "Conceptes bàsics"}, {"term": "obert", "category": "Conceptes bàsics"}, {"term": "tancat", "category": "Conceptes bàsics"}, {"term": "net", "category": "Conceptes bàsics"}, {"term": "brut", "category": "Conceptes bàsics"}, {"term": "ràpid", "category": "Conceptes bàsics"}, {"term": "lent", "category": "Conceptes bàsics"}, {"term": "fort", "category": "Conceptes bàsics"}, {"term": "fluix", "category": "Conceptes bàsics"}, {"term": "calent", "category": "Conceptes bàsics"}, {"term": "dins", "category": "Conceptes bàsics"}, {"term": "fora", "category": "Conceptes bàsics"}, {"term": "sobre", "category": "Conceptes bàsics"}, {"term": "sota", "category": "Conceptes bàsics"}, {"term": "davant", "category": "Conceptes bàsics"}, {"term": "darrere", "category": "Conceptes bàsics"}, {"term": "al costat", "category": "Conceptes bàsics"}, {"term": "entre", "category": "Conceptes bàsics"}, {"term": "esquerra", "category": "Conceptes bàsics"}, {"term": "dreta", "category": "Conceptes bàsics"}, {"term": "amunt", "category": "Conceptes bàsics"}, {"term": "avall", "category": "Conceptes bàsics"}, {"term": "igual", "category": "Conceptes bàsics"}, {"term": "diferent", "category": "Conceptes bàsics"}, {"term": "molt", "category": "Conceptes bàsics"}, {"term": "poc", "category": "Conceptes bàsics"}, {"term": "tots", "category": "Conceptes bàsics"}, {"term": "un", "category": "Conceptes bàsics"}, {"term": "dos", "category": "Conceptes bàsics"}, {"term": "tres", "category": "Conceptes bàsics"}, {"term": "segon", "category": "Conceptes bàsics"}, {"term": "vermell", "category": "Conceptes bàsics"}, {"term": "blau", "category": "Conceptes bàsics"}, {"term": "groc", "category": "Conceptes bàsics"}, {"term": "verd", "category": "Conceptes bàsics"}, {"term": "lila", "category": "Conceptes bàsics"}, {"term": "rosa", "category": "Conceptes bàsics"}, {"term": "negre", "category": "Conceptes bàsics"}, {"term": "blanc", "category": "Conceptes bàsics"}, {"term": "gris", "category": "Conceptes bàsics"}, {"term": "rodó", "category": "Conceptes bàsics"}, {"term": "quadrat", "category": "Conceptes bàsics"}, {"term": "triangle", "category": "Conceptes bàsics"}, {"term": "nina", "category": "Joc i lleure"}, {"term": "cotxe de joguina", "category": "Joc i lleure"}, {"term": "construccions", "category": "Joc i lleure"}, {"term": "memory", "category": "Joc i lleure"}, {"term": "cartes", "category": "Joc i lleure"}, {"term": "dibuix", "category": "Joc i lleure"}, {"term": "pintura", "category": "Joc i lleure"}, {"term": "ballar", "category": "Joc i lleure"}, {"term": "cantar", "category": "Joc i lleure"}, {"term": "videojoc", "category": "Joc i lleure"}, {"term": "tobogan", "category": "Joc i lleure"}, {"term": "gronxador", "category": "Joc i lleure"}, {"term": "sorra", "category": "Joc i lleure"}, {"term": "futbol", "category": "Joc i lleure"}, {"term": "bàsquet", "category": "Joc i lleure"}, {"term": "natació", "category": "Joc i lleure"}, {"term": "excursió", "category": "Joc i lleure"}, {"term": "festa", "category": "Joc i lleure"}, {"term": "aniversari", "category": "Joc i lleure"}, {"term": "regal", "category": "Joc i lleure"}, {"term": "gos", "category": "Animals i natura"}, {"term": "gat", "category": "Animals i natura"}, {"term": "ocell", "category": "Animals i natura"}, {"term": "conill", "category": "Animals i natura"}, {"term": "cavall", "category": "Animals i natura"}, {"term": "vaca", "category": "Animals i natura"}, {"term": "porc", "category": "Animals i natura"}, {"term": "ovella", "category": "Animals i natura"}, {"term": "gallina", "category": "Animals i natura"}, {"term": "ànec", "category": "Animals i natura"}, {"term": "ratolí", "category": "Animals i natura"}, {"term": "tortuga", "category": "Animals i natura"}, {"term": "papallona", "category": "Animals i natura"}, {"term": "abella", "category": "Animals i natura"}, {"term": "formiga", "category": "Animals i natura"}, {"term": "arbre", "category": "Animals i natura"}, {"term": "flor", "category": "Animals i natura"}, {"term": "herba", "category": "Animals i natura"}, {"term": "fulla", "category": "Animals i natura"}, {"term": "bosc", "category": "Animals i natura"}, {"term": "muntanya", "category": "Animals i natura"}, {"term": "riu", "category": "Animals i natura"}, {"term": "mar", "category": "Animals i natura"}, {"term": "platja", "category": "Animals i natura"}, {"term": "pedra", "category": "Animals i natura"}, {"term": "lluna", "category": "Animals i natura"}, {"term": "estrella", "category": "Animals i natura"}, {"term": "neu", "category": "Animals i natura"}, {"term": "copiar", "category": "Aprenentatge i tasques"}, {"term": "subratllar", "category": "Aprenentatge i tasques"}, {"term": "encerclar", "category": "Aprenentatge i tasques"}, {"term": "relacionar", "category": "Aprenentatge i tasques"}, {"term": "unir", "category": "Aprenentatge i tasques"}, {"term": "completar", "category": "Aprenentatge i tasques"}, {"term": "assenyalar", "category": "Aprenentatge i tasques"}, {"term": "marcar", "category": "Aprenentatge i tasques"}, {"term": "esborrar", "category": "Aprenentatge i tasques"}, {"term": "repassar", "category": "Aprenentatge i tasques"}, {"term": "repetir", "category": "Aprenentatge i tasques"}, {"term": "recordar", "category": "Aprenentatge i tasques"}, {"term": "memoritzar", "category": "Aprenentatge i tasques"}, {"term": "comparar", "category": "Aprenentatge i tasques"}, {"term": "mesurar", "category": "Aprenentatge i tasques"}, {"term": "pesar", "category": "Aprenentatge i tasques"}, {"term": "observar", "category": "Aprenentatge i tasques"}, {"term": "experimentar", "category": "Aprenentatge i tasques"}, {"term": "construir", "category": "Aprenentatge i tasques"}, {"term": "resoldre", "category": "Aprenentatge i tasques"}, {"term": "corregir", "category": "Aprenentatge i tasques"}, {"term": "revisar", "category": "Aprenentatge i tasques"}, {"term": "explicar", "category": "Aprenentatge i tasques"}, {"term": "descriure", "category": "Aprenentatge i tasques"}, {"term": "inventar", "category": "Aprenentatge i tasques"}, {"term": "crear", "category": "Aprenentatge i tasques"}, {"term": "escollir resposta", "category": "Aprenentatge i tasques"}, {"term": "treballar sol", "category": "Aprenentatge i tasques"}, {"term": "treballar amb ajuda", "category": "Aprenentatge i tasques"}, {"term": "acabar la feina", "category": "Aprenentatge i tasques"}, {"term": "comprovar", "category": "Aprenentatge i tasques"}, {"term": "entregar", "category": "Aprenentatge i tasques"}, {"term": "guardar la fitxa", "category": "Aprenentatge i tasques"}, {"term": "preparar el material", "category": "Aprenentatge i tasques"}, {"term": "seguir instruccions", "category": "Aprenentatge i tasques"}, {"term": "preparar la motxilla", "category": "Autonomia personal"}, {"term": "fer el llit", "category": "Autonomia personal"}, {"term": "endreçar l'habitació", "category": "Autonomia personal"}, {"term": "parar taula", "category": "Autonomia personal"}, {"term": "desparar taula", "category": "Autonomia personal"}, {"term": "posar la roba bruta", "category": "Autonomia personal"}, {"term": "guardar la roba", "category": "Autonomia personal"}, {"term": "preparar l'esmorzar", "category": "Autonomia personal"}, {"term": "obrir l'ampolla", "category": "Autonomia personal"}, {"term": "tancar l'ampolla", "category": "Autonomia personal"}, {"term": "pelar fruita", "category": "Autonomia personal"}, {"term": "untar pa", "category": "Autonomia personal"}, {"term": "servir aigua", "category": "Autonomia personal"}, {"term": "rentar el plat", "category": "Autonomia personal"}, {"term": "guardar el menjar", "category": "Autonomia personal"}, {"term": "posar-se les sabates", "category": "Autonomia personal"}, {"term": "cordar-se les sabates", "category": "Autonomia personal"}, {"term": "posar-se els mitjons", "category": "Autonomia personal"}, {"term": "pujar la cremallera", "category": "Autonomia personal"}, {"term": "baixar la cremallera", "category": "Autonomia personal"}, {"term": "cordar botons", "category": "Autonomia personal"}, {"term": "descordar botons", "category": "Autonomia personal"}, {"term": "posar-se la motxilla", "category": "Autonomia personal"}, {"term": "agafar les claus", "category": "Autonomia personal"}, {"term": "tancar amb clau", "category": "Autonomia personal"}, {"term": "obrir amb clau", "category": "Autonomia personal"}, {"term": "creuar el carrer", "category": "Autonomia personal"}, {"term": "mirar a dreta i esquerra", "category": "Autonomia personal"}, {"term": "compartir material", "category": "Convivència i habilitats socials"}, {"term": "demanar torn", "category": "Convivència i habilitats socials"}, {"term": "respectar el torn", "category": "Convivència i habilitats socials"}, {"term": "deixar passar", "category": "Convivència i habilitats socials"}, {"term": "fer una pregunta", "category": "Convivència i habilitats socials"}, {"term": "demanar perdó", "category": "Convivència i habilitats socials"}, {"term": "perdonar", "category": "Convivència i habilitats socials"}, {"term": "donar les gràcies", "category": "Convivència i habilitats socials"}, {"term": "dir si us plau", "category": "Convivència i habilitats socials"}, {"term": "felicitar", "category": "Convivència i habilitats socials"}, {"term": "convidar a jugar", "category": "Convivència i habilitats socials"}, {"term": "acceptar", "category": "Convivència i habilitats socials"}, {"term": "rebutjar", "category": "Convivència i habilitats socials"}, {"term": "negociar", "category": "Convivència i habilitats socials"}, {"term": "arribar a un acord", "category": "Convivència i habilitats socials"}, {"term": "escoltar l'altre", "category": "Convivència i habilitats socials"}, {"term": "mirar la persona", "category": "Convivència i habilitats socials"}, {"term": "respectar l'espai", "category": "Convivència i habilitats socials"}, {"term": "respectar una norma", "category": "Convivència i habilitats socials"}, {"term": "seguir una norma", "category": "Convivència i habilitats socials"}, {"term": "avisar un adult", "category": "Convivència i habilitats socials"}, {"term": "explicar un problema", "category": "Convivència i habilitats socials"}, {"term": "resoldre un conflicte", "category": "Convivència i habilitats socials"}, {"term": "fer les paus", "category": "Convivència i habilitats socials"}, {"term": "esperar resposta", "category": "Convivència i habilitats socials"}, {"term": "participar", "category": "Convivència i habilitats socials"}, {"term": "col·laborar", "category": "Convivència i habilitats socials"}, {"term": "treballar en equip", "category": "Convivència i habilitats socials"}, {"term": "respectar", "category": "Convivència i habilitats socials"}, {"term": "cuidar", "category": "Convivència i habilitats socials"}, {"term": "perill", "category": "Seguretat i salut"}, {"term": "prohibit", "category": "Seguretat i salut"}, {"term": "precaució", "category": "Seguretat i salut"}, {"term": "emergència", "category": "Seguretat i salut"}, {"term": "sortida d'emergència", "category": "Seguretat i salut"}, {"term": "alarma", "category": "Seguretat i salut"}, {"term": "foc", "category": "Seguretat i salut"}, {"term": "fum", "category": "Seguretat i salut"}, {"term": "cremada", "category": "Seguretat i salut"}, {"term": "caiguda", "category": "Seguretat i salut"}, {"term": "cop", "category": "Seguretat i salut"}, {"term": "sang", "category": "Seguretat i salut"}, {"term": "dolor", "category": "Seguretat i salut"}, {"term": "mareig", "category": "Seguretat i salut"}, {"term": "nàusees", "category": "Seguretat i salut"}, {"term": "tos", "category": "Seguretat i salut"}, {"term": "moc", "category": "Seguretat i salut"}, {"term": "refredat", "category": "Seguretat i salut"}, {"term": "medicina", "category": "Seguretat i salut"}, {"term": "metge", "category": "Seguretat i salut"}, {"term": "metgessa", "category": "Seguretat i salut"}, {"term": "centre de salut", "category": "Seguretat i salut"}, {"term": "urgències", "category": "Seguretat i salut"}, {"term": "farmaciola", "category": "Seguretat i salut"}, {"term": "gel", "category": "Seguretat i salut"}, {"term": "termòmetre", "category": "Seguretat i salut"}, {"term": "mascareta", "category": "Seguretat i salut"}, {"term": "desinfectar", "category": "Seguretat i salut"}, {"term": "rentar una ferida", "category": "Seguretat i salut"}, {"term": "avisar", "category": "Seguretat i salut"}, {"term": "veure", "category": "Sentits i percepció"}, {"term": "sentir", "category": "Sentits i percepció"}, {"term": "tocar", "category": "Sentits i percepció"}, {"term": "foscor", "category": "Sentits i percepció"}, {"term": "soroll", "category": "Sentits i percepció"}, {"term": "suau", "category": "Sentits i percepció"}, {"term": "aspre", "category": "Sentits i percepció"}, {"term": "dur", "category": "Sentits i percepció"}, {"term": "tou", "category": "Sentits i percepció"}, {"term": "dolç", "category": "Sentits i percepció"}, {"term": "salat", "category": "Sentits i percepció"}, {"term": "àcid", "category": "Sentits i percepció"}, {"term": "amarg", "category": "Sentits i percepció"}, {"term": "olor forta", "category": "Sentits i percepció"}, {"term": "olor agradable", "category": "Sentits i percepció"}, {"term": "veu", "category": "Sentits i percepció"}, {"term": "campana", "category": "Sentits i percepció"}, {"term": "nombre", "category": "Matemàtiques"}, {"term": "xifra", "category": "Matemàtiques"}, {"term": "quantitat", "category": "Matemàtiques"}, {"term": "multiplicar", "category": "Matemàtiques"}, {"term": "dividir", "category": "Matemàtiques"}, {"term": "més gran", "category": "Matemàtiques"}, {"term": "més petit", "category": "Matemàtiques"}, {"term": "parell", "category": "Matemàtiques"}, {"term": "senar", "category": "Matemàtiques"}, {"term": "unitat", "category": "Matemàtiques"}, {"term": "desena", "category": "Matemàtiques"}, {"term": "centena", "category": "Matemàtiques"}, {"term": "meitat", "category": "Matemàtiques"}, {"term": "doble", "category": "Matemàtiques"}, {"term": "triple", "category": "Matemàtiques"}, {"term": "problema", "category": "Matemàtiques"}, {"term": "solució", "category": "Matemàtiques"}, {"term": "operació", "category": "Matemàtiques"}, {"term": "resultat", "category": "Matemàtiques"}, {"term": "figura", "category": "Matemàtiques"}, {"term": "cercle", "category": "Matemàtiques"}, {"term": "rectangle", "category": "Matemàtiques"}, {"term": "línia", "category": "Matemàtiques"}, {"term": "punt", "category": "Matemàtiques"}, {"term": "mesura", "category": "Matemàtiques"}, {"term": "metre", "category": "Matemàtiques"}, {"term": "centímetre", "category": "Matemàtiques"}, {"term": "quilo", "category": "Matemàtiques"}, {"term": "gram", "category": "Matemàtiques"}, {"term": "moneda", "category": "Matemàtiques"}, {"term": "euro", "category": "Matemàtiques"}, {"term": "cèntim", "category": "Matemàtiques"}, {"term": "rellotge", "category": "Matemàtiques"}, {"term": "calendari", "category": "Matemàtiques"}, {"term": "lletra", "category": "Lectura i llenguatge"}, {"term": "paraula", "category": "Lectura i llenguatge"}, {"term": "frase", "category": "Lectura i llenguatge"}, {"term": "text", "category": "Lectura i llenguatge"}, {"term": "títol", "category": "Lectura i llenguatge"}, {"term": "nom", "category": "Lectura i llenguatge"}, {"term": "verb", "category": "Lectura i llenguatge"}, {"term": "article", "category": "Lectura i llenguatge"}, {"term": "singular", "category": "Lectura i llenguatge"}, {"term": "plural", "category": "Lectura i llenguatge"}, {"term": "masculí", "category": "Lectura i llenguatge"}, {"term": "femení", "category": "Lectura i llenguatge"}, {"term": "síl·laba", "category": "Lectura i llenguatge"}, {"term": "so", "category": "Lectura i llenguatge"}, {"term": "rima", "category": "Lectura i llenguatge"}, {"term": "vocal", "category": "Lectura i llenguatge"}, {"term": "consonant", "category": "Lectura i llenguatge"}, {"term": "majúscula", "category": "Lectura i llenguatge"}, {"term": "minúscula", "category": "Lectura i llenguatge"}, {"term": "coma", "category": "Lectura i llenguatge"}, {"term": "pregunta", "category": "Lectura i llenguatge"}, {"term": "resposta", "category": "Lectura i llenguatge"}, {"term": "llegir en veu alta", "category": "Lectura i llenguatge"}, {"term": "llegir en silenci", "category": "Lectura i llenguatge"}, {"term": "escoltar un conte", "category": "Lectura i llenguatge"}, {"term": "explicar un conte", "category": "Lectura i llenguatge"}, {"term": "ordenar frases", "category": "Lectura i llenguatge"}, {"term": "copiar una paraula", "category": "Lectura i llenguatge"}, {"term": "escriure el nom", "category": "Lectura i llenguatge"}, {"term": "buscar una paraula", "category": "Lectura i llenguatge"}, {"term": "comprendre", "category": "Lectura i llenguatge"}, {"term": "resumir", "category": "Lectura i llenguatge"}, {"term": "dictat", "category": "Lectura i llenguatge"}, {"term": "pantalla", "category": "Tecnologia"}, {"term": "teclat", "category": "Tecnologia"}, {"term": "mòbil", "category": "Tecnologia"}, {"term": "altaveu", "category": "Tecnologia"}, {"term": "càmera", "category": "Tecnologia"}, {"term": "micròfon", "category": "Tecnologia"}, {"term": "carregador", "category": "Tecnologia"}, {"term": "cable", "category": "Tecnologia"}, {"term": "endoll", "category": "Tecnologia"}, {"term": "internet", "category": "Tecnologia"}, {"term": "wifi", "category": "Tecnologia"}, {"term": "contrasenya", "category": "Tecnologia"}, {"term": "obrir aplicació", "category": "Tecnologia"}, {"term": "tancar aplicació", "category": "Tecnologia"}, {"term": "clic", "category": "Tecnologia"}, {"term": "doble clic", "category": "Tecnologia"}, {"term": "arrossegar", "category": "Tecnologia"}, {"term": "imprimir", "category": "Tecnologia"}, {"term": "fer una foto", "category": "Tecnologia"}, {"term": "gravar", "category": "Tecnologia"}, {"term": "vídeo", "category": "Tecnologia"}, {"term": "àudio", "category": "Tecnologia"}, {"term": "volum", "category": "Tecnologia"}, {"term": "encendre", "category": "Tecnologia"}, {"term": "apagar", "category": "Tecnologia"}, {"term": "ajuntament", "category": "Comunitat i serveis"}, {"term": "policia", "category": "Comunitat i serveis"}, {"term": "bombers", "category": "Comunitat i serveis"}, {"term": "correus", "category": "Comunitat i serveis"}, {"term": "banc", "category": "Comunitat i serveis"}, {"term": "mercat", "category": "Comunitat i serveis"}, {"term": "fleca", "category": "Comunitat i serveis"}, {"term": "carnisseria", "category": "Comunitat i serveis"}, {"term": "fruiteria", "category": "Comunitat i serveis"}, {"term": "restaurant", "category": "Comunitat i serveis"}, {"term": "cafeteria", "category": "Comunitat i serveis"}, {"term": "perruqueria", "category": "Comunitat i serveis"}, {"term": "museu", "category": "Comunitat i serveis"}, {"term": "cinema", "category": "Comunitat i serveis"}, {"term": "teatre", "category": "Comunitat i serveis"}, {"term": "plaça", "category": "Comunitat i serveis"}, {"term": "església", "category": "Comunitat i serveis"}, {"term": "centre cívic", "category": "Comunitat i serveis"}, {"term": "institut", "category": "Comunitat i serveis"}, {"term": "comissaria", "category": "Comunitat i serveis"}, {"term": "aeroport", "category": "Comunitat i serveis"}, {"term": "port", "category": "Comunitat i serveis"}, {"term": "semàfor", "category": "Comunitat i serveis"}, {"term": "pas de vianants", "category": "Comunitat i serveis"}, {"term": "avinguda", "category": "Comunitat i serveis"}];
+
+const VOCAB_PACKS={"Entrada a classe": ["entrar", "penjar la motxilla", "guardar l'abric", "treure l'agenda", "seure al lloc", "mirar l'horari"], "Treball a l'aula": ["preparar el material", "escoltar", "treballar", "demanar ajuda", "acabar la feina", "recollir"], "Regulació": ["parar", "respirar", "demanar ajuda", "necessito espai", "anar a un lloc tranquil", "descansar"], "Lavabo i higiene": ["anar al lavabo", "fer pipí", "fer caca", "paper de vàter", "rentar-se les mans", "assecar"], "Esmorzar": ["rentar-se les mans", "esmorzar", "entrepà", "fruita", "beure aigua", "recollir"], "Pati": ["sortir", "pati", "jugar", "esperar torn", "compartir", "fer fila"], "Comunicació bàsica": ["sí", "no", "vull", "no vull", "més", "prou", "ajuda", "no entenc", "ja està"], "Emocions": ["content", "trist", "enfadat", "nerviós", "tranquil", "cansat", "espantat", "frustrat"], "Autonomia": ["posar-se les sabates", "cordar-se les sabates", "posar-se la jaqueta", "preparar la motxilla", "creuar el carrer"], "Feina acadèmica": ["llegir", "escriure", "comptar", "sumar", "restar", "copiar", "subratllar", "completar"]};
+const SMART_PACKS={"Resolc un problema matemàtic": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Resolc un problema matemàtic", "terms": ["llegeixo l'enunciat", "subratllo les dades", "marco la pregunta", "penso què he de fer", "faig l'operació", "comprovo el resultat", "escric la resposta"]}, "Comprenc un text": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Comprenc un text", "terms": ["miro el títol", "llegeixo el text", "marco les paraules importants", "llegeixo les preguntes", "busco la informació", "responc", "reviso les respostes"]}, "Escric un text": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Escric un text", "terms": ["penso què vull explicar", "ordeno les idees", "escric", "reviso majúscules i punts", "corregeixo", "passo a net"]}, "Faig una activitat": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Faig una activitat", "terms": ["llegeixo la consigna", "preparo el material", "començo", "faig la feina", "comprovo", "entrego", "recullo"]}, "Treballo de manera autònoma": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Treballo de manera autònoma", "terms": ["miro què he de fer", "començo sol", "continuo treballant", "si em bloquejo demano ajuda", "reviso", "entrego"]}, "Estudio per una prova": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Estudio per una prova", "terms": ["miro què entra", "preparo el material", "llegeixo", "subratllo les idees importants", "faig un resum", "practico", "comprovo què recordo"]}, "Faig una prova": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Faig una prova", "terms": ["llegeixo totes les preguntes", "començo per una que sé", "penso abans de respondre", "si em bloquejo passo a la següent", "torno a les pendents", "reviso", "entrego"]}, "Preparo una presentació": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Preparo una presentació", "terms": ["trio el tema", "busco informació", "selecciono el més important", "ordeno les idees", "preparo el suport", "practico", "faig la presentació"]}, "Busco informació a internet": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Busco informació a internet", "terms": ["penso què vull saber", "escric paraules clau", "busco", "llegeixo", "comparo fonts", "selecciono informació", "anoto el que necessito"]}, "Corregeixo una feina": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Corregeixo una feina", "terms": ["miro la correcció", "busco l'error", "penso per què m'he equivocat", "corregeixo", "comprovo", "guardo la feina"]}, "Començo el dia": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "guided", "title": "Començo el dia", "terms": ["entro a classe", "guardo la motxilla", "trec l'agenda", "preparo el material", "miro l'horari", "començo la primera activitat"]}, "Canvio d'activitat": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "guided", "title": "Canvio d'activitat", "terms": ["acabo", "recullo", "guardo el material", "miro què toca", "preparo el material", "començo"]}, "Preparo la sortida": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "checklist", "title": "Preparo la sortida", "terms": ["acabo la feina", "apunto els deures", "guardo el material", "preparo la motxilla", "reviso la taula", "surto"]}, "Organitzo agenda i deures": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "checklist", "title": "Organitzo agenda i deures", "terms": ["miro els deures", "els apunto a l'agenda", "reviso què necessito", "preparo el material", "guardo la motxilla", "comprovo"]}, "Treball en grup": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "checklist", "title": "Treballem en grup", "terms": ["escoltem la tasca", "repartim responsabilitats", "compartim idees", "fem la nostra part", "posem en comú", "revisem", "entreguem"]}, "Si no entenc una consigna": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Si no entenc una consigna", "terms": ["paro", "torno a llegir", "miro l'exemple", "busco una paraula clau", "pregunto", "continuo"]}, "Si em bloquejo": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Si em bloquejo", "terms": ["paro", "respiro", "penso què sí que sé", "divideixo la tasca", "demano una pista", "torno a intentar"]}, "Si m'equivoco": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Si m'equivoco", "terms": ["paro", "miro l'error", "penso què ha passat", "corregeixo", "comprovo", "continuo"]}, "Demano ajuda": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Demano ajuda", "terms": ["intento entendre-ho", "penso què no entenc", "aixeco la mà", "espero", "explico el dubte", "escolto l'ajuda", "continuo"]}, "Gestiono l'enfadament": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Quan m'enfado", "terms": ["paro", "respiro", "m'allunyo si ho necessito", "explico què passa", "penso una solució", "demano ajuda", "torno quan estic preparat"]}, "Resolc un conflicte": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Resolc un conflicte", "terms": ["paro", "explico què ha passat", "escolto l'altra persona", "penso una solució", "arribem a un acord", "continuem"]}, "Quan acabo abans": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Quan acabo abans", "terms": ["reviso la feina", "corregeixo si cal", "ordeno el material", "llegeixo", "faig una activitat pendent", "espero sense molestar"]}, "Consignes de treball": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "Consignes de treball", "terms": ["llegeix", "copia", "subratlla", "encercla", "relaciona", "completa", "ordena", "classifica", "explica", "revisa"]}, "Matemàtiques · operacions": {"group": "Referents de contingut", "kind": "content", "activity": "vocabulari", "vocabStyle": "bands", "title": "Operacions matemàtiques", "terms": ["sumar", "restar", "multiplicar", "dividir", "igual", "resultat", "operació", "problema"]}, "Matemàtiques · valor posicional": {"group": "Referents de contingut", "kind": "content", "activity": "vocabulari", "vocabStyle": "cards", "title": "Valor posicional", "terms": ["unitat", "desena", "centena", "unitat de miler", "nombre", "xifra", "quantitat"]}, "Llengua · escriure bé": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "Abans d'entregar un text", "terms": ["majúscula", "punt", "coma", "frase", "paràgraf", "ortografia", "revisar"]}, "Llengua · parts d'un text": {"group": "Referents de contingut", "kind": "content", "activity": "vocabulari", "vocabStyle": "bands", "title": "Parts d'un text", "terms": ["títol", "introducció", "paràgraf", "idea principal", "conclusió"]}, "Temps i organització": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "M'organitzo en el temps", "terms": ["ara", "després", "primer", "últim", "abans", "més tard", "començar", "acabar", "temps"]}, "Emocions": {"group": "Referents de contingut", "kind": "content", "activity": "vocabulari", "vocabStyle": "bands", "title": "Com em sento?", "terms": ["content", "trist", "enfadat", "nerviós", "tranquil", "frustrat", "preocupat", "cansat", "emocionat", "incòmode"]}, "Participar a classe": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "Participo a classe", "terms": ["escolto", "penso", "aixeco la mà", "espero el torn", "parlo", "pregunto", "responc", "respecto"]}, "Ús de la tauleta": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "Fem un bon ús de la tauleta", "terms": ["tauleta", "contrasenya", "volum", "auriculars", "treballar", "guardar", "tancar aplicació", "apagar"]}};
+const ActivityRegistry={
+  fitxa:{
+    config:"configFitxa",builder:()=>buildSheet(),orientation:()=>"portrait",
+    name:"Fitxa visual",icon:"▦",description:"Targetes independents per imprimir, retallar i manipular."
+  },
+  sequencia:{
+    config:"configSequencia",builder:()=>buildSequence(),
+    orientation:()=>$("#seqLayout").value==="horizontal"?"landscape":"portrait",
+    name:"Seqüència visual",icon:"→",description:"Passos ordenats per anticipar i seguir una rutina o una acció."
+  },
+  vocabulari:{
+    config:"configVocabulari",builder:()=>buildVocabulari(),orientation:()=>"portrait",
+    name:"Vocabulari",icon:"Aa",description:"Panell compacte per mirar, identificar i anomenar paraules."
+  },
+  referent:{
+    config:"configReferent",builder:()=>buildReferent(),orientation:()=>$("#refOrientation").value,
+    name:"Referent visual",icon:"◎",description:"Cartell de consulta amb pictogrames grans i lectura ràpida."
+  }
+};
+
+
+/* === v10 · Nucli intern normalitzat === */
+const Core={
+  schemaVersion:2,
+  appVersion:"10",
+  clone(v){ return JSON.parse(JSON.stringify(v)); },
+  now(){ return new Date().toISOString(); },
+  uid(prefix="id"){ return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,8)}`; }
+};
+
+const PictoStore={
+  byId:new Map(),
+  normalize(p){
+    if(!p) return null;
+    const id=String(p.id ?? p._id ?? "").trim();
+    if(!id) return null;
+    const term=String(p.term ?? p.keyword ?? p.searched ?? "").trim();
+    return {
+      id,
+      term,
+      category:String(p.category||"").trim(),
+      url:String(p.url||`https://static.arasaac.org/pictograms/${id}/${id}_500.png`),
+      searched:String(p.searched||"").trim()
+    };
+  },
+  add(p){
+    const n=this.normalize(p);
+    if(!n) return null;
+    const prev=this.byId.get(n.id);
+    this.byId.set(n.id,{...(prev||{}),...n});
+    return this.byId.get(n.id);
+  },
+  addMany(items=[]){ return items.map(x=>this.add(x)).filter(Boolean); },
+  get(id){ return this.byId.get(String(id))||null; },
+  export(){ return [...this.byId.values()]; },
+  reset(items=[]){ this.byId.clear(); this.addMany(items); }
+};
+
+const SelectionStore={
+  selectedIds:[],
+  sequenceIds:[],
+  dedupe(ids=[]){
+    const seen=new Set();
+    return ids.map(String).filter(id=>id && !seen.has(id) && seen.add(id));
+  },
+  syncFromLegacy(){
+    PictoStore.addMany(S.selected||[]);
+    PictoStore.addMany(S.sequenceOrder||[]);
+    this.selectedIds=this.dedupe((S.selected||[]).map(p=>p.id));
+    this.sequenceIds=this.dedupe((S.sequenceOrder||[]).map(p=>p.id))
+      .filter(id=>this.selectedIds.includes(id));
+    this.syncToLegacy();
+  },
+  syncToLegacy(){
+    S.selected=this.selectedIds.map(id=>PictoStore.get(id)).filter(Boolean);
+    S.sequenceOrder=this.sequenceIds.map(id=>PictoStore.get(id)).filter(Boolean);
+  },
+  setSelected(items=[]){
+    const normalized=PictoStore.addMany(items);
+    this.selectedIds=this.dedupe(normalized.map(p=>p.id));
+    this.sequenceIds=this.sequenceIds.filter(id=>this.selectedIds.includes(id));
+    for(const id of this.selectedIds) if(!this.sequenceIds.includes(id)) this.sequenceIds.push(id);
+    this.syncToLegacy();
+  },
+  setSequence(items=[]){
+    PictoStore.addMany(items);
+    const allowed=new Set(this.selectedIds);
+    this.sequenceIds=this.dedupe(items.map(p=>String(p.id))).filter(id=>allowed.has(id));
+    for(const id of this.selectedIds) if(!this.sequenceIds.includes(id)) this.sequenceIds.push(id);
+    this.syncToLegacy();
+  }
+};
+
+const Validation={
+  project(data){
+    const errors=[];
+    if(!data || typeof data!=="object") errors.push("projecte buit");
+    if(data && data.schema!=="gestor-pictogrames-project") errors.push("schema desconegut");
+    if(data && !Array.isArray(data.selected) && !Array.isArray(data.selectedIds)) errors.push("selecció no vàlida");
+    return {ok:errors.length===0,errors};
+  },
+  activity(mode){
+    const errors=[];
+    if(!ActivityRegistry[mode]) errors.push("mode desconegut");
+    if(!S.selected.length) errors.push("sense pictogrames");
+    if(mode==="sequencia" && !S.sequenceOrder.length) errors.push("seqüència buida");
+    return {ok:errors.length===0,errors};
+  }
+};
+
+const Migration={
+  toV2(data){
+    if(!data) return data;
+    if((data.version||1)>=2 && Array.isArray(data.pictograms)) return data;
+
+    const pictos=[];
+    const add=(p)=>{
+      const n=PictoStore.normalize(p);
+      if(n && !pictos.some(x=>String(x.id)===String(n.id))) pictos.push(n);
+    };
+    (data.selected||[]).forEach(add);
+    (data.sequenceOrder||[]).forEach(add);
+
+    return {
+      schema:"gestor-pictogrames-project",
+      version:2,
+      name:data.name||"Projecte visual",
+      savedAt:data.savedAt||Core.now(),
+      mode:data.mode||"fitxa",
+      pictograms:pictos,
+      selectedIds:(data.selected||[]).map(p=>String(p.id)),
+      sequenceIds:(data.sequenceOrder||[]).map(p=>String(p.id)),
+      configs:data.configs||{}
+    };
+  }
+};
+
+const History={
+  stack:[],
+  index:-1,
+  limit:30,
+  snapshot(label="canvi"){
+    const state={
+      label,
+      at:Core.now(),
+      selectedIds:[...SelectionStore.selectedIds],
+      sequenceIds:[...SelectionStore.sequenceIds],
+      mode:S.activeMode,
+      configs:WorkspaceSchema.capture()
+    };
+    this.stack=this.stack.slice(0,this.index+1);
+    this.stack.push(state);
+    if(this.stack.length>this.limit) this.stack.shift();
+    this.index=this.stack.length-1;
+  },
+  restore(state){
+    if(!state) return;
+    SelectionStore.selectedIds=[...(state.selectedIds||[])];
+    SelectionStore.sequenceIds=[...(state.sequenceIds||[])];
+    SelectionStore.syncToLegacy();
+    saveSelected();
+    renderSelected();
+    WorkspaceSchema.apply(state.configs||{});
+    setActivityMode(state.mode||"fitxa",{keepOutput:false});
+    syncSequenceOrder();
+  },
+  undo(){
+    if(this.index<=0) return false;
+    this.index--;
+    this.restore(this.stack[this.index]);
+    return true;
+  },
+  redo(){
+    if(this.index>=this.stack.length-1) return false;
+    this.index++;
+    this.restore(this.stack[this.index]);
+    return true;
+  }
+};
+
+function updateInternalStatus(text="Nucli intern v2 · preparat"){
+  const el=$("#internalStatus");
+  if(el) el.textContent=text;
+}
+
+const WorkspaceSchema={
+  fields:{
+    fitxa:["sheetTitle","sheetCols","sheetLabelSize","sheetOrder","sheetShowText","sheetShowBorder","sheetShowSource"],
+    sequencia:["seqTitle","seqLayout","seqVisualStyle","seqSupport","seqLabelSize","seqShowText","seqShowNumbers","seqShowSource","seqNote"],
+    vocabulari:["vocabTitle","vocabVisualStyle","vocabCols","vocabLabelSize","vocabOrder","vocabShowText","vocabShowId","vocabShowBorder","vocabShowSource"],
+    referent:["refTitle","refCols","refLabelSize","refOrientation","refDensity","refShowText","refShowBorder","refShowSource","refNote"]
+  },
+  read(id){const e=$("#"+id);return !e?null:(e.type==="checkbox"?!!e.checked:e.value)},
+  write(id,v){const e=$("#"+id);if(!e||v===undefined||v===null)return;e.type==="checkbox"?e.checked=!!v:e.value=String(v)},
+  capture(){
+    const out={};
+    Object.entries(this.fields).forEach(([mode,ids])=>{out[mode]={};ids.forEach(id=>out[mode][id]=this.read(id));});
+    out.themes={seq:S.ui.seqTheme,ref:S.ui.refTheme};
+    return out;
+  },
+  apply(cfg={}){
+    Object.entries(this.fields).forEach(([mode,ids])=>ids.forEach(id=>{if(cfg[mode]&&id in cfg[mode])this.write(id,cfg[mode][id])}));
+    if(cfg.themes?.seq) chooseTheme("seq",cfg.themes.seq);
+    if(cfg.themes?.ref) chooseTheme("ref",cfg.themes.ref);
+  }
+};
+
+
+const StorageAdapter={
+  memory:{},
+  get(key){
+    try{return localStorage.getItem(key)}
+    catch(e){return Object.prototype.hasOwnProperty.call(this.memory,key)?this.memory[key]:null}
+  },
+  set(key,value){
+    const v=String(value);
+    try{localStorage.setItem(key,v)}
+    catch(e){this.memory[key]=v}
+  },
+  remove(key){
+    try{localStorage.removeItem(key)}
+    catch(e){delete this.memory[key]}
+  }
+};
+
+const ProjectStore={
+  key:"gestorPictos.projects.v1",
+  workspaceKey:"gestorPictos.workspace.v1",
+  all(){try{return JSON.parse(StorageAdapter.get(this.key)||"{}")||{}}catch(e){return {}}},
+  save(name,data){const all=this.all();all[name]=data;StorageAdapter.set(this.key,JSON.stringify(all));this.refresh(name)},
+  remove(name){const all=this.all();delete all[name];StorageAdapter.set(this.key,JSON.stringify(all));this.refresh()},
+  refresh(selected=""){
+    const e=$("#projectList");if(!e)return;
+    const names=Object.keys(this.all()).sort((a,b)=>a.localeCompare(b,"ca"));
+    e.innerHTML='<option value="">— cap projecte —</option>'+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join("");
+    if(selected&&names.includes(selected))e.value=selected;
+  }
+};
+
+function captureWorkspace(name=""){
+  SelectionStore.syncFromLegacy();
+  return {
+    schema:"gestor-pictogrames-project",
+    version:2,
+    name:name || $("#projectName").value.trim() || "Projecte visual",
+    savedAt:Core.now(),
+    mode:S.activeMode,
+    pictograms:PictoStore.export(),
+    selectedIds:[...SelectionStore.selectedIds],
+    sequenceIds:[...SelectionStore.sequenceIds],
+    configs:WorkspaceSchema.capture()
+  };
+}
+function applyWorkspace(data){
+  data=Migration.toV2(data);
+  const check=Validation.project(data);
+  if(!check.ok) throw new Error(check.errors.join(", "));
+
+  PictoStore.reset(data.pictograms||[]);
+  SelectionStore.selectedIds=SelectionStore.dedupe(data.selectedIds||[]);
+  SelectionStore.sequenceIds=SelectionStore.dedupe(data.sequenceIds||[])
+    .filter(id=>SelectionStore.selectedIds.includes(id));
+  for(const id of SelectionStore.selectedIds){
+    if(!SelectionStore.sequenceIds.includes(id)) SelectionStore.sequenceIds.push(id);
+  }
+  SelectionStore.syncToLegacy();
+
+  saveSelected();
+  renderSelected();
+  WorkspaceSchema.apply(data.configs||{});
+  $("#projectName").value=data.name||"Projecte visual";
+  setActivityMode(data.mode||"fitxa");
+  syncSequenceOrder();
+  $("#sheet").innerHTML="";
+  persistWorkspace();
+  History.snapshot("carrega projecte");
+  updateInternalStatus(`Nucli intern v2 · ${S.selected.length} pictogrames · projecte validat`);
+}
+function persistWorkspace(){try{StorageAdapter.set(ProjectStore.workspaceKey,JSON.stringify(captureWorkspace()))}catch(e){}}
+function restoreWorkspace(){try{const x=JSON.parse(StorageAdapter.get(ProjectStore.workspaceKey)||"null");if(x?.schema==="gestor-pictogrames-project")applyWorkspace(Migration.toV2(x))}catch(e){}}
+function downloadJson(filename,obj){const b=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function initProjectTools(){
+  ProjectStore.refresh();
+  $("#btnSaveProject").onclick=()=>{const n=$("#projectName").value.trim()||"Projecte visual";ProjectStore.save(n,captureWorkspace(n));persistWorkspace();updateInternalStatus(`Nucli intern v2 · projecte "${n}" desat · esquema v2`)};
+  $("#btnLoadProject").onclick=()=>{const n=$("#projectList").value;const d=ProjectStore.all()[n];if(d)applyWorkspace(d)};
+  $("#btnDeleteProject").onclick=()=>{const n=$("#projectList").value;if(n)ProjectStore.remove(n)};
+  $("#btnExportProject").onclick=()=>{const d=captureWorkspace();downloadJson((d.name||"projecte").replace(/[^\wÀ-ÿ-]+/g,"_")+".json",d)};
+  $("#projectImport").addEventListener("change",async e=>{const f=e.target.files?.[0];if(!f)return;try{const d=JSON.parse(await f.text());applyWorkspace(d);ProjectStore.save(d.name||"Projecte importat",d)}catch(err){alert("No s'ha pogut importar el projecte.")}e.target.value=""});
+  $("#projectName").addEventListener("input",persistWorkspace);
+}
+function printCurrentMode(mode=S.activeMode){const m=ActivityRegistry[mode];if(m)PrintEngine.run(m.builder,m.orientation())}
+
+const PrintEngine={
+  cleanup(){
+    document.body.classList.remove("printing");
+    const portal=$("#printPortal");
+    portal.innerHTML="";
+    portal.setAttribute("aria-hidden","true");
+  },
+  run(builder,orientation="portrait"){
+    builder();
+    const source=$("#printSheet");
+    if(!source) return false;
+
+    const portal=$("#printPortal");
+    portal.innerHTML="";
+    const doc=document.createElement("div");
+    doc.className="printDocument";
+    doc.appendChild(source.cloneNode(true));
+    portal.appendChild(doc);
+    portal.setAttribute("aria-hidden","false");
+
+    let style=$("#printEngineStyle");
+    if(!style){
+      style=document.createElement("style");
+      style.id="printEngineStyle";
+      document.head.appendChild(style);
+    }
+    style.textContent=`@media print{@page{size:A4 ${orientation};margin:8mm}}`;
+
+    document.body.classList.add("printing");
+    setTimeout(()=>window.print(),30);
+    return true;
+  }
+};
+window.addEventListener("afterprint",()=>PrintEngine.cleanup());
+
+
+
+
+
+/* === v18 · Correspondència text ↔ pictograma ===
+   El text pedagògic NO s'envia directament a ARASAAC.
+   Cada frase es redueix a un concepte visual curt i verificable. */
+const VISUAL_QUERY_EXACT={
+  "faig l'operació":"calcular",
+  "faig la feina":"treballar",
+  "faig un resum":"resum",
+  "faig la presentació":"presentar",
+  "fem la nostra part":"treballar",
+  "posem en comú":"parlar",
+  "passo a net":"escriure",
+  "si em bloquejo demano ajuda":"ajuda",
+  "si em bloquejo passo a la següent":"continuar",
+  "torno a les pendents":"tornar",
+  "comprovo què recordo":"recordar",
+  "penso què he de fer":"pensar",
+  "penso què vull explicar":"pensar",
+  "penso què vull saber":"pensar",
+  "penso abans de respondre":"pensar",
+  "penso per què m'he equivocat":"pensar",
+  "penso què sí que sé":"pensar",
+  "penso què ha passat":"pensar",
+  "penso què no entenc":"pensar",
+  "penso una solució":"solució",
+  "miro què he de fer":"mirar",
+  "miro què entra":"mirar",
+  "miro la correcció":"revisar",
+  "miro què toca":"horari",
+  "miro els deures":"deures",
+  "miro l'exemple":"exemple",
+  "miro l'error":"error",
+  "miro el títol":"títol",
+  "reviso majúscules i punts":"revisar",
+  "reviso les respostes":"revisar",
+  "reviso la taula":"revisar",
+  "reviso què necessito":"revisar",
+  "reviso la feina":"revisar",
+  "corregeixo si cal":"corregir",
+  "marco les paraules importants":"marcar",
+  "marco la pregunta":"marcar",
+  "subratllo les dades":"subratllar",
+  "subratllo les idees importants":"subratllar",
+  "llegeixo l'enunciat":"llegir",
+  "llegeixo el text":"llegir",
+  "llegeixo les preguntes":"llegir",
+  "llegeixo la consigna":"llegir",
+  "llegeixo totes les preguntes":"llegir",
+  "busco la informació":"buscar",
+  "busco informació":"buscar",
+  "busco l'error":"error",
+  "busco una paraula clau":"buscar",
+  "començo per una que sé":"començar",
+  "començo sol":"començar",
+  "continuo treballant":"continuar",
+  "selecciono el més important":"seleccionar",
+  "selecciono informació":"seleccionar",
+  "escric paraules clau":"escriure",
+  "anoto el que necessito":"escriure",
+  "guardo la feina":"guardar",
+  "guardo la motxilla":"motxilla",
+  "guardo el material":"guardar",
+  "els apunto a l'agenda":"agenda",
+  "apunto els deures":"agenda",
+  "trec l'agenda":"agenda",
+  "miro l'horari":"horari",
+  "començo la primera activitat":"començar",
+  "acabo la feina":"acabar",
+  "preparo la motxilla":"motxilla",
+  "preparo el material":"preparar",
+  "preparo el suport":"preparar",
+  "escoltem la tasca":"escoltar",
+  "repartim responsabilitats":"repartir",
+  "compartim idees":"compartir",
+  "revisem":"revisar",
+  "entreguem":"entregar",
+  "torno a llegir":"llegir",
+  "divideixo la tasca":"dividir",
+  "demano una pista":"ajuda",
+  "torno a intentar":"intentar",
+  "intento entendre-ho":"entendre",
+  "aixeco la mà":"aixecar la mà",
+  "explico el dubte":"explicar",
+  "escolto l'ajuda":"escoltar",
+  "m'allunyo si ho necessito":"allunyar-se",
+  "explico què passa":"explicar",
+  "demano ajuda":"ajuda",
+  "torno quan estic preparat":"tornar",
+  "explico què ha passat":"explicar",
+  "escolto l'altra persona":"escoltar",
+  "arribem a un acord":"acord",
+  "faig una activitat pendent":"treballar",
+  "espero sense molestar":"esperar",
+  "espero el torn":"esperar torn",
+  "tancar aplicació":"tancar",
+  "unitat de miler":"miler",
+  "idea principal":"idea"
+};
+
+const VISUAL_QUERY_PREFIX=[
+  ["llegeixo ","llegir"],["llegeix","llegir"],
+  ["subratllo ","subratllar"],["subratlla","subratllar"],
+  ["marco ","marcar"],["penso ","pensar"],["miro ","mirar"],
+  ["busco ","buscar"],["responc","respondre"],["reviso ","revisar"],["reviso","revisar"],
+  ["ordeno ","ordenar"],["corregeixo","corregir"],["escric ","escriure"],["escric","escriure"],
+  ["preparo ","preparar"],["començo ","començar"],["començo","començar"],
+  ["comprovo ","comprovar"],["comprovo","comprovar"],["entrego","entregar"],["recullo","recollir"],
+  ["practico","practicar"],["trio ","escollir"],["comparo ","comparar"],["anoto ","escriure"],
+  ["entro ","entrar"],["acabo ","acabar"],["acabo","acabar"],["surto","sortir"],
+  ["pregunto","preguntar"],["continuo","continuar"],["respiro","respirar"],["paro","parar"],
+  ["espero","esperar"],["explico ","explicar"],["escolto ","escoltar"],["parlo","parlar"],
+  ["respecto","respectar"]
+];
+
+function visualQueryFor(label){
+  const raw=String(label||"").trim().toLowerCase();
+  if(VISUAL_QUERY_EXACT[raw]) return VISUAL_QUERY_EXACT[raw];
+  for(const [prefix,q] of VISUAL_QUERY_PREFIX){
+    if(raw===prefix.trim() || raw.startsWith(prefix)) return q;
+  }
+  return raw;
+}
+
+function normalizeTextForMatch(s){
+  return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+}
+
+function pictoKeywordList(p){
+  if(!p || !Array.isArray(p.keywords)) return [];
+  return p.keywords.map(k=>normalizeTextForMatch(k&&k.keyword)).filter(Boolean);
+}
+
+function scorePictoForQuery(p,query){
+  const q=normalizeTextForMatch(query);
+  const keys=pictoKeywordList(p);
+  if(keys.some(k=>k===q)) return 100;
+  if(keys.some(k=>k.startsWith(q)||q.startsWith(k))) return 80;
+  if(keys.some(k=>k.includes(q)||q.includes(k))) return 60;
+  return 10;
+}
+
+const SmartPackEngine={
+  async fetchPicto(query){
+    const urls=[
+      `${API}/pictograms/ca/bestsearch/${encodeURIComponent(query)}`,
+      `${API}/pictograms/ca/search/${encodeURIComponent(query)}`
+    ];
+    let candidates=[];
+    for(const url of urls){
+      try{
+        const r=await fetch(url);
+        if(!r.ok) continue;
+        const data=await r.json();
+        if(Array.isArray(data)&&data.length){
+          candidates.push(...data.slice(0,12));
+        }
+      }catch(e){}
+    }
+    if(!candidates.length) return null;
+    const unique=[...new Map(candidates.map(p=>[String(p._id||p.id),p])).values()];
+    unique.sort((a,b)=>scorePictoForQuery(b,query)-scorePictoForQuery(a,query));
+    return unique[0];
+  },
+  applyPreset(pack){
+    const mode=pack.activity||"referent";
+    setActivityMode(mode,{persist:false});
+    if(mode==="sequencia"){
+      if($("#seqTitle")) $("#seqTitle").value=pack.title||"Seqüència visual";
+      if($("#seqVisualStyle")) $("#seqVisualStyle").value=pack.style||"guided";
+      if($("#seqSupport")) $("#seqSupport").value="auto";
+      if($("#seqShowNumbers")) $("#seqShowNumbers").checked=true;
+      if($("#seqShowText")) $("#seqShowText").checked=true;
+    }else if(mode==="vocabulari"){
+      if($("#vocabTitle")) $("#vocabTitle").value=pack.title||"Vocabulari visual";
+      if($("#vocabVisualStyle")) $("#vocabVisualStyle").value=pack.vocabStyle||"dictionary";
+      if($("#vocabShowText")) $("#vocabShowText").checked=true;
+    }else if(mode==="referent"){
+      if($("#refTitle")) $("#refTitle").value=pack.title||"Referent visual";
+      if($("#refDensity")) $("#refDensity").value="poster";
+      if($("#refShowText")) $("#refShowText").checked=true;
+    }else if(mode==="fitxa"){
+      if($("#sheetTitle")) $("#sheetTitle").value=pack.title||"Fitxa visual";
+    }
+  },
+  async generate(name){
+    const pack=SMART_PACKS[name];
+    if(!pack) return;
+    const status=$("#smartPackStatus");
+    status.textContent=`Preparant "${name}"...`;
+
+    const selected=[];
+    const missing=[];
+    for(let i=0;i<pack.terms.length;i++){
+      const label=pack.terms[i];
+      const query=visualQueryFor(label);
+      status.textContent=`${i+1}/${pack.terms.length} · ${label} → ${query}`;
+      const raw=await this.fetchPicto(query);
+      if(raw){
+        const p=normalizePicto(raw,query,guessCategory(query));
+        // Important: the educational instruction stays as the visible label.
+        p.term=label;
+        p.searched=query;
+        p.visualQuery=query;
+        p.matchedKeyword=(raw.keywords||[]).map(k=>k.keyword).filter(Boolean)[0]||query;
+        selected.push(p);
+      }else{
+        missing.push(label);
+      }
+    }
+
+    S.selected=selected;
+    S.sequenceOrder=[...selected];
+    SelectionStore.setSelected(selected);
+    SelectionStore.setSequence(selected);
+    saveSelected();
+    renderSelected();
+    syncSequenceOrder();
+
+    this.applyPreset(pack);
+
+    if(pack.activity==="sequencia") buildSequence();
+    else if(pack.activity==="vocabulari") buildVocabulari();
+    else if(pack.activity==="referent") buildReferent();
+    else buildSheet();
+
+    persistWorkspace();
+    History.snapshot(`genera paquet ${name}`);
+    status.textContent=`${name}: ${selected.length} pictogrames preparats${missing.length?` · sense resultat: ${missing.join(", ")}`:""}.`;
+  },
+  queue(name){
+    const pack=SMART_PACKS[name];
+    if(!pack) return;
+    BatchVocabulary.clear();
+    pack.terms.forEach(term=>{
+      const hit=BUILTIN_VOCAB_FLAT.find(x=>x.term.toLowerCase()===term.toLowerCase());
+      BatchVocabulary.add(term,hit?.category||pack.group||"");
+    });
+    const bank=$("#builtinBankPanel"); if(bank) bank.open=true;
+    $("#smartPackStatus").textContent=`"${name}" enviat a la cua. Pots revisar els termes abans d'afegir-los.`;
+  }
+};
+
+function initSmartPacks(){
+  const group=$("#smartPackGroup");
+  const search=$("#smartPackSearch");
+  const grid=$("#smartPackGrid");
+  if(!group||!search||!grid) return;
+
+  const groups=[...new Set(Object.values(SMART_PACKS).map(p=>p.group))].sort((a,b)=>a.localeCompare(b,"ca"));
+  groups.forEach(g=>{
+    const o=document.createElement("option");o.value=g;o.textContent=g;group.appendChild(o);
+  });
+
+  const render=()=>{
+    const g=group.value;
+    const q=search.value.trim().toLowerCase();
+    const entries=Object.entries(SMART_PACKS).filter(([name,p])=>{
+      const hay=(name+" "+p.title+" "+p.terms.join(" ")).toLowerCase();
+      return (!g||p.group===g) && (!q||hay.includes(q));
+    });
+    grid.innerHTML=entries.map(([name,p])=>`
+      <article class="smartPackCard" data-kind="${esc(p.kind||"")}">
+        <div class="spTop">
+          <h4>${esc(name)}</h4>
+          <span class="smartPackTag">${esc(p.group)}</span>
+        </div>
+        <div class="packTypeLine">${p.kind==="work"?"Seqüència de treball":p.kind==="routine"?"Rutina":p.kind==="strategy"?"Estratègia":"Referent de contingut"}</div><div class="smartPackTerms">${p.terms.slice(0,8).map(esc).join(" → ")}${p.terms.length>8?"…":""}</div>
+        <details class="queryAudit"><summary>Correspondència pictogràfica</summary>
+          <div>${p.terms.map(t=>`<span><b>${esc(t)}</b> <i>→ ${esc(visualQueryFor(t))}</i></span>`).join("")}</div>
+        </details>
+        <div class="smartPackActions">
+          <button type="button" data-generate-pack="${esc(name)}">Generar</button>
+          <button type="button" class="secondary" data-queue-pack="${esc(name)}">Revisar</button>
+        </div>
+      </article>`).join("");
+    grid.querySelectorAll("[data-generate-pack]").forEach(b=>b.onclick=()=>SmartPackEngine.generate(b.dataset.generatePack));
+    grid.querySelectorAll("[data-queue-pack]").forEach(b=>b.onclick=()=>SmartPackEngine.queue(b.dataset.queuePack));
+    $("#smartPackStatus").textContent=`${entries.length} paquets disponibles`;
+  };
+
+  group.addEventListener("change",render);
+  search.addEventListener("input",render);
+  render();
+}
+
+const BatchVocabulary={
+  queue:[],
+  add(term,category=""){
+    const key=String(term).trim().toLowerCase();
+    if(!key || this.queue.some(x=>x.term.toLowerCase()===key)) return;
+    this.queue.push({term:String(term).trim(),category:String(category||"")});
+    this.render();
+  },
+  remove(term){
+    const key=String(term).toLowerCase();
+    this.queue=this.queue.filter(x=>x.term.toLowerCase()!==key);
+    this.render();
+  },
+  clear(){this.queue=[];this.render();},
+  loadPack(name){
+    this.clear();
+    (VOCAB_PACKS[name]||[]).forEach(term=>{
+      const hit=BUILTIN_VOCAB_FLAT.find(x=>x.term.toLowerCase()===term.toLowerCase());
+      this.add(term,hit?.category||"");
+    });
+  },
+  render(){
+    const wrap=$("#batchQueueWrap");
+    if(!wrap) return;
+    wrap.classList.toggle("hidden",this.queue.length===0);
+    $("#batchQueueCount").textContent=`${this.queue.length} termes`;
+    $("#batchQueue").innerHTML=this.queue.map(x=>`
+      <span>${esc(x.term)}<button type="button" data-remove-queued="${esc(x.term)}">×</button></span>`).join("");
+    $("#batchQueue").querySelectorAll("[data-remove-queued]").forEach(b=>{
+      b.onclick=()=>this.remove(b.dataset.removeQueued);
+    });
+  },
+  async addAll(){
+    if(!this.queue.length) return;
+    $("#batchStatus").textContent="Cercant pictogrames a ARASAAC...";
+    let added=0, failed=0;
+    for(let i=0;i<this.queue.length;i++){
+      const item=this.queue[i];
+      $("#batchStatus").textContent=`${i+1}/${this.queue.length} · ${item.term}`;
+      const urls=[
+        `${API}/pictograms/ca/bestsearch/${encodeURIComponent(item.term)}`,
+        `${API}/pictograms/ca/search/${encodeURIComponent(item.term)}`
+      ];
+      let data=[];
+      for(const url of urls){
+        try{
+          const r=await fetch(url);
+          if(r.ok){data=await r.json();if(Array.isArray(data)&&data.length)break;}
+        }catch(e){}
+      }
+      if(Array.isArray(data)&&data.length){
+        const p=normalizePicto(data[0],item.term,item.category||guessCategory(item.term));
+        if(!S.selected.some(x=>String(x.id)===String(p.id))){
+          S.selected.push(p); added++;
+        }else{
+          const clone={...p,id:String(p.id)+"_"+i,term:item.term,category:item.category||p.category};
+          S.selected.push(clone); added++;
+        }
+      }else failed++;
+    }
+    SelectionStore.setSelected(S.selected);
+    saveSelected();
+    renderSelected();
+    syncSequenceOrder();
+    persistWorkspace();
+    History.snapshot("afegeix paquet de vocabulari");
+    $("#batchStatus").textContent=`Afegits ${added} pictogrames${failed?` · ${failed} sense resultat`:""}.`;
+  }
+};
+
+function initBuiltinVocabularyBank(){
+  const cat=$("#builtinBankCategory");
+  if(!cat) return;
+  Object.keys(BUILTIN_VOCAB_BANK).sort((a,b)=>a.localeCompare(b,"ca")).forEach(name=>{
+    const o=document.createElement("option");
+    o.value=name;o.textContent=name;cat.appendChild(o);
+  });
+
+  const render=()=>{
+    const q=($("#builtinBankSearch").value||"").trim().toLowerCase();
+    const c=cat.value;
+    let items=BUILTIN_VOCAB_FLAT.filter(x=>(!c||x.category===c) && (!q||x.term.toLowerCase().includes(q)));
+    items=items.slice(0,180);
+    $("#builtinBankCount").textContent=`${items.length} termes mostrats · ${BUILTIN_VOCAB_FLAT.length} termes al banc`;
+    $("#builtinBankResults").innerHTML=items.map(x=>`
+      <div class="bankWord">
+        <div><b>${esc(x.term)}</b><small>${esc(x.category)}</small></div>
+        <div style="display:flex;gap:5px">
+          <button type="button" data-bankterm="${esc(x.term)}">Cercar</button>
+          <button type="button" class="secondary" data-queue-term="${esc(x.term)}" data-queue-cat="${esc(x.category)}">+</button>
+        </div>
+      </div>`).join("");
+    $("#builtinBankResults").querySelectorAll("[data-bankterm]").forEach(b=>{
+      b.onclick=()=>{
+        $("#q").value=b.dataset.bankterm;
+        $("#btnSearch").click();
+      };
+    });
+    $("#builtinBankResults").querySelectorAll("[data-queue-term]").forEach(b=>{
+      b.onclick=()=>BatchVocabulary.add(b.dataset.queueTerm,b.dataset.queueCat||"");
+    });
+  };
+
+  $("#vocabPacks").innerHTML=Object.keys(VOCAB_PACKS).map(n=>`<button type="button" data-pack="${esc(n)}">${esc(n)}</button>`).join("");
+  $("#vocabPacks").querySelectorAll("[data-pack]").forEach(b=>b.onclick=()=>BatchVocabulary.loadPack(b.dataset.pack));
+
+  $("#btnBuiltinBankSearch").onclick=render;
+  $("#btnBatchAdd").onclick=()=>BatchVocabulary.addAll();
+  $("#btnBatchClear").onclick=()=>BatchVocabulary.clear();
+
+  $("#btnBuiltinBankClear").onclick=()=>{
+    $("#builtinBankSearch").value="";
+    cat.value="";
+    $("#builtinBankResults").innerHTML="";
+    $("#builtinBankCount").textContent=`${BUILTIN_VOCAB_FLAT.length} termes disponibles`;
+  };
+  $("#builtinBankSearch").addEventListener("keydown",e=>{if(e.key==="Enter")render()});
+  cat.addEventListener("change",render);
+  $("#builtinBankCount").textContent=`${BUILTIN_VOCAB_FLAT.length} termes disponibles`;
+}
+
+function init(){
+  initProjectTools();
+  initBuiltinVocabularyBank();
+  initSmartPacks();
+  $("#activityType").addEventListener("change",e=>setActivityMode(e.target.value));
+  SelectionStore.syncFromLegacy();
+  History.snapshot("inici");
+  document.addEventListener("keydown",e=>{
+    const tag=(e.target&&e.target.tagName||"").toLowerCase();
+    if(["input","textarea","select"].includes(tag)) return;
+    if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="z"){
+      e.preventDefault();
+      if(e.shiftKey) History.redo(); else History.undo();
+    }
+    if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==="y"){
+      e.preventDefault(); History.redo();
+    }
+  });
+  updateInternalStatus();
+  setActivityMode(S.activeMode||"fitxa",{keepOutput:true,persist:false});
+
+  const cat=$("#cat");
+  Object.keys(CATEGORIES).forEach(c=>{
+    const o=document.createElement("option"); o.value=c; o.textContent=c; cat.appendChild(o);
+  });
+  renderQuick();
+  loadSelected();
+  bind();
+}
+
+function bind(){
+  $("#btnSearch").onclick=search;
+  $("#q").addEventListener("keydown",e=>{if(e.key==="Enter")search()});
+  $("#cat").onchange=()=>{ renderQuick(); if($("#q").value.trim()) search(); else showCategoryTerms(); };
+  $("#btnAdd").onclick=addPreview;
+  $("#btnClearPreview").onclick=clearPreview;
+  $("#btnClearAll").onclick=()=>{S.selected=[]; SelectionStore.setSelected([]); saveSelected(); renderSelected(); persistWorkspace(); syncSequenceOrder(); History.snapshot("neteja selecció");};
+  $("#btnSheet").onclick=buildSheet;
+  $("#btnPrint").onclick=()=>printCurrentMode("fitxa");
+  $("#btnJson").onclick=exportJson;
+  $("#btnVocab").onclick=buildVocabulari;
+  $("#btnVocabPrint").onclick=()=>printCurrentMode("vocabulari");
+  $("#btnReferent").onclick=buildReferent;
+  $("#btnReferentPrint").onclick=()=>printCurrentMode("referent");
+  ["vocabTitle","vocabCols","vocabLabelSize","vocabOrder","vocabShowText","vocabShowId","vocabShowBorder","vocabShowSource"]
+    .forEach(id=>$("#"+id).addEventListener("change",()=>{if($("#sheet .vocabSheet"))buildVocabulari();}));
+  ["refTitle","refCols","refLabelSize","refOrientation","refDensity","refShowText","refShowBorder","refShowSource","refNote"]
+    .forEach(id=>$("#"+id).addEventListener("change",()=>{if($("#sheet .referentSheet"))buildReferent();}));
+  $("#btnSequence").onclick=buildSequence;
+  $("#btnSequencePrint").onclick=()=>printCurrentMode("sequencia");
+  ["seqTitle","seqLayout","seqSupport","seqLabelSize","seqShowText","seqShowNumbers","seqShowSource","seqNote"]
+    .forEach(id=>$("#"+id).addEventListener("change",()=>{if($("#sheet .sequencePages"))buildSequence();}));
+
+  ["sheetTitle","sheetCols","sheetLabelSize","sheetOrder","sheetShowText","sheetShowBorder","sheetShowSource"]
+    .forEach(id=>$("#"+id).addEventListener("change",()=>{if($("#sheet .sheet"))buildSheet();}));
+  Object.values(WorkspaceSchema.fields).flat().forEach(id=>{const e=$("#"+id);if(e){e.addEventListener("change",persistWorkspace);if(e.tagName==="INPUT"&&e.type!=="checkbox")e.addEventListener("input",persistWorkspace)}});
+}
+
+function renderQuick(){
+  const cat=$("#cat").value;
+  const source=cat ? CATEGORIES[cat] : ["escola","ajuda","menjar","lavabo","content","trist","esperar","jugar"];
+  $("#quick").innerHTML=source.slice(0,12).map(w=>`<button class="chip" data-word="${esc(w)}">${esc(w)}</button>`).join("");
+  $("#quick").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{$("#q").value=b.dataset.word;search();});
+}
+
+function showCategoryTerms(){
+  const cat=$("#cat").value;
+  if(!cat){$("#results").innerHTML="";$("#status").textContent="Escriu una paraula o tria una categoria.";return;}
+  $("#status").textContent=`Categoria: ${cat}. Tria un terme per cercar el pictograma.`;
+  $("#results").innerHTML=CATEGORIES[cat].map(w=>`<div class="picto" data-term="${esc(w)}"><div style="height:90px;display:grid;place-items:center;background:#f7f9fa;border-radius:8px;color:#71808c">Cercar</div><b>${esc(w)}</b><small>${esc(cat)}</small></div>`).join("");
+  $("#results").querySelectorAll(".picto").forEach(x=>x.onclick=()=>{$("#q").value=x.dataset.term;search();});
+}
+
+async function search(){
+  const term=$("#q").value.trim();
+  if(!term) return showCategoryTerms();
+  $("#status").textContent="Cercant a ARASAAC...";
+  $("#results").innerHTML="";
+  const urls=[
+    `${API}/pictograms/ca/bestsearch/${encodeURIComponent(term)}`,
+    `${API}/pictograms/ca/search/${encodeURIComponent(term)}`
+  ];
+  let data=[];
+  for(const url of urls){
+    try{
+      const r=await fetch(url);
+      if(r.ok){data=await r.json(); if(Array.isArray(data)&&data.length)break;}
+    }catch(e){}
+  }
+  if(!Array.isArray(data)||!data.length){
+    $("#status").textContent="No s'han trobat resultats. Comprova la connexió o prova una altra paraula.";
+    return;
+  }
+  const cat=$("#cat").value || guessCategory(term);
+  S.lastResults=data.slice(0,24).map(p=>normalizePicto(p,term,cat));
+  renderResults();
+  $("#status").textContent=`${S.lastResults.length} resultats per «${term}».`;
+}
+
+function normalizePicto(p,term,cat){
+  const id=p._id || p.id;
+  let keyword=term;
+  if(Array.isArray(p.keywords)){
+    const k=p.keywords.find(x=>x.keyword) || p.keywords[0];
+    if(k && k.keyword) keyword=k.keyword;
+  }
+  return {id, term:keyword, searched:term, category:cat||"", url:`${STATIC}/${id}/${id}_500.png`};
+}
+
+function renderResults(){
+  $("#results").innerHTML=S.lastResults.map((p,i)=>`
+    <div class="picto" data-i="${i}">
+      <img src="${p.url}" alt="${esc(p.term)}" loading="lazy">
+      <b>${esc(p.term)}</b>
+      <small>ID ${p.id}</small>
+    </div>`).join("");
+  $("#results").querySelectorAll(".picto").forEach(x=>x.onclick=()=>setPreview(S.lastResults[+x.dataset.i]));
+}
+
+function setPreview(p){
+  S.preview=p;
+  $("#preview").innerHTML=`<img src="${p.url}" alt="${esc(p.term)}">`;
+  $("#previewMeta").innerHTML=`<b>${esc(p.term)}</b><br><span>${esc(p.category||"Sense categoria")} · ARASAAC #${p.id}</span>`;
+  $("#btnAdd").disabled=false;
+}
+
+function clearPreview(){
+  S.preview=null;
+  $("#preview").innerHTML='<div class="previewEmpty">Selecciona un resultat per veure\'l aquí.</div>';
+  $("#previewMeta").innerHTML="";
+  $("#btnAdd").disabled=true;
+}
+
+function addPreview(){
+  const p=S.preview; if(!p)return;
+  if(!S.selected.some(x=>String(x.id)===String(p.id))) S.selected.push(p);
+  saveSelected(); renderSelected(); persistWorkspace();
+}
+
+function renderSelected(){
+  $("#badgeSel").textContent=`${S.selected.length} seleccionats`;
+  const box=$("#selected");
+  if(!S.selected.length){box.innerHTML='<div class="previewEmpty">Encara no hi ha pictogrames seleccionats.</div>';return;}
+  box.innerHTML=S.selected.map((p,i)=>`
+    <div class="sel"><img src="${p.url}" alt=""><div><b>${esc(p.term)}</b><br><small>${esc(p.category||"")}</small></div>
+    <button class="secondary" data-remove="${i}">×</button></div>`).join("");
+  box.querySelectorAll("[data-remove]").forEach(b=>b.onclick=()=>{S.selected.splice(+b.dataset.remove,1);saveSelected();renderSelected();persistWorkspace();syncSequenceOrder();persistWorkspace();});
+}
+
+function saveSelected(){ try{localStorage.setItem("gestorPictos.selected",JSON.stringify(S.selected));}catch(e){} }
+function loadSelected(){
+  try{S.selected=JSON.parse(localStorage.getItem("gestorPictos.selected")||"[]")||[];}
+  catch(e){S.selected=[]}
+  renderSelected();
+  syncSequenceOrder();
+}
+
+function guessCategory(term){
+  const t=term.toLowerCase();
+  for(const [cat,words] of Object.entries(CATEGORIES)) if(words.some(w=>w.toLowerCase()===t)) return cat;
+  return "";
+}
+
+
+function setActivityMode(mode,opts={}){
+  if(!ActivityRegistry[mode]) mode="fitxa";
+  S.activeMode=mode;
+
+  Object.entries(ActivityRegistry).forEach(([key,meta])=>{
+    const panel=$("#"+meta.config);
+    if(panel) panel.classList.toggle("hidden",key!==mode);
+  });
+
+  const select=$("#activityType");
+  if(select && select.value!==mode) select.value=mode;
+
+  const meta=ActivityRegistry[mode];
+  if($("#activityName")) $("#activityName").textContent=meta.name;
+  if($("#activityDescription")) $("#activityDescription").textContent=meta.description;
+  if($("#activityIcon")) $("#activityIcon").textContent=meta.icon;
+  if($("#projectMode")) $("#projectMode").value=mode;
+
+  if(!opts.keepOutput) $("#sheet").innerHTML="";
+  if(mode==="sequencia") syncSequenceOrder();
+  if(opts.persist!==false) persistWorkspace();
+}
+function syncSequenceOrder(){
+  SelectionStore.syncFromLegacy();
+  const selectedIds=new Set(SelectionStore.selectedIds);
+  SelectionStore.sequenceIds=SelectionStore.sequenceIds.filter(id=>selectedIds.has(id));
+  for(const id of SelectionStore.selectedIds){
+    if(!SelectionStore.sequenceIds.includes(id)) SelectionStore.sequenceIds.push(id);
+  }
+  SelectionStore.syncToLegacy();
+  renderSequenceOrder();
+}
+
+function renderSequenceOrder(){
+  const box=$("#sequenceOrder");
+  if(!S.sequenceOrder.length){
+    box.innerHTML='<div class="status">Selecciona pictogrames al cercador per crear una seqüència.</div>';
+    return;
+  }
+  box.innerHTML=S.sequenceOrder.map((p,i)=>`
+    <div class="sequenceRow">
+      <img src="${p.url}" alt="${esc(p.term)}">
+      <div class="seqText"><b>${i+1}. ${esc(p.term)}</b><small>ID ARASAAC ${p.id}</small></div>
+      <div class="sequenceButtons">
+        <button class="secondary" data-up="${i}" ${i===0?"disabled":""} title="Pujar">↑</button>
+        <button class="secondary" data-down="${i}" ${i===S.sequenceOrder.length-1?"disabled":""} title="Baixar">↓</button>
+      </div>
+    </div>`).join("");
+  box.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.up; if(i<=0)return;
+    [S.sequenceOrder[i-1],S.sequenceOrder[i]]=[S.sequenceOrder[i],S.sequenceOrder[i-1]];
+    SelectionStore.setSequence(S.sequenceOrder);
+    History.snapshot("reordena seqüència");
+    renderSequenceOrder();
+    if($("#sheet .sequencePages")) buildSequence();
+  });
+  box.querySelectorAll("[data-down]").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.down; if(i>=S.sequenceOrder.length-1)return;
+    [S.sequenceOrder[i+1],S.sequenceOrder[i]]=[S.sequenceOrder[i],S.sequenceOrder[i+1]];
+    SelectionStore.setSequence(S.sequenceOrder);
+    History.snapshot("reordena seqüència");
+    renderSequenceOrder();
+    if($("#sheet .sequencePages")) buildSequence();
+  });
+}
+
+
+const LayoutEngine={
+  sequenceCapacity(layout,support,count){
+    if(support==="auto"){
+      if(layout==="horizontal"){
+        support=count<=6?"third":count<=12?"full":"double";
+      }else{
+        support=count<=4?"third":count<=8?"full":"double";
+      }
+    }
+    if(layout==="horizontal"){
+      if(support==="third") return 6;
+      if(support==="full") return 12;
+      return 12;
+    }
+    if(support==="third") return 4;
+    if(support==="full") return 8;
+    return 8;
+  },
+  pages(items,layout,support){
+    const cap=this.sequenceCapacity(layout,support,items.length);
+    const chunks=[];
+    for(let i=0;i<items.length;i+=cap) chunks.push(items.slice(i,i+cap));
+    return chunks;
+  },
+  supportClass(support,count,layout){
+    if(support==="auto"){
+      support = layout==="horizontal"
+        ? (count<=6?"third":count<=12?"full":"double")
+        : (count<=4?"third":count<=8?"full":"double");
+    }
+    return support==="third"?"thirdA4 compact":support==="double"?"doubleA4":"fullA4";
+  }
+};
+
+function chooseTheme(kind,value){
+  if(kind==="seq") S.ui.seqTheme=value;
+  if(kind==="ref") S.ui.refTheme=value;
+  document.querySelectorAll(`[data-${kind}theme]`).forEach(b=>{
+    b.classList.toggle("active",b.dataset[`${kind}theme`]===value);
+  });
+  if(kind==="seq" && $("#sheet .sequencePages")) buildSequence();
+  if(kind==="ref" && $("#sheet .referentSheet")) buildReferent();
+  persistWorkspace();
+}
+
+function buildSequence(){
+  syncSequenceOrder();
+  if(!S.sequenceOrder.length){
+    $("#sheet").innerHTML='<div class="status">Selecciona almenys un pictograma.</div>';
+    return;
+  }
+
+  const title=$("#seqTitle").value.trim()||"Seqüència visual";
+  const layout=$("#seqLayout").value;
+  const visualStyle=$("#seqVisualStyle")?.value||"guided";
+  const support=$("#seqSupport").value;
+  const labelSize=+$("#seqLabelSize").value||20;
+  const showText=$("#seqShowText").checked;
+  const showNumbers=$("#seqShowNumbers").checked;
+  const showSource=$("#seqShowSource").checked;
+  const note=$("#seqNote").value.trim();
+
+  const styleNames={
+    guided:"Tira guiada",
+    path:"Camí visual",
+    checklist:"Llista de passos",
+    firstthen:"Ara / Després"
+  };
+
+  if(visualStyle==="firstthen"){
+    const a=S.sequenceOrder[0], b=S.sequenceOrder[1]||null;
+    const rest=S.sequenceOrder.slice(2);
+    $("#sheet").innerHTML=`
+      <div class="sequencePages" id="printSheet">
+        <section class="sequencePage pdfDocument fullA4 styleFirstThen themeSoft">
+          <div class="pdfMasthead">
+            <div>
+              <div class="pdfEyebrow">Seqüència visual</div>
+              <h3>${esc(title)}</h3>
+            </div>
+            <div class="pdfCount">Ara / Després</div>
+          </div>
+          <div class="seqStyleBadge">Anticipació de dos passos</div>
+          <div class="firstThenBoard">
+            <div class="firstThenPanel">
+              <span class="ftLabel">Ara</span>
+              <img src="${a.url}" alt="${esc(a.term)}">
+              ${showText?`<b>${esc(a.term)}</b>`:""}
+            </div>
+            <div class="firstThenArrow">→</div>
+            <div class="firstThenPanel">
+              <span class="ftLabel">Després</span>
+              ${b?`<img src="${b.url}" alt="${esc(b.term)}">${showText?`<b>${esc(b.term)}</b>`:""}`:
+                  `<div style="color:var(--pdf-muted);font-weight:700">Afegeix un segon pas</div>`}
+            </div>
+          </div>
+          ${rest.length?`<div class="firstThenOverflow">Aquesta plantilla mostra només els dos primers passos. Hi ha ${rest.length} pas${rest.length===1?"":"s"} més a la selecció.</div>`:""}
+          ${note?`<div class="sequenceNote pdfNote">${esc(note)}</div>`:""}
+          ${showSource?'<div class="pdfFooter">Pictogrames: ARASAAC · Sergio Palao · Govern d’Aragó · CC BY-NC-SA.</div>':""}
+        </section>
+      </div>`;
+    return;
+  }
+
+  const pages=LayoutEngine.pages(S.sequenceOrder,layout,support);
+  const supportClass=LayoutEngine.supportClass(support,S.sequenceOrder.length,layout);
+  const cap=LayoutEngine.sequenceCapacity(layout,support,S.sequenceOrder.length);
+  const styleClass=visualStyle==="path"?"stylePath":visualStyle==="checklist"?"styleChecklist":"styleGuided";
+
+  $("#sheet").innerHTML=`
+    <div class="sequencePages" id="printSheet">
+      ${pages.map((items,pageIndex)=>`
+        <section class="sequencePage pdfDocument ${supportClass} ${styleClass} themeSoft">
+          <div class="pdfMasthead">
+            <div>
+              <div class="pdfEyebrow">Seqüència visual</div>
+              <h3>${esc(title)}</h3>
+            </div>
+            <div class="pdfCount">${pages.length>1?`${pageIndex+1}/${pages.length}`:`${S.sequenceOrder.length} passos`}</div>
+          </div>
+          <div class="seqStyleBadge">${styleNames[visualStyle]||styleNames.guided}</div>
+
+          <div class="sequenceRail ${layout}" style="--seqItems:${items.length};--seqLabelSize:${labelSize}px">
+            ${items.map((p,i)=>{
+              const globalIndex=pageIndex*cap+i;
+              return `
+                <div class="seqUnit">
+                  <div class="seqCard">
+                    ${showNumbers?`<div class="seqStepTag">${globalIndex+1}</div>`:""}
+                    <img src="${p.url}" alt="${esc(p.term)}">
+                    ${showText?`<span class="seqWord">${esc(p.term)}</span>`:""}
+                    ${visualStyle==="checklist"?'<span class="seqCheck" aria-hidden="true"></span>':""}
+                  </div>
+                  <div class="seqArrow">${layout==="horizontal"?"→":"↓"}</div>
+                </div>`;
+            }).join("")}
+          </div>
+
+          ${note && pageIndex===pages.length-1?`<div class="sequenceNote pdfNote">${esc(note)}</div>`:""}
+          ${showSource?'<div class="pdfFooter">Pictogrames: ARASAAC · Sergio Palao · Govern d’Aragó · CC BY-NC-SA.</div>':""}
+        </section>`).join("")}
+    </div>`;
+}
+function buildVocabulari(){
+  if(!S.selected.length){
+    $("#sheet").innerHTML='<div class="status">Selecciona almenys un pictograma.</div>';
+    return;
+  }
+
+  const title=$("#vocabTitle").value.trim() || "Vocabulari visual";
+  const visualStyle=$("#vocabVisualStyle")?.value||"dictionary";
+  const cols=+$("#vocabCols").value || 4;
+  const labelSize=+$("#vocabLabelSize").value || 18;
+  const showText=$("#vocabShowText").checked;
+  const showId=$("#vocabShowId").checked;
+  const showBorder=$("#vocabShowBorder").checked;
+  const showSource=$("#vocabShowSource").checked;
+  let items=[...S.selected];
+
+  if($("#vocabOrder").value==="alpha"){
+    items.sort((a,b)=>String(a.term).localeCompare(String(b.term),"ca"));
+  }
+
+  const styleClass=visualStyle==="cards"?"styleCards":visualStyle==="bands"?"styleBands":"styleDictionary";
+  const styleName=visualStyle==="cards"?"Targetes de vocabulari":visualStyle==="bands"?"Bandes temàtiques":"Diccionari visual";
+
+  $("#sheet").innerHTML=`
+    <section class="vocabSheet pdfDocument themeSoft ${styleClass}" id="printSheet">
+      <div class="pdfMasthead">
+        <div>
+          <div class="pdfEyebrow">Vocabulari visual</div>
+          <h3>${esc(title)}</h3>
+        </div>
+        <div class="pdfCount">${items.length} paraules</div>
+      </div>
+
+      <div class="vocabSectionLabel">${styleName}</div>
+
+      <div class="vocabGrid pdfGrid" style="--vocabCols:${cols};--vocabLabelSize:${labelSize}px">
+        ${items.map(p=>`
+          <div class="vocabCard pdfCard ${showBorder?"":"noBorder"}">
+            <img src="${p.url}" alt="${esc(p.term)}">
+            ${showText?`<b>${esc(p.term)}</b>`:""}
+            ${showId?`<small>ID ARASAAC ${p.id}</small>`:""}
+          </div>`).join("")}
+      </div>
+
+      ${showSource?'<div class="pdfFooter">Pictogrames: ARASAAC · Sergio Palao · Govern d’Aragó · CC BY-NC-SA.</div>':""}
+    </section>`;
+}
+function buildReferent(){
+  if(!S.selected.length){
+    $("#sheet").innerHTML='<div class="status">Selecciona almenys un pictograma.</div>';
+    return;
+  }
+
+  const title=$("#refTitle").value.trim() || "Referent visual";
+  const cols=+$("#refCols").value || 3;
+  const labelSize=+$("#refLabelSize").value || 22;
+  const showText=$("#refShowText").checked;
+  const showBorder=$("#refShowBorder").checked;
+  const showSource=$("#refShowSource").checked;
+  const note=$("#refNote").value.trim();
+  const orientation=$("#refOrientation").value;
+  const density=$("#refDensity")?.value || "poster";
+
+  const modeClass = density==="poster" ? "posterMode" : density==="compact" ? "compactMode" : "standardMode";
+
+  $("#sheet").innerHTML=`
+    <section class="referentSheet pdfDocument ${modeClass} themeSoft" id="printSheet" data-orientation="${orientation}">
+      <div class="pdfMasthead">
+        <div>
+          <div class="pdfEyebrow">Referent visual</div>
+          <h3>${esc(title)}</h3>
+        </div>
+        <div class="pdfCount">${S.selected.length} elements</div>
+      </div>
+
+      <div class="referentIntro">
+        <div class="refDot">i</div>
+        <div>
+          <b>Referent de consulta</b>
+          <span>Mira els pictogrames i utilitza'ls com a suport durant l'activitat o la rutina.</span>
+        </div>
+      </div>
+
+      <div class="referentBoard pdfBoard" style="--refCols:${cols};--refLabelSize:${labelSize}px">
+        ${S.selected.map(p=>`
+          <div class="referentCard pdfRefCard ${showBorder?"":"noBorder"}">
+            <img src="${p.url}" alt="${esc(p.term)}">
+            ${showText?`<span class="refLabel">${esc(p.term)}</span>`:""}
+            ${p.category?`<span class="refCategory">${esc(p.category)}</span>`:""}
+          </div>`).join("")}
+      </div>
+
+      ${note?`<div class="referentNote pdfRefNote">${esc(note)}</div>`:""}
+      ${showSource?'<div class="pdfFooter">Pictogrames: ARASAAC · Sergio Palao · Govern d’Aragó · CC BY-NC-SA.</div>':""}
+    </section>`;
+}
+function buildSheet(){
+  if(!S.selected.length){
+    $("#sheet").innerHTML='<div class="status">Selecciona almenys un pictograma.</div>';
+    return;
+  }
+
+  const title=$("#sheetTitle").value.trim() || "Fitxa visual";
+  const cols=+$("#sheetCols").value || 3;
+  const labelSize=+$("#sheetLabelSize").value || 18;
+  const showText=$("#sheetShowText").checked;
+  const showBorder=$("#sheetShowBorder").checked;
+  const showSource=$("#sheetShowSource").checked;
+  let items=[...S.selected];
+
+  if($("#sheetOrder").value==="alpha"){
+    items.sort((a,b)=>String(a.term).localeCompare(String(b.term),"ca"));
+  }
+
+  $("#sheet").innerHTML=`
+    <section class="sheet fitxaMode pdfDocument" id="printSheet">
+      <div class="pdfMasthead">
+        <div>
+          <div class="pdfEyebrow">Fitxa visual</div>
+          <h3>${esc(title)}</h3>
+        </div>
+        <div class="pdfCount">${items.length} targetes</div>
+      </div>
+
+      <div class="fitxaIntro">
+        <div><b>Targetes manipulatives</b><br>Imprimeix, retalla i utilitza-les de manera independent.</div>
+        <div>${cols} columnes</div>
+      </div>
+
+      <div class="sheetGrid" style="--cols:${cols};--labelSize:${labelSize}px">
+        ${items.map(p=>`
+          <div class="sheetItem ${showBorder?"":"noBorder"}">
+            <img src="${p.url}" alt="${esc(p.term)}">
+            ${showText?`<b>${esc(p.term)}</b>`:""}
+          </div>`).join("")}
+      </div>
+
+      ${showSource?'<div class="pdfFooter">Pictogrames: ARASAAC · Sergio Palao · Govern d’Aragó · CC BY-NC-SA.</div>':""}
+    </section>`;
+}
+function exportJson(){
+  const data={version:1,language:"ca",source:"ARASAAC",items:S.selected};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="seleccio_pictogrames.json"; a.click(); URL.revokeObjectURL(a.href);
+}
+
+init();
+restoreWorkspace();
+</script>
+<div id="printPortal" aria-hidden="true"></div>
+</body>
+</html>

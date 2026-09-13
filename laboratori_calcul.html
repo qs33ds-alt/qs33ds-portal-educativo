@@ -1,0 +1,1665 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Laboratori de càlcul · Vista docent i alumne · v14.9</title>
+<style>
+:root{
+  --fons:#f4f7fb;--panell:#fff;--linia:#dbe5ef;--text:#10203a;--suau:#61728b;
+  --blau:#2563eb;--blau-suau:#eaf2ff;--groc:#ffd84d;--groc-linia:#c9a300;
+  --verd:#eaf9ef;--verd-linia:#b8e3c4;--taronja:#fff7e5;--taronja-linia:#ead194;
+  --ombra:0 8px 24px rgba(21,44,74,.06)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:var(--fons);color:var(--text)}
+button,select,input{font:inherit}button{cursor:pointer}.amagat{display:none!important}
+
+.capcalera{height:66px;background:#fff;border-bottom:1px solid var(--linia);display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:40}
+.marca{font-size:22px;font-weight:850;display:flex;align-items:center;gap:10px}
+.punt{width:14px;height:14px;border-radius:50%;background:var(--blau);box-shadow:0 9px 0 -3px var(--blau)}
+.insignia{background:var(--blau-suau);color:#174fc1;border-radius:999px;padding:7px 12px;font-weight:800;font-size:13px}
+.usuari{display:flex;align-items:center;gap:9px;border:1px solid var(--linia);border-radius:12px;padding:6px 11px;background:#fbfdff}
+.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#5c65d8;color:#fff;font-weight:850}
+.petit{font-size:12px;color:var(--suau)}
+
+.contenidor{max-width:1540px;margin:18px auto;padding:0 18px 32px;display:grid;grid-template-columns:270px minmax(0,1fr);gap:22px}
+.lateral{background:#f7f9fc;border:1px solid var(--linia);border-radius:14px;padding:18px;align-self:start;position:sticky;top:84px}
+.lateral h2{margin:0 0 16px;font-size:20px}
+.camp{margin-bottom:15px}.camp>label{display:block;font-size:14px;font-weight:800;margin-bottom:7px}
+select{width:100%;padding:11px 13px;border:1px solid #ccd8e5;border-radius:10px;background:#fff;color:var(--text)}
+.boto{border:1px solid #cdd9e6;background:#fff;color:#20304a;border-radius:10px;padding:10px 13px;font-weight:750}
+.boto:hover{background:#f8fbff}.boto.primari{background:var(--blau);border-color:var(--blau);color:#fff}.boto.amplada{width:100%}
+.progres{margin-top:17px;border-top:1px solid var(--linia);padding-top:14px}.fila-metrica{display:flex;justify-content:space-between;margin:8px 0;color:#334158}
+
+.ruta{margin-top:18px;border-top:1px solid var(--linia);padding-top:14px}
+.ruta h3{font-size:15px;margin:0 0 9px}
+.ruta a{display:grid;grid-template-columns:23px 1fr auto;align-items:center;gap:9px;text-decoration:none;color:#334158;padding:8px;border-radius:8px;font-size:13px;font-weight:700}
+.estat-fase{font-weight:900;color:#8a99ad}
+.estat-fase.feta{color:#16824a}
+.ruta a:hover{background:#edf3fb}
+.ruta-num{width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:#e8eef7;color:#38506e;font-size:12px}
+.ruta a.actiu .ruta-num{background:var(--blau);color:#fff}
+
+.principal{display:grid;gap:12px}
+.targeta{background:#fff;border:1px solid var(--linia);border-radius:16px;box-shadow:0 6px 20px rgba(21,44,74,.045);padding:16px}
+.targeta.hero{padding:14px 16px}
+.cap-fila{display:flex;justify-content:space-between;align-items:center;gap:10px}.cap-fila h2,.cap-fila h3{margin:0}
+.operacio{display:flex;align-items:center;justify-content:center;gap:20px;font-size:46px;font-weight:900;padding:4px 0 2px}
+.caixa-resposta{width:82px;height:68px;border:1px solid #cbd9ef;border-radius:12px;background:#edf4ff;display:grid;place-items:center;color:var(--blau);font-size:38px}
+.seq{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;background:#f3f7fd;border-radius:10px;padding:9px;color:#52647f;font-size:13px}
+.seq span{background:#dfeaff;color:#174fc1;border-radius:999px;padding:4px 8px;font-weight:800}
+
+.pas{scroll-margin-top:82px;border-left:5px solid #d8e6fb}
+.titol-pas{display:flex;align-items:center;gap:9px}.num-pas{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:var(--blau);color:#fff;font-weight:850}
+.intro{font-size:13px;color:var(--suau);margin:6px 0 12px}
+
+.linia-nombres{display:grid;grid-template-columns:1fr 32px 1fr;gap:10px;align-items:center}.signe{font-size:38px;font-weight:900;text-align:center}
+.caixa-nombre{border:1px solid var(--linia);border-radius:12px;padding:10px;background:#fbfdff}.titol-caixa{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.valor-posicional{display:grid;grid-template-columns:1fr 1fr;border:1px solid #cbd7e4;border-radius:10px;overflow:hidden;background:#fff}
+.columna{min-height:148px}.columna+.columna{border-left:1px solid #d5dfeb}.cap-columna{height:32px;border-bottom:1px solid #d5dfeb;display:grid;place-items:center;font-size:13px}
+.zona{min-height:114px;padding:10px;display:flex;gap:6px;flex-wrap:wrap;align-content:flex-start;justify-content:center;transition:.15s}
+.zona:hover{background:#f7fbff}.zona.desti{box-shadow:inset 0 0 0 2px rgba(37,99,235,.16)}
+
+.part-inferior{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.75fr);gap:10px;margin-top:10px}
+.magatzem{border:1px solid var(--linia);border-radius:12px;padding:11px;background:#fff}
+.magatzem-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.caixa-magatzem{border:1px solid #f0df9b;background:#fffdf1;border-radius:10px;padding:8px}
+.caixa-magatzem strong{display:block;font-size:12px;margin-bottom:7px}.peces{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start}
+.unitat{width:16px;height:16px;border:2px solid var(--groc-linia);background:var(--groc);border-radius:4px}
+.desena{width:16px;height:72px;border:2px solid var(--groc-linia);border-radius:4px;background:repeating-linear-gradient(to bottom,var(--groc) 0 5px,var(--groc-linia) 5px 6px)}
+.peca{cursor:pointer;transition:.12s}.peca:hover{transform:translateY(-1px)}.peca.seleccionada{outline:3px solid rgba(37,99,235,.38);outline-offset:2px;transform:translateY(-1px)}
+.barra-seleccio{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px;padding:8px 10px;border:1px solid var(--linia);border-radius:9px;background:#f8fbff}
+.comptador-seleccio{font-weight:850;color:#174fc1;font-size:13px}
+
+.canvis{border:1px solid var(--verd-linia);background:var(--verd);border-radius:12px;padding:11px}.canvis h3{margin:0 0 3px;font-size:16px}
+.boto-canvi{width:100%;border:1px solid #a8d8b6;background:#f8fff9;border-radius:9px;padding:10px;display:flex;align-items:center;justify-content:center;gap:12px;font-weight:850;margin-top:8px}
+/* V14.9 · jerarquia visual de nombres i comprovació en vista alumne */
+.objectiu-cap{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.objectiu-identitat{display:flex;align-items:center;gap:10px;min-width:0}
+.objectiu-ordre{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:#6f8096}
+.numero-objectiu{display:inline-grid;place-items:center;min-width:62px;height:48px;padding:0 12px;border-radius:13px;background:#edf4ff;border:1px solid #c7daf7;color:#174fc1;font-size:30px;line-height:1;font-weight:950}
+.estat-objectiu{display:none;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;font-size:12px;font-weight:900}
+.caixa-nombre.objectiu-correcte{border-color:#9fd3af;background:#fbfffc;box-shadow:inset 0 0 0 1px rgba(34,139,78,.08)}
+.caixa-nombre.objectiu-correcte .estat-objectiu{display:inline-flex;background:#edf9f1;color:#18703d}
+body.mode-alumne .titol-caixa{display:none}
+body.mode-alumne .objectiu-cap{margin-bottom:10px}
+body.mode-alumne .caixa-nombre{padding:12px;border-radius:16px}
+body.mode-alumne .cap-columna{font-size:12px;font-weight:850;color:#53647a;background:#f7faff}
+body.mode-alumne .pissarra-valor{display:none!important}
+body.mode-alumne .transferencies{justify-content:center}
+body.mode-alumne .transferencies .boto{min-height:44px;font-size:14px}
+body.mode-alumne #comprovaConstruccio{min-width:210px;font-size:17px}
+body.mode-alumne #missatgeConstruccio{font-size:15px;margin-top:10px}
+body.mode-alumne .barra-seleccio .petit{display:none}
+@media(max-width:560px){.numero-objectiu{min-width:54px;height:44px;font-size:27px}.objectiu-ordre{font-size:10px}}
+
+/* Feedback visual de selecció al punter */
+.cursor-peces{position:fixed;left:0;top:0;z-index:1200;pointer-events:none;display:none;transform:translate(18px,18px);min-width:58px;padding:7px 9px;border:1px solid #b9c9dc;border-radius:12px;background:rgba(255,255,255,.96);box-shadow:0 8px 24px rgba(32,55,84,.18);backdrop-filter:blur(4px)}
+.cursor-peces.visible{display:flex;align-items:center;gap:7px}
+.cursor-grup{display:flex;align-items:center;gap:5px;font-weight:950;color:#173f83;font-size:15px;white-space:nowrap}
+.cursor-peces .mini-unitat{width:18px;height:18px;border:2px solid var(--groc-linia);background:var(--groc);border-radius:4px;box-sizing:border-box}
+.cursor-peces .mini-desena{width:18px;height:55px;border:2px solid var(--groc-linia);border-radius:4px;background:repeating-linear-gradient(to bottom,var(--groc) 0 4px,var(--groc-linia) 4px 5px);box-sizing:border-box}
+.cursor-peces .multiplicador{font-size:17px;line-height:1}
+.cursor-transformacio{font-size:11px;font-weight:900;color:#157347;background:#eefaf2;border-radius:999px;padding:3px 6px;white-space:nowrap}
+.peca.canvi-nou{animation:canviNou .8s ease-out}
+@keyframes canviNou{0%{box-shadow:0 0 0 0 rgba(27,145,78,.55);transform:scale(1.28)}70%{box-shadow:0 0 0 12px rgba(27,145,78,0)}100%{transform:scale(1)}}
+@media (pointer:coarse){.cursor-peces{transform:translate(12px,20px)}}
+
+
+.descomp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.descomp-caixa,.calc-caixa{border:1px solid var(--linia);border-radius:11px;padding:12px;background:#fbfdff}.descomp-caixa h4,.calc-caixa h4{margin:0 0 8px}
+.equacio{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:20px;font-weight:850}.entrada-mini{width:64px;padding:8px;border:1px solid #cbd7e4;border-radius:8px;text-align:center;font-weight:800}
+.avís-canvi{margin-top:10px;padding:10px;border:1px solid var(--taronja-linia);background:var(--taronja);border-radius:9px;color:#71571f;font-size:13px}
+.resultat-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}.final-num{display:flex;align-items:center;justify-content:center;gap:10px;font-size:28px;font-weight:900;height:100%}
+.entrada-final{width:100px;padding:9px;border:2px solid #b8cae6;border-radius:9px;text-align:center;font-size:28px;font-weight:900}
+.accions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}.missatge{min-height:22px;margin-top:8px;text-align:center;font-weight:800;font-size:13px}.correcte{color:#178447}.error{color:#b33a2d}
+.bloqueig{padding:9px 11px;border-radius:9px;background:#fff3f1;border:1px solid #efc4bc;color:#8b382d;font-size:13px;margin-top:9px}
+
+.login{position:fixed;inset:0;background:rgba(235,241,248,.94);display:grid;place-items:center;z-index:100}.login-caixa{width:min(390px,90vw);background:#fff;border:1px solid var(--linia);border-radius:16px;padding:22px;box-shadow:0 20px 60px rgba(20,45,80,.15)}
+.login-caixa input{width:100%;padding:12px;border:1px solid #ccd8e5;border-radius:10px;margin:6px 0 12px}
+
+@media(max-width:1080px){
+  .contenidor{grid-template-columns:1fr}.lateral{position:static}.linia-nombres,.descomp-grid,.resultat-grid,.part-inferior{grid-template-columns:1fr}.signe{font-size:26px}
+}
+
+.pissarra-wrap{margin-top:12px;border:1px solid #cddbea;background:#f9fbfe;border-radius:14px;padding:12px}
+.pissarra-cap{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.pissarra-cap h3{margin:0;font-size:17px}.pissarra-sub{font-size:12px;color:var(--suau)}
+.pissarra{display:grid;grid-template-columns:1fr 1fr;border:1px solid #bccddd;border-radius:12px;overflow:hidden;background:#fff;min-height:154px}
+.pissarra .columna{min-height:154px}.pissarra .zona{min-height:120px}
+.pissarra-valor{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;background:#edf4ff;color:#174fc1;font-weight:850;font-size:13px}
+.transferencies{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.transferencies .boto{font-size:13px}
+.boto.verd{background:#f1fbf4;border-color:#b7dfc2;color:#17683a}
+.mini-guia{display:flex;gap:8px;align-items:flex-start;margin-top:10px;padding:9px 10px;background:#f6f8fb;border-radius:10px;color:#56677f;font-size:12px}.mini-guia b{color:#24364e}
+@media(max-width:760px){.capcalera{padding:0 12px}.marca{font-size:19px}.insignia{font-size:12px;padding:6px 9px}.usuari{padding:5px 8px}.contenidor{padding:0 10px 24px}.targeta{padding:13px}.operacio{font-size:38px;gap:14px}}
+
+.selector-estrategia{display:flex;gap:4px;background:#eef3fb;border:1px solid #d6e1ef;border-radius:12px;padding:4px}
+.seg{border:0;background:transparent;color:#40516d;border-radius:9px;padding:8px 12px;font-weight:800;cursor:pointer}
+.seg.actiu{background:#fff;color:#174fc1;box-shadow:0 2px 8px rgba(21,44,74,.08)}
+.bloc-salts{display:none}
+body.mode-salts .bloc-descomp{display:none!important}
+body.mode-salts .bloc-salts{display:block!important}
+body.mode-salts .ruta-descomp{display:none!important}
+body:not(.mode-salts) .ruta-salts{display:none!important}
+.recta-card{background:#fff;border:1px solid var(--linia);border-radius:16px;box-shadow:0 6px 20px rgba(21,44,74,.045);padding:16px}
+.recta-cap{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.recta-wrap{position:relative;padding:46px 18px 46px;overflow:hidden}
+.recta{position:relative;height:5px;background:#2f4a6a;border-radius:999px;margin-top:10px}
+.recta::after{content:"";position:absolute;right:-1px;top:50%;transform:translateY(-50%);border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:11px solid #2f4a6a}
+.marca-recta{position:absolute;top:50%;transform:translate(-50%,-50%);width:1px;height:12px;background:#8da0b8}
+.marca-recta.major{width:2px;height:20px;background:#2f4a6a}
+.etiqueta-recta.secundaria{font-size:11px;color:#71839a;font-weight:700}
+.etiqueta-recta.major{font-size:12px;color:#263a56;font-weight:900}
+.etiqueta-recta{position:absolute;top:72px;transform:translateX(-50%);font-size:12px;font-weight:800;color:#31435f}
+.salt-arc{position:absolute;height:30px;border:2px solid var(--blau);border-bottom:0;border-radius:50% 50% 0 0;top:21px}
+.salt-arc.negatiu{border-color:#b85b47}
+.salt-label{position:absolute;top:-21px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:850;white-space:nowrap;background:#fff;padding:1px 4px;border-radius:4px;color:#174fc1}
+.salt-arc.negatiu .salt-label{color:#9a3d2b}
+.salts-controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.salts-panel{border:1px solid var(--linia);border-radius:12px;padding:12px;background:#fbfdff}
+.salts-panel h4{margin:0 0 8px}.salt-buttons{display:flex;gap:7px;flex-wrap:wrap}.salt-buttons .boto{min-width:58px}
+.salt-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.xip-salt{padding:6px 9px;border-radius:999px;background:#edf4ff;color:#174fc1;font-weight:800;font-size:12px}
+.salt-current{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:850;margin-top:8px}.salt-current strong{font-size:24px;color:#174fc1}
+.salt-answer{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:14px;font-size:24px;font-weight:900}
+.salt-answer input{width:96px;padding:8px;border:2px solid #b8cae6;border-radius:9px;text-align:center;font-size:24px;font-weight:900}.salts-help{font-size:13px;color:var(--suau);margin-top:6px}
+@media(max-width:850px){.selector-estrategia{max-width:260px}.seg{padding:7px 9px;font-size:12px}.salts-controls{grid-template-columns:1fr}}
+
+.inici-recta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 6px}
+.fitxa-inici{display:inline-flex;align-items:center;justify-content:center;min-width:54px;height:44px;padding:0 12px;border:2px solid #d34f45;border-radius:12px;background:#fff3f2;color:#bd3028;font-size:22px;font-weight:950;cursor:grab;user-select:none}
+.fitxa-inici.seleccionada{box-shadow:0 0 0 4px rgba(211,79,69,.14)}
+.instruccio-inici{font-size:13px;color:var(--suau)}
+.recta-wrap.preparada{cursor:crosshair}
+.punt-inici{position:absolute;top:31px;transform:translate(-50%,-50%);z-index:7;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:#d9473f;color:#fff;font-weight:950;font-size:12px;border:3px solid #fff;box-shadow:0 2px 8px rgba(120,30,25,.25)}
+.punt-inici::after{content:"";position:absolute;left:50%;top:31px;transform:translateX(-50%);width:3px;height:22px;background:#d9473f;border-radius:2px}
+.missatge-inici{min-height:20px;margin-top:6px;font-size:13px;font-weight:700}
+.missatge-inici.ok{color:#18733f}.missatge-inici.ko{color:#b33a2d}
+.salt-buttons.bloquejats{opacity:.42;pointer-events:none}
+
+.recta-scroll{width:100%;overflow-x:auto;overflow-y:hidden;padding:8px 0 14px;-webkit-overflow-scrolling:touch}
+.recta-track{position:relative;min-width:1080px;height:130px}
+.recta-track .recta-wrap{position:absolute;inset:0;padding:0;overflow:visible}
+.recta-track .recta{position:absolute;left:2%;right:2%;top:58px;height:5px;margin:0;background:#2f4a6a;border-radius:999px}
+.recta-track .marca-recta{position:absolute;top:50px;transform:translateX(-50%);width:1px;height:21px;background:#8da0b8;z-index:3}
+.recta-track .marca-recta.major{top:46px;width:2px;height:29px;background:#2f4a6a}
+.recta-track .etiqueta-recta{position:absolute;top:79px;transform:translateX(-50%);font-size:12px;font-weight:700;color:#71839a;z-index:4}
+.recta-track .etiqueta-recta.major{font-weight:950;color:#263a56}
+.recta-track .punt-inici{top:60px;z-index:20;width:38px;height:38px;background:#d9362b;color:#fff;border:3px solid #fff;box-shadow:0 0 0 3px rgba(217,54,43,.22),0 4px 12px rgba(125,28,22,.28)}
+.recta-track .salt-arc{top:12px;z-index:8}
+@media(max-width:760px){.recta-track{min-width:1080px}.recta-scroll{margin-top:6px}}
+
+/* Mode focus: menys estímuls, només el que l'alumne necessita en cada moment */
+.lateral-focus{display:flex;flex-direction:column;gap:10px}
+.panel-desplegable{background:#fff;border:1px solid var(--linia);border-radius:14px;overflow:hidden}
+.panel-desplegable summary{cursor:pointer;list-style:none;padding:13px 14px;font-weight:850;color:#30445f;display:flex;align-items:center;justify-content:space-between}
+.panel-desplegable summary::-webkit-details-marker{display:none}
+.panel-desplegable summary::after{content:"⌄";font-size:16px;color:#6f8097;transition:.18s transform}
+.panel-desplegable[open] summary::after{transform:rotate(180deg)}
+.panel-cos{padding:0 14px 14px}
+.panel-desplegable .ruta{margin:0}
+.panel-desplegable .ruta a{margin-top:5px}
+
+[data-plegable]{position:relative}
+[data-plegable].plegada{padding-top:13px;padding-bottom:13px}
+[data-plegable].plegada > *:not(.titol-pas):not(.recta-cap){display:none!important}
+[data-plegable].plegada .recta-cap > *:not(:first-child){display:none!important}
+[data-plegable].plegada .recta-cap .salts-help{display:none!important}
+[data-plegable].plegada .recta-cap{margin:0}
+[data-plegable].plegada .titol-pas{margin:0}
+.titol-pas{display:flex;align-items:center;gap:9px}
+.titol-pas strong{flex:1}
+.boto-plega{margin-left:auto;border:0;background:#f1f5fa;color:#51647d;border-radius:9px;padding:6px 10px;font-weight:850;cursor:pointer}
+.boto-plega:hover{background:#e8eef6}
+[data-plegable].plegada .boto-plega::after{content:"Obre"}
+[data-plegable]:not(.plegada) .boto-plega::after{content:"Tanca"}
+.boto-plega span{display:none}
+
+.hero .seq{opacity:.62;font-size:11px}
+body.mode-salts .hero .seq{display:none}
+
+@media(max-width:900px){
+  .contenidor{grid-template-columns:1fr}
+  .lateral-focus{order:2}
+  .principal{order:1}
+  .lateral-focus .panel-desplegable{box-shadow:none}
+}
+
+.recta-persistent{padding:8px 14px 2px}
+.recta-persistent .recta-scroll{margin-top:0}
+
+
+/* =========================================================
+   V14.9 · Vista alumne local + perfils separats
+   ========================================================= */
+.mode-switch{display:flex;align-items:center;gap:8px}
+.boto.alumne{background:#0f766e;border-color:#0f766e;color:#fff}
+.gestor-alumnes{display:grid;gap:8px}
+.fila-alumne{display:grid;grid-template-columns:1fr auto;gap:7px}
+.fila-alumne input{min-width:0;width:100%;padding:10px 11px;border:1px solid #ccd8e5;border-radius:10px;background:#fff}
+.mini-accio{border:1px solid #d3deea;background:#fff;border-radius:9px;padding:8px 10px;font-weight:800;color:#40516d}
+.mini-accio.perill{color:#9d2f2f;border-color:#ebcaca;background:#fffafa}
+.activitat-alumne-resum{margin-top:10px;padding:10px 11px;border:1px solid #cfe0f4;border-radius:10px;background:#f5f9ff;font-size:12px;color:#4e617c;line-height:1.45}
+
+.alumne-barra{display:none;position:sticky;top:0;z-index:70;background:#fff;border-bottom:1px solid var(--linia);padding:11px 18px;align-items:center;justify-content:space-between;gap:14px}
+.alumne-identitat{display:flex;align-items:center;gap:10px;min-width:0}
+.alumne-avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#dff5f1;color:#0f766e;font-weight:950}
+.alumne-nom{font-size:16px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alumne-progres{font-size:13px;color:var(--suau);font-weight:750}
+.alumne-comptador{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;background:#eef6ff;color:#2256a3;font-size:13px;font-weight:900}
+.alumne-sortir{border:0;background:transparent;color:#738299;font-size:12px;font-weight:800;padding:7px;cursor:pointer}
+
+.alumne-final{display:none;background:#fff;border:1px solid var(--linia);border-radius:16px;box-shadow:var(--ombra);padding:22px;text-align:center}
+.alumne-final h2{margin:0 0 8px;font-size:25px}
+.alumne-final p{margin:0 auto 16px;color:var(--suau);max-width:560px;line-height:1.5}
+.alumne-final .gran{font-size:38px;margin-bottom:7px}
+.alumne-seguent{display:none;margin:16px auto 0;min-width:180px}
+
+body.mode-alumne{background:#f7faff}
+body.mode-alumne .capcalera{display:none}
+body.mode-alumne .alumne-barra{display:flex}
+body.mode-alumne .contenidor{display:block;max-width:1040px;margin:20px auto;padding:0 16px 40px}
+body.mode-alumne .lateral{display:none!important}
+body.mode-alumne .principal{gap:16px}
+body.mode-alumne .targeta{box-shadow:0 10px 30px rgba(21,44,74,.055);border-color:#dce7f2}
+body.mode-alumne .hero{padding:20px}
+body.mode-alumne .hero .cap-fila h2{font-size:14px;color:var(--suau);font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+body.mode-alumne #pista{display:none}
+body.mode-alumne .hero .seq{display:none!important}
+body.mode-alumne .operacio{font-size:clamp(42px,9vw,66px);padding:8px 0}
+body.mode-alumne [data-plegable].plegada{display:none!important}
+body.mode-alumne .boto-plega{display:none!important}
+body.mode-alumne .intro{font-size:15px;line-height:1.5;color:#52647f}
+body.mode-alumne .titol-pas strong{font-size:20px}
+body.mode-alumne .num-pas{width:34px;height:34px}
+body.mode-alumne .alumne-seguent{display:none}
+body.mode-alumne.exercici-resolt .alumne-seguent{display:block}
+body.mode-alumne.activitat-acabada .principal > :not(.alumne-final){display:none!important}
+body.mode-alumne.activitat-acabada .alumne-final{display:block}
+/* V14.9 · suport visual tipus ARASAAC per a vista alumne */
+.guia-visual-alumne{display:none;align-items:center;gap:14px;margin:0 0 14px;padding:12px 14px;border:1px solid #d7e4ef;border-radius:16px;background:#fff}
+.guia-visual-picto{width:64px;height:64px;flex:0 0 64px;border:2px solid #202833;border-radius:12px;background:#fff;display:grid;place-items:center;overflow:hidden}
+.guia-visual-picto svg,.guia-visual-picto img{width:54px;height:54px;display:block;object-fit:contain}
+.guia-visual-text{min-width:0}.guia-visual-text small{display:block;font-size:12px;color:#6b7b90;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}.guia-visual-text strong{display:block;font-size:22px;line-height:1.12;color:#1d2b3d}.guia-visual-text span{display:block;margin-top:4px;font-size:14px;color:#5b6b80}
+body.mode-alumne .guia-visual-alumne{display:flex}
+body.mode-alumne .intro{display:none!important}
+body.mode-alumne .mini-guia{display:none!important}
+body.mode-alumne .petit{font-size:13px}
+body.mode-alumne .titol-pas{margin-bottom:10px}
+body.mode-alumne .accions{margin-top:12px}
+body.mode-alumne .accions .boto.primari{font-size:16px;min-height:48px}
+@media(max-width:560px){.guia-visual-picto{width:56px;height:56px;flex-basis:56px}.guia-visual-picto svg,.guia-visual-picto img{width:48px;height:48px}.guia-visual-text strong{font-size:19px}.guia-visual-text span{font-size:13px}}
+
+
+@media(max-width:680px){
+  .alumne-barra{padding:9px 10px}.alumne-comptador{font-size:12px}.alumne-sortir{font-size:0}.alumne-sortir::after{content:'🔒';font-size:16px}
+  body.mode-alumne .contenidor{margin-top:12px;padding:0 9px 26px}
+  body.mode-alumne .targeta{padding:14px}
+}
+
+
+
+/* V14.9 · Simplificació visual pastel de la Vista alumne */
+body.mode-alumne{
+  --pastel-a:#eaf3ff;--pastel-a-b:#b9d4ff;
+  --pastel-b:#e9f8ef;--pastel-b-b:#b9e5ca;
+  --pastel-w:#fff0f5;--pastel-w-b:#efbfd1;
+  --pastel-m:#fff9df;--pastel-m-b:#eadb9e;
+  --pastel-c:#fff3d8;--pastel-c-b:#e7c980;
+  background:#f7f9fc;
+}
+body.mode-alumne .principal{max-width:1100px;padding-top:18px}
+body.mode-alumne .targeta{border-radius:22px;border-color:#dce5f0;box-shadow:none}
+body.mode-alumne .hero{padding:20px 24px;margin-bottom:14px}
+body.mode-alumne .hero .cap-fila,
+body.mode-alumne .hero .seq,
+body.mode-alumne .hero #pista{display:none!important}
+body.mode-alumne .hero .operacio{font-size:52px;line-height:1.05;gap:18px;justify-content:center;color:#10213f}
+body.mode-alumne .hero .caixa-resposta{width:68px;height:68px;border-radius:16px;background:#edf4ff;border:1px solid #bfd4f5;color:#2c69d8}
+
+body.mode-alumne .guia-visual-alumne{max-width:760px;margin:0 auto 14px;padding:10px 16px;border-radius:18px;min-height:72px;box-shadow:none}
+body.mode-alumne .guia-visual-text small,
+body.mode-alumne .guia-visual-text span{display:none!important}
+body.mode-alumne .guia-visual-text strong{font-size:21px}
+body.mode-alumne .guia-visual-picto{width:54px;height:54px;border-radius:12px}
+body.mode-alumne .arasaac-credit{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+
+body.mode-alumne #pas1{padding:14px;border:none;background:transparent;box-shadow:none}
+body.mode-alumne #pas1>.titol-pas,
+body.mode-alumne #pas1>.intro{display:none!important}
+body.mode-alumne .linia-nombres{gap:16px;align-items:stretch;margin-bottom:16px}
+body.mode-alumne .caixa-nombre{border-width:1px;box-shadow:none;padding:18px!important;min-width:0}
+body.mode-alumne #caixaObjectiuA{background:var(--pastel-a);border-color:var(--pastel-a-b)}
+body.mode-alumne #caixaObjectiuB{background:var(--pastel-b);border-color:var(--pastel-b-b)}
+body.mode-alumne .objectiu-cap{justify-content:center;margin-bottom:12px!important;position:relative}
+body.mode-alumne .objectiu-identitat{justify-content:center;width:100%}
+body.mode-alumne .objectiu-ordre{display:none!important}
+body.mode-alumne .numero-objectiu{font-size:48px;min-width:96px;height:64px;padding:0 18px;border:0;background:rgba(255,255,255,.72);color:#10213f;border-radius:18px}
+body.mode-alumne #caixaObjectiuA .numero-objectiu{box-shadow:inset 0 0 0 1px #c7dcff}
+body.mode-alumne #caixaObjectiuB .numero-objectiu{box-shadow:inset 0 0 0 1px #c8ead6}
+body.mode-alumne .objectiu-cap>.boto{position:absolute;right:0;top:50%;transform:translateY(-50%);width:44px;height:44px;padding:0;border-radius:14px;font-size:0;background:rgba(255,255,255,.72)}
+body.mode-alumne .objectiu-cap>.boto:after{content:'↺';font-size:22px;color:#60758f}
+body.mode-alumne .estat-objectiu{position:absolute;left:0;top:50%;transform:translateY(-50%);width:42px;height:42px;padding:0;justify-content:center;border-radius:50%;font-size:0}
+body.mode-alumne .estat-objectiu:before{content:'✓';font-size:24px}
+body.mode-alumne .valor-posicional{border:0;background:rgba(255,255,255,.78);border-radius:18px;overflow:hidden}
+body.mode-alumne .cap-columna{font-size:12px;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.72)!important;color:#657891;padding:8px}
+body.mode-alumne .zona{min-height:112px;background:transparent!important}
+body.mode-alumne .signe{font-size:46px;color:#11213e;align-self:center}
+
+body.mode-alumne .pissarra-wrap{background:var(--pastel-w);border:1px solid var(--pastel-w-b);border-radius:22px;padding:16px;margin-top:0}
+body.mode-alumne .pissarra-cap{display:none!important}
+body.mode-alumne .pissarra{border:0;border-radius:18px;background:rgba(255,255,255,.82);overflow:hidden;min-height:180px}
+body.mode-alumne .pissarra .zona{min-height:150px}
+body.mode-alumne .transferencies{margin-top:12px;gap:10px}
+body.mode-alumne .transferencies .boto{font-size:0;width:54px;min-width:54px;height:48px;padding:0;border-radius:14px;background:rgba(255,255,255,.86);border:1px solid #dfc1cd}
+body.mode-alumne #portaA:after{content:'1';font-size:20px;font-weight:950;color:#2f6fc9}
+body.mode-alumne #portaB:after{content:'2';font-size:20px;font-weight:950;color:#148355}
+body.mode-alumne #netejaPissarra:after{content:'↺';font-size:22px;color:#64758b}
+body.mode-alumne #treuSeleccio:after{content:'−';font-size:24px;color:#a04e6e}
+body.mode-alumne .mini-guia{display:none!important}
+
+body.mode-alumne .part-inferior{grid-template-columns:1.45fr .55fr;gap:14px;margin-top:14px}
+body.mode-alumne .magatzem{background:var(--pastel-m);border:1px solid var(--pastel-m-b);border-radius:22px;padding:14px}
+body.mode-alumne .magatzem>strong,
+body.mode-alumne .magatzem>.petit,
+body.mode-alumne .barra-seleccio .petit{display:none!important}
+body.mode-alumne .magatzem-grid{gap:10px}
+body.mode-alumne .caixa-magatzem{background:rgba(255,255,255,.72);border:0;border-radius:16px;padding:10px}
+body.mode-alumne .caixa-magatzem>strong{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#786d43}
+body.mode-alumne .barra-seleccio{margin-top:10px;padding:0;background:transparent;border:0;justify-content:center}
+body.mode-alumne #estatSeleccio{font-size:16px;color:#665b37;font-weight:900}
+body.mode-alumne #desselecciona{font-size:0;width:44px;height:44px;padding:0;border-radius:14px;background:rgba(255,255,255,.8)}
+body.mode-alumne #desselecciona:after{content:'×';font-size:25px}
+
+body.mode-alumne .canvis{background:var(--pastel-c);border:1px solid var(--pastel-c-b);border-radius:22px;padding:14px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+body.mode-alumne .canvis h3,
+body.mode-alumne .canvis>.petit,
+body.mode-alumne #ajudaCanvi{display:none!important}
+body.mode-alumne .boto-canvi{margin:0;min-height:78px;border:0;border-radius:18px;background:rgba(255,255,255,.78);box-shadow:none;font-size:17px}
+body.mode-alumne .boto-canvi span:not(.unitat):not(.desena){font-size:17px}
+
+body.mode-alumne #pas1>.accions{justify-content:center;margin-top:16px}
+body.mode-alumne #posaExemple{display:none!important}
+body.mode-alumne #comprovaConstruccio{min-width:300px;min-height:56px;border-radius:18px;font-size:19px;box-shadow:none}
+body.mode-alumne #missatgeConstruccio{font-size:16px}
+
+body.mode-alumne .intro,
+body.mode-alumne .pissarra-sub,
+body.mode-alumne .petit{line-height:1.2}
+
+@media(max-width:760px){
+ body.mode-alumne .hero .operacio{font-size:40px;gap:10px}
+ body.mode-alumne .hero .caixa-resposta{width:56px;height:56px}
+ body.mode-alumne .linia-nombres{grid-template-columns:1fr!important;display:grid}
+ body.mode-alumne .signe{font-size:34px;text-align:center}
+ body.mode-alumne .part-inferior{grid-template-columns:1fr}
+ body.mode-alumne .numero-objectiu{font-size:40px}
+}
+
+body.mode-alumne #alumneSubBarra{display:none!important}
+body.mode-alumne #estatSeleccio{display:none!important}
+body.mode-alumne .barra-seleccio{min-height:44px}
+</style>
+</head>
+<body>
+
+<div id="login" class="login">
+  <div class="login-caixa">
+    <h2 style="margin-top:0">Accés</h2>
+    <div class="petit" style="margin-bottom:12px">Laboratori de càlcul</div>
+    <label>Usuari</label><input id="usuariLogin" autocomplete="username" value="Ffreda">
+    <label>Contrasenya</label><input id="contrasenyaLogin" type="password" autocomplete="current-password" value="f0nt-fr3d4">
+    <button id="entrar" class="boto primari amplada">Entrar</button>
+    <div id="missatgeLogin" class="missatge"></div>
+  </div>
+</div>
+
+<header class="capcalera">
+  <div class="marca"><span class="punt"></span>Laboratori de càlcul</div>
+  <div class="selector-estrategia">
+<button id="estrategiaDescomp" class="seg actiu">Descomposició</button>
+<button id="estrategiaSalts" class="seg">Salts</button>
+</div>
+  <div class="usuari"><div class="avatar">S</div><div><strong>Ffreda</strong><div class="petit">Usuari general</div></div></div>
+</header>
+
+<div id="alumneBarra" class="alumne-barra">
+  <div class="alumne-identitat">
+    <div id="alumneAvatar" class="alumne-avatar">A</div>
+    <div><div id="alumneNomBarra" class="alumne-nom">Alumne</div><div id="alumneSubBarra" class="alumne-progres">Activitat de càlcul</div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <div id="alumneComptador" class="alumne-comptador">Operació 1 de 3</div>
+    <button id="sortirVistaAlumne" class="alumne-sortir" type="button">🔒 Vista docent</button>
+  </div>
+</div>
+
+<div class="contenidor">
+<aside class="lateral lateral-focus">
+  <details class="panel-desplegable">
+    <summary>Opcions de l'activitat</summary>
+    <div class="panel-cos">
+      <div class="camp"><label>Operació</label><select id="tipusOperacio"><option value="+">Sumes</option><option value="-">Restes</option><option value="mixt">Mixtes</option></select></div>
+      <div class="camp"><label>Nivell numèric</label><select id="nivell"><option value="20">Fins a 20</option><option value="99" selected>Dues xifres · fins a 99</option></select></div>
+      <div class="camp"><label>Dificultat</label><select id="dificultat"><option value="general">General</option><option value="sense">Sense canvi</option><option value="amb">Amb canvi</option></select></div>
+    </div>
+  </details>
+
+
+  <details class="panel-desplegable" open>
+    <summary>Vista alumne</summary>
+    <div class="panel-cos gestor-alumnes">
+      <div class="camp" style="margin-bottom:2px">
+        <label>Alumne</label>
+        <select id="alumneSelect"><option value="">Selecciona un alumne</option></select>
+      </div>
+      <div class="fila-alumne">
+        <input id="nouAlumne" type="text" maxlength="40" placeholder="Nom de l'alumne">
+        <button id="afegirAlumne" class="mini-accio" type="button">Afegir</button>
+      </div>
+      <button id="eliminarAlumne" class="mini-accio perill" type="button">Eliminar alumne seleccionat</button>
+      <div class="camp" style="margin:5px 0 0">
+        <label>Nombre d'operacions</label>
+        <select id="quantitatOperacions">
+          <option value="1">1 operació</option><option value="2">2 operacions</option><option value="3" selected>3 operacions</option>
+          <option value="4">4 operacions</option><option value="5">5 operacions</option><option value="6">6 operacions</option>
+          <option value="8">8 operacions</option><option value="10">10 operacions</option>
+        </select>
+      </div>
+      <button id="comencarVistaAlumne" class="boto alumne amplada" type="button">▶ Començar en vista alumne</button>
+      <div id="resumAlumne" class="activitat-alumne-resum">Crea o selecciona un alumne. El seu progrés quedarà desat només en aquest navegador.</div>
+    </div>
+  </details>
+
+  <button id="novaOperacio" class="boto primari amplada">↻ Nova operació</button>
+
+  <details class="panel-desplegable">
+    <summary>Progrés</summary>
+    <div class="panel-cos">
+      <div class="fila-metrica"><span>Encerts</span><strong id="encerts">0</strong></div>
+      <div class="fila-metrica"><span>Intents</span><strong id="intents">0</strong></div>
+      <div class="fila-metrica"><span>Percentatge</span><strong id="percentatge">0%</strong></div>
+    </div>
+  </details>
+
+  <details class="panel-desplegable">
+    <summary>Ruta de treball</summary>
+    <nav class="ruta panel-cos">
+      <a href="#pas1" class="ruta-descomp actiu" data-fase="construccio"><span class="ruta-num">1</span><span>Construcció</span><span class="estat-fase" id="estat-construccio">○</span></a>
+      <a href="#pas2" class="ruta-descomp" data-fase="descomposicio"><span class="ruta-num">2</span><span>Descomposició</span><span class="estat-fase" id="estat-descomposicio">○</span></a>
+      <a href="#pas3" class="ruta-descomp" data-fase="posicio"><span class="ruta-num">3</span><span>Càlcul per posició</span><span class="estat-fase" id="estat-posicio">○</span></a>
+      <a href="#pas4" class="ruta-descomp" data-fase="recomposicio"><span class="ruta-num">4</span><span>Recomposició</span><span class="estat-fase" id="estat-recomposicio">○</span></a>
+      <a href="#salts1" class="ruta-salts"><span class="ruta-num">1</span><span>Nombre inicial</span><span></span></a>
+      <a href="#salts2" class="ruta-salts"><span class="ruta-num">2</span><span>Construeix els salts</span><span></span></a>
+      <a href="#salts3" class="ruta-salts"><span class="ruta-num">3</span><span>Comprova</span><span></span></a>
+    </nav>
+  </details>
+</aside>
+
+<main class="principal">
+
+<div id="guiaVisualAlumne" class="guia-visual-alumne" aria-live="polite">
+  <div id="guiaVisualPicto" class="guia-visual-picto" aria-hidden="true"></div>
+  <div class="guia-visual-text"><small>Què faig ara?</small><strong id="guiaVisualTitol">Construeix els nombres</strong><span id="guiaVisualSub">Fes-ho pas a pas.</span></div>
+  <div class="arasaac-credit" style="margin-left:auto;font-size:10px;color:#6f7c8c;white-space:nowrap">Pictogrames: ARASAAC · Sergio Palao</div>
+</div>
+<section class="targeta hero">
+  <div class="cap-fila"><h2>Operació actual</h2><button id="pista" class="boto">💡 Pista</button></div>
+  <div class="operacio"><span id="nombreA">34</span><span id="signeOperacio">+</span><span id="nombreB">27</span><span>=</span><div class="caixa-resposta">?</div></div>
+  <div class="seq"><span>1</span>Construeix <b>→</b><span>2</span>Descompon <b>→</b><span>3</span>Opera per posició <b>→</b><span>4</span>Recompon</div>
+  <button id="seguentOperacioAlumne" class="boto primari alumne-seguent" type="button">Següent operació →</button>
+</section>
+
+<section class="targeta pas bloc-descomp" id="pas1" data-plegable="1">
+  <div class="titol-pas"><span class="num-pas">1</span><strong>Construeix els dos nombres</strong></div>
+  <div class="intro">Selecciona diverses peces del magatzem i, després, fes clic a la columna on les vols col·locar. No cal arrossegar-les una per una.</div>
+
+  <div class="linia-nombres">
+    <div class="caixa-nombre" id="caixaObjectiuA">
+      <div class="objectiu-cap">
+        <div class="objectiu-identitat"><div><div class="objectiu-ordre">1r nombre</div><strong id="titolA" class="numero-objectiu">40</strong></div><span id="estatObjectiuA" class="estat-objectiu">✓ Correcte</span></div>
+        <button class="boto" data-neteja="A" aria-label="Neteja el primer nombre">Neteja</button>
+      </div>
+      <div class="valor-posicional">
+        <div class="columna"><div class="cap-columna">Desenes</div><div id="A_d" class="zona" data-zona="A" data-tipus="d"></div></div>
+        <div class="columna"><div class="cap-columna">Unitats</div><div id="A_u" class="zona" data-zona="A" data-tipus="u"></div></div>
+      </div>
+    </div>
+    <div class="signe" id="signeMig">+</div>
+    <div class="caixa-nombre" id="caixaObjectiuB">
+      <div class="objectiu-cap">
+        <div class="objectiu-identitat"><div><div class="objectiu-ordre">2n nombre</div><strong id="titolB" class="numero-objectiu">21</strong></div><span id="estatObjectiuB" class="estat-objectiu">✓ Correcte</span></div>
+        <button class="boto" data-neteja="B" aria-label="Neteja el segon nombre">Neteja</button>
+      </div>
+      <div class="valor-posicional">
+        <div class="columna"><div class="cap-columna">Desenes</div><div id="B_d" class="zona" data-zona="B" data-tipus="d"></div></div>
+        <div class="columna"><div class="cap-columna">Unitats</div><div id="B_u" class="zona" data-zona="B" data-tipus="u"></div></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="pissarra-wrap">
+    <div class="pissarra-cap">
+      <div>
+        <h3>Pissarra de càlcul</h3>
+        <div class="pissarra-sub" id="textPissarra">Porta-hi les peces per operar sense destruir els nombres originals.</div>
+      </div>
+      <div class="pissarra-valor">Valor: <span id="valorPissarra">0</span></div>
+    </div>
+    <div class="pissarra">
+      <div class="columna">
+        <div class="cap-columna">Desenes</div>
+        <div id="W_d" class="zona" data-zona="W" data-tipus="d"></div>
+      </div>
+      <div class="columna">
+        <div class="cap-columna">Unitats</div>
+        <div id="W_u" class="zona" data-zona="W" data-tipus="u"></div>
+      </div>
+    </div>
+    <div class="transferencies">
+      <button id="portaA" class="boto verd">Porta el primer nombre</button>
+      <button id="portaB" class="boto verd">Afegeix el segon nombre</button>
+      <button id="treuSeleccio" class="boto amagat">Treu peces seleccionades</button>
+      <button id="netejaPissarra" class="boto">Neteja la pissarra</button>
+    </div>
+    <div class="mini-guia" id="guiaPissarra"><b>Idea:</b><span>ajunta les peces a la pissarra i fes el canvi només quan tu decideixis.</span></div>
+  </div>
+
+  <div class="part-inferior">
+    <div class="magatzem">
+      <strong>Magatzem de peces</strong>
+      <div class="petit">Selecciona les peces amb un clic. Pots seleccionar-ne moltes abans de col·locar-les.</div>
+      <div class="magatzem-grid">
+        <div class="caixa-magatzem"><strong>Desenes</strong><div id="magatzemD" class="peces"></div></div>
+        <div class="caixa-magatzem"><strong>Unitats</strong><div id="magatzemU" class="peces"></div></div>
+      </div>
+      <div class="barra-seleccio">
+        <div><div class="petit">Selecció actual</div><div id="estatSeleccio" class="comptador-seleccio">Cap peça seleccionada</div></div>
+        <button id="desselecciona" class="boto">Desselecciona</button>
+      </div>
+    </div>
+
+    <div class="canvis">
+      <h3>Canvi d'unitats</h3>
+      <div class="petit">El laboratori no farà cap canvi automàtic. Selecciona les peces que vulguis transformar i prem tu mateix el botó del canvi.</div>
+      <button id="canviU_D" class="boto-canvi"><span class="unitat"></span><span>10 U</span><span>→</span><span>1 D</span><span class="desena"></span></button>
+      <button id="canviD_U" class="boto-canvi"><span class="desena"></span><span>1 D</span><span>→</span><span>10 U</span><span class="unitat"></span></button>
+      <div id="ajudaCanvi" class="petit" style="margin-top:9px">Quan vulguis fer un canvi, selecciona les peces i prem tu mateix el botó corresponent.</div>
+    </div>
+  </div>
+
+  <div class="accions"><button id="posaExemple" class="boto">Col·loca un exemple</button><button id="comprovaConstruccio" class="boto primari">✓ Comprova</button></div>
+  <div id="missatgeConstruccio" class="missatge"></div>
+</section>
+
+<section class="targeta pas bloc-descomp" id="pas2" data-plegable="1">
+  <div class="titol-pas"><span class="num-pas">2</span><strong>Descompon els nombres</strong></div>
+  <div class="intro">Escriu quantes desenes i unitats té cada nombre i, després, el valor de cada part.</div>
+  <div class="descomp-grid">
+    <div class="descomp-caixa">
+      <h4>Primer nombre</h4>
+      <div class="equacio"><span id="decA1"></span> = <input id="aD" class="entrada-mini" inputmode="numeric"> D + <input id="aU" class="entrada-mini" inputmode="numeric"> U</div>
+      <div class="equacio" style="margin-top:8px"><span id="decA2"></span> = <input id="aDV" class="entrada-mini" inputmode="numeric"> + <input id="aUV" class="entrada-mini" inputmode="numeric"></div>
+    </div>
+    <div class="descomp-caixa">
+      <h4>Segon nombre</h4>
+      <div class="equacio"><span id="decB1"></span> = <input id="bD" class="entrada-mini" inputmode="numeric"> D + <input id="bU" class="entrada-mini" inputmode="numeric"> U</div>
+      <div class="equacio" style="margin-top:8px"><span id="decB2"></span> = <input id="bDV" class="entrada-mini" inputmode="numeric"> + <input id="bUV" class="entrada-mini" inputmode="numeric"></div>
+    </div>
+  </div>
+  <div class="accions"><button id="comprovaDescomposicio" class="boto primari">Comprova la descomposició</button></div>
+  <div id="missatgeDescomposicio" class="missatge"></div>
+</section>
+
+<section class="targeta pas bloc-descomp" id="pas3" data-plegable="1">
+  <div class="titol-pas"><span class="num-pas">3</span><strong>Opera per valor posicional</strong></div>
+  <div class="intro">Opera les desenes amb les desenes i les unitats amb les unitats. Si cal, fes el canvi amb les peces.</div>
+  <div class="descomp-grid">
+    <div class="calc-caixa"><h4>Desenes</h4><div class="equacio"><span id="exprD"></span> = <input id="calcD" class="entrada-mini" inputmode="numeric"></div></div>
+    <div class="calc-caixa"><h4>Unitats</h4><div class="equacio"><span id="exprU"></span> = <input id="calcU" class="entrada-mini" inputmode="numeric"></div></div>
+  </div>
+  <div id="avisCanvi" class="avís-canvi"></div>
+  <div class="accions"><button id="comprovaPosicio" class="boto primari">Comprova el càlcul</button></div>
+  <div id="missatgePosicio" class="missatge"></div>
+</section>
+
+<section class="targeta pas bloc-descomp" id="pas4" data-plegable="1">
+  <div class="titol-pas"><span class="num-pas">4</span><strong>Recompon el resultat</strong></div>
+  <div class="intro">Quan hagis acabat a la pissarra, porta la representació final al resultat i escriu el nombre. Si encara hi ha 10 unitats o més, primer has de fer el canvi.</div>
+  <div class="resultat-grid">
+    <div class="caixa-nombre">
+      <div class="titol-caixa"><strong>Resultat amb peces</strong><button class="boto" data-neteja="R">Neteja</button></div>
+      <div class="valor-posicional">
+        <div class="columna"><div class="cap-columna">Desenes</div><div id="R_d" class="zona" data-zona="R" data-tipus="d"></div></div>
+        <div class="columna"><div class="cap-columna">Unitats</div><div id="R_u" class="zona" data-zona="R" data-tipus="u"></div></div>
+      </div>
+    </div>
+    <div class="caixa-nombre">
+      <div class="final-num"><span id="exprFinal"></span><input id="respostaFinal" class="entrada-final" inputmode="numeric"></div>
+    </div>
+  </div>
+  <div id="bloqueigFinal" class="bloqueig amagat"></div>
+  <div class="accions"><button id="portaResultat" class="boto verd">Porta la pissarra al resultat</button><button id="buidaTot" class="boto">Buida-ho tot</button><button id="desfer" class="boto">↶ Desfés</button><button id="comprovaFinal" class="boto primari">✓ Comprova el resultat</button></div>
+  <div id="missatgeFinal" class="missatge"></div>
+</section>
+
+<section class="recta-card bloc-salts" id="salts1" data-plegable="1">
+  <div class="titol-pas"><span class="num-pas">1</span><strong>Col·loca el primer nombre</strong></div>
+  <div class="intro">Abans de fer cap salt, situa el primer nombre a la recta numèrica. Les marques de 5 en 5 són la teva referència.</div>
+  <div class="inici-recta">
+    <div id="fitxaInici" class="fitxa-inici" draggable="true">34</div>
+    <div class="instruccio-inici">Arrossega la fitxa fins a la seva posició o toca la fitxa i després toca la recta.</div>
+  </div>
+  <div id="missatgeInici" class="missatge-inici"></div>
+</section>
+<section class="recta-card bloc-salts recta-persistent" id="saltsRecta">
+  <div class="recta-scroll" id="rectaScroll"><div class="recta-track" id="rectaTrack"><div class="recta-wrap" id="rectaWrap"><div id="rectaNumerica" class="recta"></div></div></div></div>
+</section>
+<section class="recta-card bloc-salts" id="salts2" data-plegable="1">
+  <div class="recta-cap"><div><div class="titol-pas"><span class="num-pas">2</span><strong>Construeix els salts</strong></div><div class="salts-help" id="textSalts"></div></div><button id="reiniciaSalts" class="boto">Reinicia els salts</button></div>
+  
+  <div class="salts-controls">
+    <div class="salts-panel"><h4>Salts disponibles</h4><div class="salt-buttons" id="botonsSalts">
+      <button class="boto" data-salt="10">+10</button><button class="boto" data-salt="5">+5</button><button class="boto" data-salt="2">+2</button><button class="boto" data-salt="1">+1</button>
+      <button class="boto" data-salt="-10">−10</button><button class="boto" data-salt="-5">−5</button><button class="boto" data-salt="-2">−2</button><button class="boto" data-salt="-1">−1</button>
+    </div><div class="salts-help">En una suma avances; en una resta retrocedeixes. Pots combinar salts grans i petits.</div></div>
+    <div class="salts-panel"><h4>Els teus salts</h4><div id="llistaSalts" class="salt-list"></div><div class="salt-current">Has arribat a <strong id="saltActual">34</strong></div><div class="accions"><button id="desferSalt" class="boto">↶ Desfés l'últim salt</button></div></div>
+  </div>
+</section>
+<section class="recta-card bloc-salts" id="salts3" data-plegable="1">
+  <div class="titol-pas"><span class="num-pas">3</span><strong>Comprova el resultat</strong></div>
+  <div class="intro">Quan els salts representin tot el segon nombre, escriu el punt d'arribada.</div>
+  <div class="salt-answer"><span id="exprSalts"></span><input id="respostaSalts" inputmode="numeric"></div>
+  <div class="accions" style="justify-content:center"><button id="comprovaSalts" class="boto primari">Comprova els salts</button></div><div id="missatgeSalts" class="missatge"></div>
+</section>
+
+<section class="alumne-final" id="alumneFinal">
+  <div class="gran">✓</div>
+  <h2>Activitat completada</h2>
+  <p id="alumneFinalText">Has completat totes les operacions.</p>
+  <button id="tornarDocentFinal" class="boto primari" type="button">Tornar a la vista docent</button>
+</section>
+</main>
+</div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   ESTRUCTURA INTERNA
+   1. Estat: dades de l'activitat
+   2. Selecció: peces seleccionades
+   3. Manipulatiu: moviment i canvis
+   4. Descomposició: comprovacions
+   5. Progrés: intents i encerts
+   ========================================================= */
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+const Estat = {
+  a:34, b:27, operacio:"+",
+  peces:{
+    A:{d:0,u:0},
+    B:{d:0,u:0},
+    W:{d:0,u:0},
+    R:{d:0,u:0}
+  },
+  seleccio:new Set(),
+  ma:{d:0,u:0},
+  historial:[],
+  encerts:0,
+  intents:0,
+  fases:{
+    construccio:false,
+    descomposicio:false,
+    posicio:false,
+    recomposicio:false
+  },
+  estrategia:"descomposicio",
+  salts:[],
+  iniciColocat:false,
+  fitxaIniciSeleccionada:false,
+  pissarraPrimer:false,
+  pissarraSegon:false
+};
+
+const Util = {
+  valorZona(z){ return Estat.peces[z].d*10 + Estat.peces[z].u; },
+  clau(origen,tipus,index){ return `${origen}|${tipus}|${index}`; },
+  parts(clau){
+    const [origen,tipus,index]=clau.split("|");
+    return {origen,tipus,index:Number(index)};
+  },
+  missatge(id,text,ok=null){
+    const el=$(id); if(!el)return;
+    el.textContent=text;
+    el.className="missatge"+(ok===true?" correcte":ok===false?" error":"");
+  },
+  desaHistorial(){
+    Estat.historial.push(JSON.stringify({
+      peces:Estat.peces,
+      fases:Estat.fases,
+      ma:Estat.ma
+    }));
+    if(Estat.historial.length>40)Estat.historial.shift();
+  }
+};
+
+const Seleccio = {
+  buida(){ Estat.seleccio.clear(); Estat.ma={d:0,u:0}; UI.render(); },
+  commuta(clau){
+    Estat.seleccio.has(clau)?Estat.seleccio.delete(clau):Estat.seleccio.add(clau);
+    UI.render();
+  },
+  elements(){
+    const items=[...Estat.seleccio].map(Util.parts);
+    for(let i=0;i<Estat.ma.d;i++)items.push({origen:"ma",tipus:"d",index:i});
+    for(let i=0;i<Estat.ma.u;i++)items.push({origen:"ma",tipus:"u",index:i});
+    return items;
+  },
+  delTipus(t){ return this.elements().filter(x=>x.tipus===t); },
+  origenUnic(){
+    const items=this.elements();
+    const origens=[...new Set(items.map(x=>x.origen))];
+    return origens.length===1?origens[0]:null;
+  }
+};
+
+const FeedbackCursor = {
+  x:0,y:0,forcat:null,timer:null,
+  inicia(){
+    document.addEventListener("pointermove",e=>{this.x=e.clientX;this.y=e.clientY;this.posiciona();},{passive:true});
+    document.addEventListener("pointerdown",e=>{this.x=e.clientX;this.y=e.clientY;this.posiciona();},{passive:true});
+    this.actualitza();
+  },
+  posiciona(){
+    const el=$("#cursorPeces"); if(!el)return;
+    el.style.left=this.x+"px"; el.style.top=this.y+"px";
+  },
+  contingutPeca(tipus,n){
+    const cls=tipus==="d"?"mini-desena":"mini-unitat";
+    const nom=tipus==="d"?"desena":"unitat";
+    return `<span class="cursor-grup"><span class="${cls}" aria-label="${nom}"></span><span class="multiplicador">×${n}</span></span>`;
+  },
+  actualitza(){
+    const el=$("#cursorPeces"); if(!el)return;
+    let d=0,u=0,etiqueta="";
+    if(this.forcat){({d,u,etiqueta}=this.forcat)}
+    else{
+      const items=Seleccio.elements();
+      d=items.filter(x=>x.tipus==="d").length;
+      u=items.filter(x=>x.tipus==="u").length;
+    }
+    if(!d&&!u){el.classList.remove("visible");el.innerHTML="";return;}
+    el.innerHTML=(d?this.contingutPeca("d",d):"")+(u?this.contingutPeca("u",u):"")+(etiqueta?`<span class="cursor-transformacio">${etiqueta}</span>`:"");
+    el.classList.add("visible"); this.posiciona();
+  },
+  mostraCanvi(tipus,n,etiqueta){
+    clearTimeout(this.timer);
+    this.forcat={d:tipus==="d"?n:0,u:tipus==="u"?n:0,etiqueta};
+    this.actualitza();
+    this.timer=setTimeout(()=>{this.forcat=null;this.actualitza()},1050);
+  },
+  marcaNovaPeca(zona,tipus){
+    requestAnimationFrame(()=>{
+      const cont=$("#"+zona+"_"+tipus); if(!cont)return;
+      const peces=cont.querySelectorAll(".peca"); const p=peces[peces.length-1];
+      if(p){p.classList.add("canvi-nou");setTimeout(()=>p.classList.remove("canvi-nou"),850)}
+    });
+  }
+};
+
+const Manipulatiu = {
+  creaPeca(tipus,origen,index){
+    const el=document.createElement("div");
+    el.className=`peca ${tipus==="d"?"desena":"unitat"}`;
+    const clau=Util.clau(origen,tipus,index);
+    if(Estat.seleccio.has(clau))el.classList.add("seleccionada");
+    el.dataset.clau=clau;
+    el.title=tipus==="d"?"Desena":"Unitat";
+    el.addEventListener("click",e=>{
+      e.stopPropagation();
+      Seleccio.commuta(clau);
+    });
+    return el;
+  },
+
+  mouSeleccio(zonaDesti,tipusDesti){
+    const items=Seleccio.delTipus(tipusDesti);
+    if(!items.length)return;
+
+    Util.desaHistorial();
+    const perOrigen={magatzem:0,ma:0,A:0,B:0,W:0,R:0};
+    items.forEach(x=>perOrigen[x.origen]++);
+
+    // Les peces del magatzem són una reserva: creen peces a la zona de destí.
+    Estat.peces[zonaDesti][tipusDesti]+=(perOrigen.magatzem||0)+(perOrigen.ma||0);
+
+    // Les peces que ja són en una zona es mouen realment.
+    for(const origen of ["A","B","W","R"]){
+      if(origen===zonaDesti)continue;
+      const quantitat=Math.min(perOrigen[origen]||0,Estat.peces[origen][tipusDesti]);
+      Estat.peces[origen][tipusDesti]-=quantitat;
+      Estat.peces[zonaDesti][tipusDesti]+=quantitat;
+    }
+
+    // La selecció d'aquest tipus ja s'ha utilitzat.
+    [...Estat.seleccio].forEach(k=>{
+      if(Util.parts(k).tipus===tipusDesti)Estat.seleccio.delete(k);
+    });
+    Estat.ma[tipusDesti]=0;
+    UI.render();
+  },
+
+  potCanviarU_D(){
+    const items=Seleccio.elements();
+    const origens=[...new Set(items.map(x=>x.origen))];
+    return items.length===10 && items.every(x=>x.tipus==="u") && origens.length===1;
+  },
+
+  potCanviarD_U(){
+    const items=Seleccio.elements();
+    return items.length===1 && items[0].tipus==="d";
+  },
+
+  canviU_D(){
+    const items=Seleccio.elements();
+    if(items.length!==10 || !items.every(x=>x.tipus==="u")){
+      Util.missatge("#missatgeConstruccio","Per fer aquest canvi has de seleccionar exactament 10 unitats.",false);
+      return;
+    }
+
+    const origens=[...new Set(items.map(x=>x.origen))];
+    if(origens.length!==1){
+      Util.missatge("#missatgeConstruccio","Les 10 unitats han de sortir del mateix lloc: magatzem, pissarra o una mateixa zona.",false);
+      return;
+    }
+
+    const origen=origens[0];
+    Util.desaHistorial();
+
+    if(["A","B","W","R"].includes(origen)){
+      if(Estat.peces[origen].u<10)return;
+      Estat.peces[origen].u-=10;
+      Estat.peces[origen].d+=1;
+      Estat.seleccio.clear();
+      Estat.ma={d:0,u:0};
+      UI.render();
+      FeedbackCursor.mostraCanvi("d",1,"10 U → 1 D");
+      FeedbackCursor.marcaNovaPeca(origen,"d");
+      Util.missatge("#missatgeConstruccio",`Canvi fet ${UI.locatiuZona(origen)}: 10 unitats s'han convertit en 1 desena.`,true);
+      return;
+    }
+
+    // Magatzem o mà: la nova desena queda preparada per col·locar.
+    Estat.seleccio.clear();
+    Estat.ma={d:1,u:0};
+    UI.render();
+    FeedbackCursor.mostraCanvi("d",1,"10 U → 1 D");
+    Util.missatge("#missatgeConstruccio","Canvi fet: ara tens 1 desena seleccionada. Fes clic a la columna de desenes on la vulguis col·locar.",true);
+  },
+
+  canviD_U(){
+    const items=Seleccio.elements();
+    if(items.length!==1 || items[0].tipus!=="d"){
+      Util.missatge("#missatgeConstruccio","Per fer aquest canvi has de seleccionar exactament 1 desena.",false);
+      return;
+    }
+    const origen=items[0].origen;
+    Util.desaHistorial();
+
+    if(["A","B","W","R"].includes(origen)){
+      if(Estat.peces[origen].d<1)return;
+      Estat.peces[origen].d-=1;
+      Estat.peces[origen].u+=10;
+      Estat.seleccio.clear(); Estat.ma={d:0,u:0};
+      UI.render();
+      FeedbackCursor.mostraCanvi("u",10,"1 D → 10 U");
+      FeedbackCursor.marcaNovaPeca(origen,"u");
+      Util.missatge("#missatgeConstruccio",`Canvi fet ${UI.locatiuZona(origen)}: 1 desena s'ha convertit en 10 unitats.`,true);
+      return;
+    }
+
+    Estat.seleccio.clear();
+    Estat.ma={d:0,u:10};
+    UI.render();
+    FeedbackCursor.mostraCanvi("u",10,"1 D → 10 U");
+    Util.missatge("#missatgeConstruccio","Canvi fet: ara tens 10 unitats seleccionades. Fes clic a la columna d'unitats on les vulguis col·locar.",true);
+  }
+
+};
+
+
+const GuiaVisual = {
+  pictos:{
+    construir:`<img src="https://static.arasaac.org/pictograms/2713/2713_500.png" alt="Construir" loading="eager">`,
+    descompondre:`<img src="https://static.arasaac.org/pictograms/8077/8077_500.png" alt="Classificar i separar" loading="eager">`,
+    calcular:`<img src="https://static.arasaac.org/pictograms/5868/5868_500.png" alt="Suma i càlcul" loading="eager">`,
+    resultat:`<img src="https://static.arasaac.org/pictograms/4484/4484_500.png" alt="Escriure el resultat" loading="eager">`,
+    salts:`<img src="https://static.arasaac.org/pictograms/12007/12007_500.png" alt="Fer salts" loading="eager">`
+  },
+
+  posa(clau,titol,sub){
+    const p=$("#guiaVisualPicto"),t=$("#guiaVisualTitol"),s=$("#guiaVisualSub");
+    if(!p||!t||!s)return;
+    p.innerHTML=this.pictos[clau]||this.pictos.calcular;t.textContent=titol;s.textContent=sub||"";
+  },
+  actualitza(){
+    if(!document.body.classList.contains("mode-alumne"))return;
+    if(document.body.classList.contains("activitat-acabada")){this.posa("be","Activitat acabada","Ja has fet totes les operacions.");return;}
+    if(document.body.classList.contains("exercici-resolt")){this.posa("be","Molt bé!","Prem «Següent operació» quan estiguis preparat.");return;}
+    if(Estat.estrategia==="salts"){
+      if(!Estat.iniciColocat){this.posa("colocar","Col·loca el primer nombre","Busca el seu lloc a la recta numèrica.");return;}
+      if(Math.abs(Salts.suma())!==Estat.b){this.posa("salts","Fes els salts","Avança o retrocedeix fins representar el segon nombre.");return;}
+      this.posa("escriure","Escriu el resultat","Mira on has arribat i escriu el nombre.");return;
+    }
+    if(!Estat.fases.construccio){this.posa("construir","Construeix els nombres","Representa cada nombre amb desenes i unitats.");return;}
+    if(!Estat.fases.descomposicio){this.posa("descompondre","Descompon","Separa desenes i unitats.");return;}
+    if(!Estat.fases.posicio){this.posa("calcular","Calcula","Opera desenes amb desenes i unitats amb unitats.");return;}
+    this.posa("resultat","Forma el resultat","Recompon i escriu el resultat final.");
+  }
+};
+
+const GestorFases = {
+  reinicia(){
+    Estat.fases={construccio:false,descomposicio:false,posicio:false,recomposicio:false};
+    this.render();
+    GuiaVisual.actualitza();
+  },
+  completa(fase){
+    Estat.fases[fase]=true;
+    this.render();
+    GuiaVisual.actualitza();
+  },
+  render(){
+    const map={
+      construccio:"#estat-construccio",
+      descomposicio:"#estat-descomposicio",
+      posicio:"#estat-posicio",
+      recomposicio:"#estat-recomposicio"
+    };
+    Object.entries(map).forEach(([fase,sel])=>{
+      const el=$(sel); if(!el)return;
+      const feta=!!Estat.fases[fase];
+      el.textContent=feta?"✓":"○";
+      el.classList.toggle("feta",feta);
+    });
+  }
+};
+
+
+const Pissarra = {
+  neteja(){
+    Util.desaHistorial();
+    Estat.peces.W={d:0,u:0};
+    Estat.pissarraPrimer=false;
+    Estat.pissarraSegon=false;
+    Estat.seleccio.clear();
+    Estat.ma={d:0,u:0};
+    UI.render();
+  },
+
+  portaPrimer(){
+    Util.desaHistorial();
+    Estat.peces.W={d:Estat.peces.A.d,u:Estat.peces.A.u};
+    Estat.pissarraPrimer=true;
+    Estat.pissarraSegon=false;
+    Estat.seleccio.clear();
+    Estat.ma={d:0,u:0};
+    UI.render();
+    Util.missatge("#missatgeConstruccio","Has portat el primer nombre a la pissarra.",true);
+  },
+
+  portaSegon(){
+    if(!Estat.pissarraPrimer){
+      Util.missatge("#missatgeConstruccio","Primer porta el primer nombre a la pissarra.",false);
+      return;
+    }
+    if(Estat.operacio!=="+"){
+      Util.missatge("#missatgeConstruccio","En una resta, el segon nombre és la quantitat que has de treure. Selecciona peces a la pissarra i fes servir «Treu peces seleccionades».",null);
+      return;
+    }
+    if(Estat.pissarraSegon){
+      Util.missatge("#missatgeConstruccio","El segon nombre ja és a la pissarra.",null);
+      return;
+    }
+    Util.desaHistorial();
+    Estat.peces.W.d+=Estat.peces.B.d;
+    Estat.peces.W.u+=Estat.peces.B.u;
+    Estat.pissarraSegon=true;
+    Estat.seleccio.clear();
+    Estat.ma={d:0,u:0};
+    UI.render();
+    Util.missatge("#missatgeConstruccio","Has afegit el segon nombre a la pissarra. Ara pots decidir si cal fer algun canvi.",true);
+  },
+
+  treuSeleccio(){
+    const items=Seleccio.elements().filter(x=>x.origen==="W");
+    if(!items.length){
+      Util.missatge("#missatgeConstruccio","Selecciona a la pissarra les peces que vulguis treure.",false);
+      return;
+    }
+    Util.desaHistorial();
+    const d=items.filter(x=>x.tipus==="d").length;
+    const u=items.filter(x=>x.tipus==="u").length;
+    Estat.peces.W.d=Math.max(0,Estat.peces.W.d-d);
+    Estat.peces.W.u=Math.max(0,Estat.peces.W.u-u);
+    Estat.seleccio.clear();
+    UI.render();
+    Util.missatge("#missatgeConstruccio",`Has tret ${d} desenes i ${u} unitats de la pissarra.`,true);
+  },
+
+  portaResultat(){
+    Util.desaHistorial();
+    Estat.peces.R={d:Estat.peces.W.d,u:Estat.peces.W.u};
+    Estat.seleccio.clear();
+    Estat.ma={d:0,u:0};
+    UI.render();
+    Util.missatge("#missatgeFinal","Has portat la representació de la pissarra al resultat.",true);
+  }
+};
+
+
+const Focus = {
+  idsDescomp:["pas1","pas2","pas3","pas4"],
+  idsSalts:["salts1","salts2","salts3"],
+
+  prepara(){
+    $$("[data-plegable]").forEach(sec=>{
+      const titol=sec.querySelector(".titol-pas");
+      if(!titol || titol.querySelector(".boto-plega")) return;
+      const b=document.createElement("button");
+      b.type="button";
+      b.className="boto-plega";
+      b.setAttribute("aria-label","Obre o tanca aquest pas");
+      b.innerHTML="<span>Mostra o amaga</span>";
+      b.onclick=(e)=>{e.stopPropagation();this.toggle(sec.id);};
+      titol.appendChild(b);
+    });
+    this.reinicia();
+  },
+
+  reinicia(){
+    this.idsDescomp.forEach((id,i)=>$("#"+id)?.classList.toggle("plegada",i!==0));
+    this.idsSalts.forEach((id,i)=>$("#"+id)?.classList.toggle("plegada",i!==0));
+  },
+
+  obrir(id,scroll=true){
+    const grup=this.idsDescomp.includes(id)?this.idsDescomp:this.idsSalts;
+    grup.forEach(x=>$("#"+x)?.classList.toggle("plegada",x!==id));
+    if(scroll) setTimeout(()=>$("#"+id)?.scrollIntoView({behavior:"smooth",block:"start"}),40);
+  },
+
+  toggle(id){
+    const sec=$("#"+id);
+    if(!sec)return;
+    if(sec.classList.contains("plegada")) this.obrir(id,false);
+    else sec.classList.add("plegada");
+  }
+};
+
+const Calcul = {
+  resultat(){ return Estat.operacio==="+"?Estat.a+Estat.b:Estat.a-Estat.b; },
+
+  necessitaCanvi(){
+    return Estat.operacio==="+" ? (Estat.a%10+Estat.b%10>=10) : (Estat.a%10<Estat.b%10);
+  },
+
+  posicioEsperada(){
+    const aD=Math.floor(Estat.a/10)*10, bD=Math.floor(Estat.b/10)*10;
+    const aU=Estat.a%10, bU=Estat.b%10;
+    if(Estat.operacio==="+")return {d:aD+bD,u:aU+bU};
+    if(aU>=bU)return {d:aD-bD,u:aU-bU};
+    // En la resta amb canvi, una desena del primer nombre es transforma en 10 unitats.
+    return {d:(Math.floor(Estat.a/10)-1)*10-bD,u:(aU+10)-bU};
+  },
+
+  comprovaConstruccio(){
+    const okA=Estat.peces.A.d===Math.floor(Estat.a/10) && Estat.peces.A.u===Estat.a%10;
+    const okB=Estat.peces.B.d===Math.floor(Estat.b/10) && Estat.peces.B.u===Estat.b%10;
+    const ok=okA&&okB;
+    UI.renderObjectius();
+    if(ok){
+      GestorFases.completa("construccio");
+      Focus.obrir("pas2");
+    }
+    let missatge="";
+    if(ok) missatge="✓ Els dos nombres estan ben construïts.";
+    else if(!okA&&!okB) missatge="Revisa els dos nombres: cada desena i cada unitat han d'estar a la seva columna.";
+    else if(!okA) missatge=`Revisa ${Estat.a}: ha de tenir ${Math.floor(Estat.a/10)} D i ${Estat.a%10} U.`;
+    else missatge=`Revisa ${Estat.b}: ha de tenir ${Math.floor(Estat.b/10)} D i ${Estat.b%10} U.`;
+    Util.missatge("#missatgeConstruccio",missatge,ok);
+  },
+
+  comprovaDescomposicio(){
+    const ok=
+      Number($("#aD").value)===Math.floor(Estat.a/10) &&
+      Number($("#aU").value)===Estat.a%10 &&
+      Number($("#aDV").value)===Math.floor(Estat.a/10)*10 &&
+      Number($("#aUV").value)===Estat.a%10 &&
+      Number($("#bD").value)===Math.floor(Estat.b/10) &&
+      Number($("#bU").value)===Estat.b%10 &&
+      Number($("#bDV").value)===Math.floor(Estat.b/10)*10 &&
+      Number($("#bUV").value)===Estat.b%10;
+    if(ok){
+      GestorFases.completa("descomposicio");
+      Focus.obrir("pas3");
+    }
+    Util.missatge("#missatgeDescomposicio",ok?"Descomposició correcta.":"Revisa les desenes, les unitats i el valor de cada part.",ok);
+  },
+
+  comprovaPosicio(){
+    const p=this.posicioEsperada();
+    const ok=Number($("#calcD").value)===p.d && Number($("#calcU").value)===p.u;
+    if(!ok){
+      Util.missatge("#missatgePosicio","Revisa el càlcul de desenes i unitats.",false);
+      return;
+    }
+    GestorFases.completa("posicio");
+    Focus.obrir("pas4");
+    Util.missatge("#missatgePosicio",this.necessitaCanvi()?"Càlcul correcte. Ara representa també el canvi amb les peces.":"Càlcul correcte. Ja pots recompondre el resultat.",true);
+  },
+
+  comprovaFinal(){
+    const esperat=this.resultat();
+    const escrit=Number($("#respostaFinal").value);
+    const peces=Util.valorZona("R");
+
+    if(Estat.peces.R.u>=10){
+      $("#bloqueigFinal").classList.remove("amagat");
+      $("#bloqueigFinal").textContent="Encara hi ha 10 unitats o més al resultat. Selecciona 10 unitats del resultat i fes el canvi «10 U → 1 D».";
+      Util.missatge("#missatgeFinal","El resultat encara no està normalitzat en desenes i unitats.",false);
+      return;
+    }
+    $("#bloqueigFinal").classList.add("amagat");
+
+    const ok=(escrit===esperat && peces===esperat);
+    if(AlumneManager.sessio){
+      AlumneManager.registraIntent(ok);
+    }else{
+      Estat.intents++;
+      if(ok)Estat.encerts++;
+      localStorage.setItem("lab_encerts",Estat.encerts);
+      localStorage.setItem("lab_intents",Estat.intents);
+      UI.renderProgres();
+    }
+    if(ok){
+      GestorFases.completa("recomposicio");
+      AlumneManager.correcte();
+    }
+
+    Util.missatge("#missatgeFinal",ok?`Molt bé! ${Estat.a} ${Estat.operacio} ${Estat.b} = ${esperat}.`:"El nombre escrit i les peces del resultat han de representar el mateix valor.",ok);
+  }
+};
+
+const UI = {
+  nomZona(z){return z==="A"?"el primer nombre":z==="B"?"el segon nombre":z==="W"?"la pissarra":"el resultat";},
+  locatiuZona(z){return z==="A"?"al primer nombre":z==="B"?"al segon nombre":z==="W"?"a la pissarra":"al resultat";},
+
+  renderMagatzem(){
+    $("#magatzemD").innerHTML="";$("#magatzemU").innerHTML="";
+    for(let i=0;i<12;i++)$("#magatzemD").appendChild(Manipulatiu.creaPeca("d","magatzem",i));
+    for(let i=0;i<24;i++)$("#magatzemU").appendChild(Manipulatiu.creaPeca("u","magatzem",i));
+  },
+
+  renderZones(){
+    for(const z of ["A","B","W","R"]){
+      for(const t of ["d","u"]){
+        const el=$("#"+z+"_"+t);el.innerHTML="";
+        for(let i=0;i<Estat.peces[z][t];i++)el.appendChild(Manipulatiu.creaPeca(t,z,i));
+      }
+    }
+    this.renderObjectius();
+  },
+
+  renderSeleccio(){
+    const items=Seleccio.elements();
+    const d=items.filter(x=>x.tipus==="d").length,u=items.filter(x=>x.tipus==="u").length;
+    const origen=Seleccio.origenUnic();
+    let lloc="";
+    if(origen==="ma")lloc=" · preparada per col·locar";
+    else if(origen&&origen!=="magatzem")lloc=" · "+this.nomZona(origen);
+    $("#estatSeleccio").textContent=items.length
+      ? `${items.length} peces · ${d} D · ${u} U${lloc}`
+      : "Cap peça seleccionada";
+
+    // No s'analitza ni s'activa automàticament cap canvi.
+    // L'alumne decideix quan vol provar de transformar les peces.
+    $("#ajudaCanvi").textContent="Quan hagis seleccionat les peces, decideix tu si vols fer el canvi.";
+    FeedbackCursor.actualitza();
+  },
+
+  renderObjectius(){
+    const correcteA=Estat.peces.A.d===Math.floor(Estat.a/10) && Estat.peces.A.u===Estat.a%10;
+    const correcteB=Estat.peces.B.d===Math.floor(Estat.b/10) && Estat.peces.B.u===Estat.b%10;
+    $("#caixaObjectiuA")?.classList.toggle("objectiu-correcte",correcteA);
+    $("#caixaObjectiuB")?.classList.toggle("objectiu-correcte",correcteB);
+  },
+
+  renderOperacio(){
+    $("#nombreA").textContent=Estat.a;$("#nombreB").textContent=Estat.b;
+    $("#signeOperacio").textContent=Estat.operacio;$("#signeMig").textContent=Estat.operacio;
+    $("#titolA").textContent=Estat.a;$("#titolB").textContent=Estat.b;
+    $("#decA1").textContent=$("#decA2").textContent=Estat.a;
+    $("#decB1").textContent=$("#decB2").textContent=Estat.b;
+    if(Estat.operacio==="-" && Estat.a%10<Estat.b%10){
+      $("#exprD").textContent=`${(Math.floor(Estat.a/10)-1)*10} - ${Math.floor(Estat.b/10)*10}`;
+      $("#exprU").textContent=`${Estat.a%10+10} - ${Estat.b%10}`;
+    }else{
+      $("#exprD").textContent=`${Math.floor(Estat.a/10)*10} ${Estat.operacio} ${Math.floor(Estat.b/10)*10}`;
+      $("#exprU").textContent=`${Estat.a%10} ${Estat.operacio} ${Estat.b%10}`;
+    }
+    $("#exprFinal").textContent=`${Estat.a} ${Estat.operacio} ${Estat.b} =`;
+
+    $("#valorPissarra").textContent=Util.valorZona("W");
+    $("#portaB").textContent=Estat.operacio==="+"?"Afegeix el segon nombre":"Prepara la resta";
+    $("#treuSeleccio").classList.toggle("amagat",Estat.operacio==="+");
+    $("#textPissarra").textContent=Estat.operacio==="+"
+      ?"Porta-hi els dos nombres, ajunta les peces i transforma-les quan tu decideixis."
+      :"Porta-hi el primer nombre. Després treu la quantitat del segon nombre; si cal, descompon una desena.";
+    $("#guiaPissarra").innerHTML=Estat.operacio==="+"
+      ?"<b>Idea:</b><span>ajunta les dues quantitats a la pissarra. Si reuneixes 10 unitats, selecciona-les i fes tu mateix el canvi a 1 desena.</span>"
+      :"<b>Idea:</b><span>treu de la pissarra les desenes i unitats del segon nombre. Si no tens prou unitats, transforma 1 desena en 10 unitats.</span>";
+    $("#avisCanvi").textContent=Calcul.necessitaCanvi()
+      ? (Estat.operacio==="+"?"Les unitats arriben a 10 o més. Cal convertir 10 unitats en 1 desena abans d'acabar.":"No hi ha prou unitats al primer nombre. Cal convertir 1 desena en 10 unitats.")
+      : "En aquesta operació no cal fer cap canvi d'unitats.";
+  },
+
+  renderProgres(){
+    $("#encerts").textContent=Estat.encerts;$("#intents").textContent=Estat.intents;
+    $("#percentatge").textContent=Estat.intents?Math.round(Estat.encerts/Estat.intents*100)+"%":"0%";
+  },
+
+  render(){
+    this.renderMagatzem();this.renderZones();this.renderSeleccio();this.renderOperacio();this.renderProgres();GestorFases.render();
+  }
+};
+
+
+const Salts = {
+  reinicia(){
+    Estat.salts=[];
+    Estat.pissarraPrimer=false;
+    Estat.pissarraSegon=false;
+    Estat.iniciColocat=false;
+    Estat.fitxaIniciSeleccionada=false;
+    $("#respostaSalts").value="";
+    Util.missatge("#missatgeSalts","");
+    $("#missatgeInici").textContent="";
+    $("#missatgeInici").className="missatge-inici";
+    this.render();
+    Focus.obrir("salts1",false);
+  },
+  actual(){return Estat.a+Estat.salts.reduce((acc,s)=>acc+s,0);},
+  suma(){return Estat.salts.reduce((acc,s)=>acc+s,0);},
+  seleccionaFitxa(){
+    if(Estat.iniciColocat)return;
+    Estat.fitxaIniciSeleccionada=!Estat.fitxaIniciSeleccionada;
+    $("#fitxaInici").classList.toggle("seleccionada",Estat.fitxaIniciSeleccionada);
+    $("#rectaWrap").classList.toggle("preparada",Estat.fitxaIniciSeleccionada);
+  },
+  posicioDesDeClientX(clientX){
+    const r=$("#rectaNumerica").getBoundingClientRect();
+    let ratio=(clientX-r.left)/r.width;
+    ratio=Math.max(0,Math.min(1,ratio));
+    return ratio*100;
+  },
+  provaColocacio(clientX){
+    if(Estat.iniciColocat||!Estat.fitxaIniciSeleccionada)return;
+    const valor=this.posicioDesDeClientX(clientX);
+    if(Math.abs(valor-Estat.a)<=1.8){
+      Estat.iniciColocat=true;
+      Estat.fitxaIniciSeleccionada=false;
+      $("#missatgeInici").textContent="Correcte. Aquest és el punt de partida.";
+      $("#missatgeInici").className="missatge-inici ok";
+      this.render();
+      GuiaVisual.actualitza();
+      setTimeout(()=>{
+        RectaVista.centra(Estat.a);
+        Focus.obrir("salts2");
+      },0);
+    }else{
+      $("#missatgeInici").textContent="Encara no. Busca millor la posició del primer nombre.";
+      $("#missatgeInici").className="missatge-inici ko";
+    }
+  },
+  afegeix(v){
+    if(!Estat.iniciColocat){Util.missatge("#missatgeSalts","Primer has de col·locar el primer nombre a la recta.",false);return;}
+    if(Estat.operacio==="+"&&v<0){Util.missatge("#missatgeSalts","En una suma, els salts han d'anar cap endavant.",false);return;}
+    if(Estat.operacio==="-"&&v>0){Util.missatge("#missatgeSalts","En una resta, els salts han d'anar cap enrere.",false);return;}
+    const seguent=this.actual()+v;
+    if(seguent<0||seguent>100){Util.missatge("#missatgeSalts","Aquest salt sortiria de la recta de 0 a 100.",false);return;}
+    Estat.salts.push(v);
+    this.render();
+    GuiaVisual.actualitza();
+    if(Math.abs(this.suma())===Estat.b)Focus.obrir("salts3");
+  },
+  desfer(){Estat.salts.pop();this.render();GuiaVisual.actualitza();},
+  comprova(){
+    if(!Estat.iniciColocat){Util.missatge("#missatgeSalts","Primer has de col·locar el primer nombre.",false);return;}
+    const representat=Math.abs(this.suma()), arribada=this.actual(), resultat=Calcul.resultat(), escrit=Number($("#respostaSalts").value);
+    if(representat!==Estat.b){Util.missatge("#missatgeSalts",`Els teus salts representen ${representat}, però el segon nombre és ${Estat.b}.`,false);return;}
+    if(arribada!==resultat||escrit!==resultat){Util.missatge("#missatgeSalts","Revisa el punt d'arribada i el resultat escrit.",false);return;}
+    if(AlumneManager.sessio){AlumneManager.registraIntent(true)}else{Estat.intents++;Estat.encerts++;localStorage.setItem("lab_encerts",Estat.encerts);localStorage.setItem("lab_intents",Estat.intents);UI.renderProgres()}Util.missatge("#missatgeSalts",`Molt bé! Has arribat a ${resultat}.`,true);AlumneManager.correcte();
+  },
+  render(){
+    $("#fitxaInici").textContent=Estat.a;
+    $("#saltActual").textContent=Estat.iniciColocat?this.actual():"—";
+    $("#exprSalts").textContent=`${Estat.a} ${Estat.operacio} ${Estat.b} =`;
+    $("#textSalts").textContent=Estat.operacio==="+"?`Quan hagis col·locat ${Estat.a}, avança fins a representar +${Estat.b}.`:`Quan hagis col·locat ${Estat.a}, retrocedeix fins a representar −${Estat.b}.`;
+    $("#fitxaInici").classList.toggle("amagat",Estat.iniciColocat);
+    $("#fitxaInici").classList.toggle("seleccionada",Estat.fitxaIniciSeleccionada);
+    $("#rectaWrap").classList.toggle("preparada",Estat.fitxaIniciSeleccionada);
+    $("#botonsSalts").classList.toggle("bloquejats",!Estat.iniciColocat);
+    const l=$("#llistaSalts");l.innerHTML="";Estat.salts.forEach(s=>{const x=document.createElement("span");x.className="xip-salt";x.textContent=s>0?`+${s}`:`${s}`;l.appendChild(x)});this.renderRecta();
+  },
+  renderRecta(){
+    const wrap=$("#rectaWrap");
+    [...wrap.querySelectorAll(".etiqueta-recta,.salt-arc,.marca-recta,.punt-inici")].forEach(x=>x.remove());
+    const pos=v=>2+(v/100)*96;
+
+    // Referències permanents: cada 5, amb les desenes destacades.
+    for(let v=0;v<=100;v+=5){
+      const major=v%10===0;
+      const m=document.createElement("div");
+      m.className="marca-recta"+(major?" major":"");
+      m.style.left=pos(v)+"%";
+      wrap.appendChild(m);
+
+      const e=document.createElement("div");
+      e.className="etiqueta-recta "+(major?"major":"secundaria");
+      e.style.left=pos(v)+"%";
+      e.textContent=v;
+      wrap.appendChild(e);
+    }
+
+    if(Estat.iniciColocat){
+      const punt=document.createElement("div");
+      punt.className="punt-inici";
+      punt.style.left=pos(Estat.a)+"%";
+      punt.textContent=Estat.a;
+      wrap.appendChild(punt);
+    }else return;
+
+    let c=Estat.a;
+    Estat.salts.forEach(s=>{
+      const n=c+s,left=Math.min(pos(c),pos(n)),width=Math.abs(pos(n)-pos(c));
+      const a=document.createElement("div");
+      a.className="salt-arc"+(s<0?" negatiu":"");
+      a.style.left=left+"%";
+      a.style.width=width+"%";
+      const lab=document.createElement("span");
+      lab.className="salt-label";
+      lab.textContent=s>0?`+${s}`:`${s}`;
+      a.appendChild(lab);
+      wrap.appendChild(a);
+      c=n;
+    });
+  }};
+
+
+const AlumneManager={
+  STORE:"lab_alumnes_v149",
+  SESSION:"lab_sessio_alumne_v149",
+  dades:{alumnes:[],registres:{}},
+  sessio:null,
+  currentSolved:false,
+  carrega(){
+    try{this.dades=JSON.parse(localStorage.getItem(this.STORE)||'{"alumnes":[],"registres":{}}')}catch(e){this.dades={alumnes:[],registres:{}}}
+    if(!Array.isArray(this.dades.alumnes))this.dades.alumnes=[];
+    if(!this.dades.registres)this.dades.registres={};
+    this.renderSelector();
+    const ultim=localStorage.getItem("lab_ultim_alumne_v149");
+    if(ultim && this.dades.alumnes.includes(ultim))$("#alumneSelect").value=ultim;
+    this.carregaProgresSeleccionat();
+  },
+  desa(){localStorage.setItem(this.STORE,JSON.stringify(this.dades))},
+  slug(nom){return nom.trim().replace(/\s+/g," ")},
+  afegeix(){
+    const nom=this.slug($("#nouAlumne").value);
+    if(!nom)return;
+    if(!this.dades.alumnes.some(x=>x.toLocaleLowerCase()===nom.toLocaleLowerCase())){
+      this.dades.alumnes.push(nom);this.dades.alumnes.sort((a,b)=>a.localeCompare(b,"ca"));
+      this.dades.registres[nom]=this.dades.registres[nom]||{encerts:0,intents:0,historial:[]};this.desa();
+    }
+    this.renderSelector();$("#alumneSelect").value=this.dades.alumnes.find(x=>x.toLocaleLowerCase()===nom.toLocaleLowerCase())||nom;
+    $("#nouAlumne").value="";this.carregaProgresSeleccionat();
+  },
+  elimina(){
+    const nom=$("#alumneSelect").value;if(!nom)return;
+    if(!confirm(`Eliminar el perfil local de ${nom} i el seu historial?`))return;
+    this.dades.alumnes=this.dades.alumnes.filter(x=>x!==nom);delete this.dades.registres[nom];this.desa();this.renderSelector();this.carregaProgresSeleccionat();
+  },
+  renderSelector(){
+    const sel=$("#alumneSelect");if(!sel)return;const actual=sel.value;sel.innerHTML='<option value="">Selecciona un alumne</option>';
+    this.dades.alumnes.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o)});
+    if(this.dades.alumnes.includes(actual))sel.value=actual;
+  },
+  registre(nom){return this.dades.registres[nom]||(this.dades.registres[nom]={encerts:0,intents:0,historial:[]})},
+  carregaProgresSeleccionat(){
+    const nom=$("#alumneSelect")?.value||"";
+    if(!nom){Estat.encerts=0;Estat.intents=0;UI.renderProgres();$("#resumAlumne").textContent="Crea o selecciona un alumne. El seu progrés quedarà desat només en aquest navegador.";return;}
+    localStorage.setItem("lab_ultim_alumne_v149",nom);const r=this.registre(nom);Estat.encerts=r.encerts||0;Estat.intents=r.intents||0;UI.renderProgres();
+    const fetes=(r.historial||[]).length;$("#resumAlumne").textContent=`${nom} · ${fetes} operacions completades · ${r.encerts||0} encerts de ${r.intents||0} intents registrats.`;
+  },
+  inicia(){
+    const nom=$("#alumneSelect").value;if(!nom){alert("Selecciona o crea primer un alumne.");return;}
+    const total=Number($("#quantitatOperacions").value)||1;
+    this.sessio={nom,total,index:1,config:{operacio:$("#tipusOperacio").value,nivell:$("#nivell").value,dificultat:$("#dificultat").value,estrategia:Estat.estrategia},inici:new Date().toISOString()};
+    localStorage.setItem(this.SESSION,JSON.stringify(this.sessio));this.currentSolved=false;
+    document.body.classList.add("mode-alumne");document.body.classList.remove("activitat-acabada","exercici-resolt");
+    this.aplicaConfig();this.actualitzaBarra();Activitat.nova();GuiaVisual.actualitza();
+  },
+  aplicaConfig(){
+    if(!this.sessio)return;const c=this.sessio.config;
+    $("#tipusOperacio").value=c.operacio;$("#nivell").value=c.nivell;$("#dificultat").value=c.dificultat;Estrategies.activa(c.estrategia);
+  },
+  actualitzaBarra(){
+    if(!this.sessio)return;const {nom,index,total}=this.sessio;$("#alumneNomBarra").textContent=nom;$("#alumneAvatar").textContent=(nom.trim()[0]||"A").toUpperCase();$("#alumneComptador").textContent=`Operació ${Math.min(index,total)} de ${total}`;
+    $("#alumneSubBarra").textContent=this.sessio.config.estrategia==="salts"?"Estratègia: salts":"Estratègia: descomposició";
+  },
+  registraIntent(ok){
+    if(!this.sessio)return;const r=this.registre(this.sessio.nom);r.intents=(r.intents||0)+1;if(ok)r.encerts=(r.encerts||0)+1;Estat.intents=r.intents;Estat.encerts=r.encerts;this.desa();UI.renderProgres();
+  },
+  correcte(){
+    if(!this.sessio||this.currentSolved)return;this.currentSolved=true;
+    const r=this.registre(this.sessio.nom);r.historial=r.historial||[];r.historial.push({data:new Date().toISOString(),a:Estat.a,b:Estat.b,operacio:Estat.operacio,resultat:Calcul.resultat(),estrategia:Estat.estrategia,sessioIndex:this.sessio.index,sessioTotal:this.sessio.total});this.desa();
+    document.body.classList.add("exercici-resolt");GuiaVisual.actualitza();
+    if(this.sessio.index>=this.sessio.total){
+      setTimeout(()=>this.acaba(),350);
+    }
+  },
+  seguent(){
+    if(!this.sessio||!this.currentSolved)return;if(this.sessio.index>=this.sessio.total){this.acaba();return;}
+    this.sessio.index++;localStorage.setItem(this.SESSION,JSON.stringify(this.sessio));this.currentSolved=false;document.body.classList.remove("exercici-resolt");this.actualitzaBarra();this.aplicaConfig();Activitat.nova();GuiaVisual.actualitza();
+  },
+  acaba(){
+    if(!this.sessio)return;const nom=this.sessio.nom,total=this.sessio.total;document.body.classList.remove("exercici-resolt");document.body.classList.add("activitat-acabada");$("#alumneFinalText").textContent=`${nom}, has completat ${total} ${total===1?"operació":"operacions"}.`;
+  },
+  surt(){
+    const pwd=prompt("Contrasenya de la vista docent:");if(pwd!=="f0nt-fr3d4"){if(pwd!==null)alert("Contrasenya incorrecta.");return;}
+    document.body.classList.remove("mode-alumne","activitat-acabada","exercici-resolt");localStorage.removeItem(this.SESSION);this.sessio=null;this.currentSolved=false;this.carregaProgresSeleccionat();window.scrollTo({top:0,behavior:"smooth"});
+  },
+  tornaDocentFinal(){
+    document.body.classList.remove("mode-alumne","activitat-acabada","exercici-resolt");localStorage.removeItem(this.SESSION);this.sessio=null;this.currentSolved=false;this.carregaProgresSeleccionat();window.scrollTo({top:0,behavior:"smooth"});
+  }
+};
+
+const RectaVista={
+  centra(v){
+    const s=$("#rectaScroll"),t=$("#rectaTrack");
+    if(!s||!t)return;
+    const x=(.02+.96*(v/100))*t.scrollWidth;
+    s.scrollLeft=Math.max(0,x-s.clientWidth/2);
+  }
+};
+const Estrategies={
+  activa(n){
+    Estat.estrategia=n;
+    document.body.classList.toggle("mode-salts",n==="salts");
+    $("#estrategiaDescomp").classList.toggle("actiu",n==="descomposicio");
+    $("#estrategiaSalts").classList.toggle("actiu",n==="salts");
+    if(n==="salts"){
+      Salts.render();
+      Focus.obrir("salts1",false);
+      GuiaVisual.actualitza();
+      setTimeout(()=>RectaVista.centra(Estat.a),0);
+    }else{
+      Focus.obrir("pas1",false);
+      GuiaVisual.actualitza();
+    }
+  }
+};
+
+const Activitat = {
+  nova(){
+    if(AlumneManager.sessio){AlumneManager.currentSolved=false;document.body.classList.remove("exercici-resolt");}
+    Estat.historial=[];
+    Estat.seleccio.clear();
+    Estat.ma={d:0,u:0};
+    GestorFases.reinicia();
+    for(const z of ["A","B","W","R"])Estat.peces[z]={d:0,u:0};
+
+    const max=Number($("#nivell").value), mode=$("#tipusOperacio").value, dificultat=$("#dificultat").value;
+    Estat.operacio=mode==="mixt"?(Math.random()<.5?"+":"-"):mode;
+
+    let intents=0;
+    do{
+      Estat.a=Math.floor(Math.random()*(max-10))+10;
+      Estat.b=Math.floor(Math.random()*(max-10))+10;
+      if(Estat.operacio==="-" && Estat.b>Estat.a)[Estat.a,Estat.b]=[Estat.b,Estat.a];
+      intents++;
+      const resultatValid=Estat.operacio==="+" ? (Estat.a+Estat.b<=max) : true;
+      const canvi=Estat.operacio==="+"?(Estat.a%10+Estat.b%10>=10):(Estat.a%10<Estat.b%10);
+      if(resultatValid && (dificultat==="general" || (dificultat==="amb"&&canvi) || (dificultat==="sense"&&!canvi)))break;
+    }while(intents<300);
+
+    ["aD","aU","aDV","aUV","bD","bU","bDV","bUV","calcD","calcU","respostaFinal"].forEach(id=>$("#"+id).value="");
+    ["#missatgeConstruccio","#missatgeDescomposicio","#missatgePosicio","#missatgeFinal"].forEach(id=>Util.missatge(id,""));
+    $("#bloqueigFinal").classList.add("amagat");
+    Estat.salts=[];
+    Estat.iniciColocat=false;
+    Estat.fitxaIniciSeleccionada=false;
+    $("#missatgeInici").textContent="";
+    $("#missatgeInici").className="missatge-inici";
+    UI.render();
+    Salts.render();
+    Focus.reinicia();
+    window.scrollTo({top:0,behavior:"smooth"});
+  },
+
+  exemple(){
+    Util.desaHistorial();
+    Estat.peces.A={d:Math.floor(Estat.a/10),u:Estat.a%10};
+    Estat.peces.B={d:Math.floor(Estat.b/10),u:Estat.b%10};
+    Estat.seleccio.clear();Estat.ma={d:0,u:0};UI.render();
+  },
+
+  netejaZona(z){
+    Util.desaHistorial();
+    Estat.peces[z]={d:0,u:0};
+    Estat.seleccio.clear();
+    Estat.ma={d:0,u:0};
+    UI.render();
+  },
+
+  buidaTot(){
+    Util.desaHistorial();
+    for(const z of ["A","B","W","R"])Estat.peces[z]={d:0,u:0};
+    Estat.seleccio.clear();Estat.ma={d:0,u:0};UI.render();
+  },
+
+  desfer(){
+    if(!Estat.historial.length)return;
+    const anterior=JSON.parse(Estat.historial.pop());
+    const peces=anterior.peces||anterior;
+    for(const z of ["A","B","W","R"])Estat.peces[z]={...peces[z]};
+    if(anterior.fases)Estat.fases={...anterior.fases};
+    Estat.ma=anterior.ma?{...anterior.ma}:{d:0,u:0};
+    Estat.seleccio.clear();
+    UI.render();
+  }
+};
+
+FeedbackCursor.inicia();
+
+/* Interaccions */
+$$(".zona").forEach(zona=>{
+  zona.addEventListener("click",()=>Manipulatiu.mouSeleccio(zona.dataset.zona,zona.dataset.tipus));
+});
+$$("[data-neteja]").forEach(b=>b.addEventListener("click",()=>Activitat.netejaZona(b.dataset.neteja)));
+
+$("#desselecciona").onclick=()=>Seleccio.buida();
+$("#canviU_D").onclick=()=>Manipulatiu.canviU_D();
+$("#canviD_U").onclick=()=>Manipulatiu.canviD_U();
+$("#posaExemple").onclick=()=>Activitat.exemple();
+$("#portaA").onclick=()=>Pissarra.portaPrimer();
+$("#portaB").onclick=()=>Pissarra.portaSegon();
+$("#treuSeleccio").onclick=()=>Pissarra.treuSeleccio();
+$("#netejaPissarra").onclick=()=>Pissarra.neteja();
+$("#portaResultat").onclick=()=>Pissarra.portaResultat();
+$("#comprovaConstruccio").onclick=()=>Calcul.comprovaConstruccio();
+$("#comprovaDescomposicio").onclick=()=>Calcul.comprovaDescomposicio();
+$("#comprovaPosicio").onclick=()=>Calcul.comprovaPosicio();
+$("#comprovaFinal").onclick=()=>Calcul.comprovaFinal();
+$("#buidaTot").onclick=()=>Activitat.buidaTot();
+$("#desfer").onclick=()=>Activitat.desfer();
+$("#novaOperacio").onclick=()=>Activitat.nova();
+$("#tipusOperacio").onchange=()=>Activitat.nova();
+$("#nivell").onchange=()=>Activitat.nova();
+$("#dificultat").onchange=()=>Activitat.nova();
+
+
+$("#afegirAlumne").onclick=()=>AlumneManager.afegeix();
+$("#nouAlumne").addEventListener("keydown",e=>{if(e.key==="Enter")AlumneManager.afegeix()});
+$("#eliminarAlumne").onclick=()=>AlumneManager.elimina();
+$("#alumneSelect").onchange=()=>AlumneManager.carregaProgresSeleccionat();
+$("#comencarVistaAlumne").onclick=()=>AlumneManager.inicia();
+$("#seguentOperacioAlumne").onclick=()=>AlumneManager.seguent();
+$("#sortirVistaAlumne").onclick=()=>AlumneManager.surt();
+$("#tornarDocentFinal").onclick=()=>AlumneManager.tornaDocentFinal();
+
+$("#estrategiaDescomp").onclick=()=>Estrategies.activa("descomposicio");
+$("#estrategiaSalts").onclick=()=>Estrategies.activa("salts");
+$$('[data-salt]').forEach(b=>b.onclick=()=>Salts.afegeix(Number(b.dataset.salt)));
+$("#fitxaInici").onclick=()=>Salts.seleccionaFitxa();
+$("#fitxaInici").addEventListener("dragstart",e=>{Estat.fitxaIniciSeleccionada=true;e.dataTransfer.setData("text/plain","inici");$("#fitxaInici").classList.add("seleccionada");});
+$("#rectaWrap").addEventListener("dragover",e=>e.preventDefault());
+$("#rectaWrap").addEventListener("drop",e=>{e.preventDefault();Estat.fitxaIniciSeleccionada=true;Salts.provaColocacio(e.clientX);});
+$("#rectaWrap").addEventListener("click",e=>{if(e.target.closest(".fitxa-inici"))return;Salts.provaColocacio(e.clientX);});
+$("#reiniciaSalts").onclick=()=>Salts.reinicia();
+$("#desferSalt").onclick=()=>Salts.desfer();
+$("#comprovaSalts").onclick=()=>Salts.comprova();
+
+$("#pista").onclick=()=>{
+  if(Estat.estrategia==="salts"){
+    Util.missatge("#missatgeSalts",Estat.operacio==="+"?"Mantén el primer nombre sencer i descompon només el segon en salts cap endavant.":"Mantén el primer nombre sencer i descompon només el segon en salts cap enrere.",null);
+    document.querySelector("#salts2").scrollIntoView({behavior:"smooth",block:"start"});return;
+  }
+  const txt=Estat.operacio==="+"
+    ?"Descompon els dos nombres en desenes i unitats. Si al resultat reuneixes 10 unitats, selecciona-les i canvia-les per 1 desena."
+    :"Descompon els dos nombres. Si no tens prou unitats per restar, selecciona 1 desena del primer nombre i canvia-la per 10 unitats.";
+  Util.missatge("#missatgeConstruccio",txt,null);
+  document.querySelector("#pas1").scrollIntoView({behavior:"smooth",block:"start"});
+};
+
+/* Accés */
+$("#entrar").onclick=()=>{
+  const u=$("#usuariLogin").value.trim(),p=$("#contrasenyaLogin").value;
+  if(u==="Ffreda" && p==="f0nt-fr3d4"){
+    localStorage.setItem("lab_login","Ffreda");
+    $("#login").classList.add("amagat");
+  }else Util.missatge("#missatgeLogin","Usuari o contrasenya incorrectes.",false);
+};
+if(localStorage.getItem("lab_login")==="Ffreda")$("#login").classList.add("amagat");
+
+AlumneManager.carrega();
+UI.render();
+Salts.render();
+Focus.prepara();
+</script>
+
+<div id="cursorPeces" class="cursor-peces" aria-hidden="true"></div>
+
+</body>
+</html>
