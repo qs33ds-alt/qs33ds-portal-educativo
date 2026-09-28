@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gestor de Referents d'Escriptura</title>
+<style>
+:root{--ink:#173b41;--muted:#60706f;--line:#cbd8d7;--soft:#f4f8f7;--accent:#2c7478;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#edf3f3;color:#203436}
+header{background:#173b41;color:#fff;padding:18px 22px}header h1{margin:0;font-size:22px}header p{margin:5px 0 0;color:#d7e7e6;font-size:13px}
+main{max-width:1180px;margin:auto;padding:16px}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
+h2{font-size:17px;margin:0 0 12px}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.grow{flex:1;min-width:180px}
+input,textarea,select,button{font:inherit;border:1px solid #b9c9c9;border-radius:9px;padding:9px;background:#fff}
+textarea{width:100%;min-height:120px;resize:vertical}button{cursor:pointer;font-weight:700}.primary{background:#246d72;color:#fff;border-color:#246d72}.secondary{background:#eef6f5;color:#24575b}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tab{background:#fff}.tab.active{background:#173b41;color:#fff}.view{display:none}.view.active{display:block}
+.wordList{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:10px}.wordChip{border:1px solid var(--line);border-radius:10px;padding:9px;background:#fff;display:flex;justify-content:space-between;gap:8px;align-items:center}.wordChip small{color:var(--muted)}
+.saved{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}.savedCard{border:1px solid var(--line);border-radius:12px;padding:12px}.savedCard h3{margin:0 0 5px;font-size:15px}.savedCard p{font-size:12px;color:var(--muted)}
+.materialOptions{margin-top:10px;padding:10px 12px;border-radius:12px;background:#f5f8f8}.muted{font-size:12px;color:var(--muted)}
+.printSheet{width:19.2cm;max-width:calc(100vw - 24px);margin:18px auto;background:#fff;padding:.35cm;box-shadow:0 1px 8px #0002}
+.referenceHead{border-bottom:3px solid var(--ink);padding:0 0 10px;margin-bottom:14px}.referenceHead small{font-size:11px;font-weight:800;letter-spacing:.12em;color:#5b777b}.referenceHead h1{margin:3px 0 0;font-size:30px;line-height:1.05}
+.referenceBlock{border:1.5px solid #b9c9c9;border-radius:14px;padding:12px;margin-bottom:13px;break-inside:avoid}.referenceBlock h2{font-size:14px;letter-spacing:.08em;color:#244b50}
+.wordGrid{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:8px}
+.wordCard{border:1px solid #d6dfdf;border-radius:9px;min-height:var(--cardh);padding:8px 6px;display:flex;align-items:center;justify-content:center;text-align:center;background:#fff;break-inside:avoid}
+.wordCard b{font-size:var(--label);line-height:1.12;overflow-wrap:anywhere}.text-uppercase b{text-transform:uppercase;font-family:Arial,Helvetica,sans-serif;font-weight:800;letter-spacing:.02em}.text-print b{font-family:Arial,Helvetica,sans-serif;font-weight:700}.text-school b{font-family:"Comic Sans MS","Segoe Print","Bradley Hand","URW Chancery L",cursive;font-weight:600;font-size:calc(var(--label)*1.06)}
+.block-basic{border-left:5px solid #55a7d9}.block-orthography{border-left:5px solid #e1b84a}.block-vocabulary{border-left:5px solid #6eb56e}.block-connectors{border-left:5px solid #b48ad3}
+.ruleBox{background:#fff9e9;border:1.5px solid #e4c86b;border-radius:12px;padding:10px 12px;margin:0 0 13px;font-size:14px}.ruleBox b{color:#604f16}
+.deskSheet{width:19.2cm}.deskSheet .wordCard{min-height:1.45cm}.compactSheet{width:19.2cm}.compactSheet .wordCard{min-height:1.15cm}
+.materialCredit{font-size:9px;color:#667;margin-top:10px}.empty{text-align:center;padding:20px;color:var(--muted)}
+@media print{body{background:#fff}header,.noPrint{display:none!important}main{padding:0;max-width:none}.printSheet{box-shadow:none;margin:0;width:19.2cm;max-width:none;padding:0}}
+@media(max-width:700px){header{padding:14px}.printSheet{width:100%;padding:10px}.referenceHead h1{font-size:24px}}
+
+/* ===== PRINT DESIGN SYSTEM v3 · rebuilt as one module ===== */
+:root{
+ --print-ink:#183b40; --print-muted:#617477; --print-line:#ccd9d9;
+ --print-basic:#dceef8; --print-ortho:#fff1bf; --print-vocab:#e3f2df;
+ --print-connect:#eee4f7; --print-mixed:#e7ecec;
+}
+.printSheet{
+ width:19cm; max-width:calc(100vw - 20px); margin:18px auto; background:#fff;
+ padding:.55cm; box-shadow:0 2px 12px #0002; color:#17363a;
+}
+.printSheet .referenceHead{
+ display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+ border:0; border-bottom:2.5px solid var(--print-ink); padding:0 0 .24cm; margin:0 0 .34cm;
+}
+.printSheet .referenceHead small{
+ display:block; font-size:9.5px; font-weight:800; letter-spacing:.14em; color:#698083; margin-bottom:3px
+}
+.printSheet .referenceHead h1{margin:0;font-size:24px;line-height:1.04;letter-spacing:-.02em}
+.printSheet .referenceHead .formatBadge{
+ flex:0 0 auto; border:1px solid #c8d5d5; border-radius:999px; padding:5px 9px;
+ font-size:9px; font-weight:800; letter-spacing:.06em; color:#577074
+}
+.printSheet .referenceBlock{
+ border:1px solid var(--print-line); border-radius:10px; padding:.22cm .24cm;
+ margin:0 0 .25cm; break-inside:avoid; background:#fff;
+}
+.printSheet .referenceBlock h2{
+ margin:0 0 .16cm; font-size:10.5px; line-height:1; letter-spacing:.105em; color:#38575b
+}
+.printSheet .block-basic{border-top:4px solid #79b7d6}
+.printSheet .block-orthography{border-top:4px solid #dfbd54}
+.printSheet .block-vocabulary{border-top:4px solid #7db879}
+.printSheet .block-connectors{border-top:4px solid #ad8ac7}
+.printSheet .block-mixed{border-top:4px solid #8ca2a3}
+.printSheet .wordGrid{display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:var(--gap)}
+.printSheet .wordCard{
+ border:1px solid #d5dfdf; border-radius:7px; min-height:var(--cardh);
+ padding:var(--pad); display:flex; align-items:center; justify-content:center;
+ text-align:center; background:#fff; break-inside:avoid;
+}
+.printSheet .wordCard b{font-size:var(--label);line-height:1.12;overflow-wrap:anywhere}
+.printSheet .ruleBox{
+ background:#fffaf0; border:1px solid #e1ca7d; border-left:5px solid #d8b445;
+ border-radius:8px; padding:.16cm .2cm; margin:0 0 .18cm; font-size:11.5px; line-height:1.25
+}
+.printSheet .materialCredit{font-size:7.5px;color:#829092;text-align:right;margin:.2cm 0 0}
+
+/* A4: ample breathing room, strongest hierarchy */
+.printSheet.mode-a4{min-height:27.7cm;padding:.7cm}
+.printSheet.mode-a4 .referenceHead h1{font-size:28px}
+.printSheet.mode-a4 .referenceBlock{padding:.3cm;margin-bottom:.32cm}
+.printSheet.mode-a4 .referenceBlock h2{font-size:11.5px;margin-bottom:.22cm}
+
+/* DESK: horizontal strip, quick scanning */
+.printSheet.mode-desk{
+ width:27.7cm; max-width:calc(100vw - 20px); min-height:8.4cm; padding:.48cm .58cm;
+}
+.printSheet.mode-desk .referenceHead{margin-bottom:.25cm;padding-bottom:.18cm}
+.printSheet.mode-desk .referenceHead h1{font-size:21px}
+.printSheet.mode-desk .referenceBlock{padding:.18cm .22cm;margin-bottom:.18cm}
+.printSheet.mode-desk .referenceBlock h2{font-size:9.5px;margin-bottom:.13cm}
+.printSheet.mode-desk .materialCredit{display:none}
+
+/* COMPACT: cut-and-laminate card */
+.printSheet.mode-compact{
+ width:13.2cm; max-width:calc(100vw - 20px); padding:.38cm;
+ border:1px dashed #aabbbb; box-shadow:none;
+}
+.printSheet.mode-compact .referenceHead{margin-bottom:.2cm;padding-bottom:.15cm}
+.printSheet.mode-compact .referenceHead h1{font-size:18px}
+.printSheet.mode-compact .referenceHead small{font-size:8px}
+.printSheet.mode-compact .referenceHead .formatBadge{display:none}
+.printSheet.mode-compact .referenceBlock{padding:.16cm;margin-bottom:.15cm;border-radius:7px}
+.printSheet.mode-compact .referenceBlock h2{font-size:8.5px;margin-bottom:.11cm}
+.printSheet.mode-compact .ruleBox{font-size:9.5px;padding:.12cm .15cm;margin-bottom:.12cm}
+.printSheet.mode-compact .materialCredit{display:none}
+
+
+@media print{
+ html,body{background:#fff!important}
+ header,.noPrint{display:none!important}
+ main{padding:0!important;max-width:none!important}
+ #sheet{margin:0!important;padding:0!important}
+ .printSheet{box-shadow:none!important;margin:0 auto!important;max-width:none!important}
+ .printSheet.mode-a4{width:194mm;min-height:277mm}
+ .printSheet.mode-desk{
+   width:277mm;min-height:0;
+ }
+ .printSheet.mode-compact{width:132mm;border:1px dashed #aabbbb!important}
+}
+@media(max-width:700px){
+ .printSheet.mode-desk,.printSheet.mode-a4,.printSheet.mode-compact{width:100%;max-width:100%;min-height:0;padding:10px}
+}
+
+
+/* PrintOrientation · page geometry */
+.printSheet.page-portrait{max-width:19.4cm}
+.printSheet.page-landscape{max-width:27.9cm}
+@media print{
+ .printSheet.page-portrait{max-width:194mm!important}
+ .printSheet.page-landscape{max-width:279mm!important}
+}
+</style>
+</head>
+<body>
+<header><h1>Gestor de Referents d'Escriptura</h1><p>Paraules bàsiques, vocabulari i normes ortogràfiques per tenir a mà mentre s'escriu.</p></header>
+<main>
+<div class="tabs noPrint">
+<button class="tab active" data-view="bank">Banc base 2</button>
+<button class="tab" data-view="create">Crear referent</button>
+<button class="tab" data-view="library">Els meus referents</button>
+<button class="tab" data-view="projects">Projectes</button>
+</div>
+
+<section id="bank" class="view active">
+<div class="panel noPrint">
+<h2>Banc base 2 · Referents revisats</h2>
+<p class="muted">Tria un referent preparat. El pots utilitzar directament o modificar-lo abans d'imprimir.</p>
+<div class="row">
+<select id="bankLevel"><option value="">Tots els nivells</option><option>CI</option><option>CM</option><option>CS</option></select>
+<select id="bankKind"><option value="">Tots els tipus</option><option value="basic">Paraules bàsiques</option><option value="connectors">Connectors</option><option value="vocabulary">Vocabulari</option><option value="orthography">Ortografia</option><option value="mixed">Revisió / mixt</option></select>
+<input id="bankSearch" class="grow" placeholder="Cerca: narració, r/rr, emocions, verbs...">
+</div>
+<div id="bankCards" class="saved" style="margin-top:12px"></div>
+</div></section>
+<section id="create" class="view">
+<div class="panel noPrint">
+<h2>1. Contingut</h2>
+<div class="row">
+<input id="title" class="grow" value="Paraules que m'ajuden a escriure" placeholder="Títol del referent">
+<select id="kind">
+<option value="basic">Paraules bàsiques</option>
+<option value="orthography">Norma ortogràfica</option>
+<option value="vocabulary">Vocabulari temàtic</option>
+<option value="connectors">Connectors i expressions</option>
+<option value="mixed">Referent mixt</option>
+</select>
+</div>
+<div class="row" style="margin-top:9px">
+<input id="blockTitle" class="grow" placeholder="Nom del bloc (opcional)">
+<input id="rule" class="grow" placeholder="Norma o recordatori (opcional)">
+</div>
+<textarea id="words" placeholder="Escriu una paraula o expressió per línia, o separa-les amb comes.&#10;&#10;Exemple:&#10;amb&#10;després&#10;perquè&#10;també&#10;quan"></textarea>
+<div class="row"><button id="addWords" class="primary">Afegir al referent</button><button id="clearWords" class="secondary">Buidar selecció</button></div>
+</div>
+
+<div class="panel noPrint">
+<h2>2. Importar JSON senzill</h2>
+<div class="row"><input type="file" id="jsonFile" accept=".json,application/json"><button id="importJson" class="secondary">Importar text JSON</button></div>
+<textarea id="jsonText" placeholder='{"nom":"Paraules bàsiques","tipus":"basic","paraules":["amb","després","perquè"]}'></textarea>
+<p class="muted">Admet <b>paraules / words / items</b>, blocs opcionals i una norma ortogràfica.</p>
+</div>
+
+<div class="panel noPrint">
+<h2>3. Paraules seleccionades</h2><div id="selection" class="wordList"></div>
+</div>
+
+<div class="panel noPrint">
+<h2>4. Disseny i impressió</h2>
+<div class="row">
+<select id="layout"><option value="desk">Referent de taula · horitzontal</option><option value="a4">Làmina A4 · consulta</option><option value="compact">Targeta compacta · retallar/laminar</option></select><select id="printOrientation"><option value="auto" selected>Orientació · Automàtica</option><option value="portrait">Orientació · Vertical</option><option value="landscape">Orientació · Horitzontal</option></select>
+<select id="columns"><option value="3">3 columnes</option><option value="4" selected>4 columnes</option><option value="5">5 columnes</option><option value="6">6 columnes</option></select>
+<select id="textStyle"><option value="uppercase">MAJÚSCULA</option><option value="school">Lligada escolar</option><option value="print" selected>Impremta</option></select>
+<select id="fontSize"><option value="16">Lletra petita</option><option value="19" selected>Lletra estàndard</option><option value="23">Lletra gran</option><option value="28">Lletra molt gran</option></select>
+</div>
+<div class="row" style="margin-top:9px"><button id="build" class="secondary">Generar</button><button id="saveReference" class="secondary">Desar referent</button><button id="print" class="primary">Imprimir</button></div>
+</div>
+<div id="sheet"></div>
+</section>
+
+<section id="library" class="view"><div class="panel"><h2>Els meus referents</h2><div id="saved" class="saved"></div></div></section>
+<section id="projects" class="view">
+<div class="panel"><h2>Projecte complet</h2><div class="row"><button id="exportProject" class="secondary">Exportar projecte</button><input type="file" id="projectFile" accept=".json,application/json"></div><p class="muted">El projecte conserva contingut, tipus de referent i configuració d'impressió.</p></div>
+</section>
+</main>
+<script>
+const VocabularyBank={"version":"2.0","language":"ca","reviewed":"2026-09-28","method":"Selecció pedagògica alineada amb currículum de primària i bastides d'expressió escrita; formes normatives contrastables amb IEC.","packs":[{"id":"basics-ci","title":"Paraules bàsiques per escriure · CI","level":"CI","kind":"basic","description":"Paraules funcionals i temporals de consulta ràpida.","tags":["freqüents","escriptura"],"blocks":[{"title":"PARAULES QUE FAIG SERVIR MOLT","kind":"basic","rule":"","words":["amb","i","que","per","de","a","un","una","el","la","els","les","aquest","aquesta","molt","més","també","no","sí"]},{"title":"TEMPS I LLOC","kind":"basic","rule":"","words":["avui","ahir","demà","ara","abans","després","aquí","allà","dins","fora","davant","darrere"]}]},{"id":"basics-cm","title":"Paraules bàsiques per escriure · CM","level":"CM","kind":"basic","description":"Paraules d'alta utilitat per redactar amb més autonomia.","tags":["freqüents","cohesió"],"blocks":[{"title":"PARAULES ÚTILS","kind":"basic","rule":"","words":["amb","que","perquè","però","també","encara","sempre","mai","molt","més","quan","mentre","després","abans","llavors","així","aquí","allà"]},{"title":"PER ENLLAÇAR","kind":"connectors","rule":"","words":["primer","després","llavors","més tard","també","perquè","però","finalment"]}]},{"id":"basics-cs","title":"Paraules bàsiques per escriure · CS","level":"CS","kind":"basic","description":"Repertori funcional per cohesionar textos progressivament més elaborats.","tags":["cohesió","precisió"],"blocks":[{"title":"PER CONNECTAR","kind":"connectors","rule":"","words":["en primer lloc","a continuació","després","mentrestant","a més","també","per exemple","perquè","per això","però","en canvi","finalment"]},{"title":"PER PRECISAR","kind":"basic","rule":"","words":["sobretot","gairebé","potser","encara","sempre","mai","realment","especialment"]}]},{"id":"conn-narracio","title":"Connectors · Narració","level":"CM-CS","kind":"connectors","description":"Connectors agrupats segons el moment del relat.","tags":["narració"],"blocks":[{"title":"PER COMENÇAR","kind":"connectors","rule":"","words":["un dia","una vegada","al principi","primer"]},{"title":"PER CONTINUAR","kind":"connectors","rule":"","words":["després","llavors","més tard","a continuació","mentrestant","de sobte"]},{"title":"PER EXPLICAR","kind":"connectors","rule":"","words":["perquè","per això","per exemple","també"]},{"title":"PER ACABAR","kind":"connectors","rule":"","words":["finalment","al final","per acabar"]}]},{"id":"conn-opinio","title":"Expressions · Donar una opinió","level":"CM-CS","kind":"connectors","description":"Bastida per formular i justificar una opinió.","tags":["opinió","argumentació"],"blocks":[{"title":"QUÈ PENSO","kind":"connectors","rule":"","words":["jo penso que","crec que","em sembla que","segons la meva opinió"]},{"title":"PER JUSTIFICAR","kind":"connectors","rule":"","words":["perquè","ja que","per exemple","per això"]},{"title":"PER CONTRASTAR","kind":"connectors","rule":"","words":["però","en canvi","tot i això"]},{"title":"PER TANCAR","kind":"connectors","rule":"","words":["per tant","en conclusió","finalment"]}]},{"id":"conn-explicacio","title":"Connectors · Explicar","level":"CM-CS","kind":"connectors","description":"Recursos per ordenar una explicació.","tags":["explicació"],"blocks":[{"title":"ORDENAR","kind":"connectors","rule":"","words":["primer","en primer lloc","a continuació","després","finalment"]},{"title":"ACLARIR","kind":"connectors","rule":"","words":["és a dir","per exemple","en concret"]},{"title":"CAUSA I CONSEQÜÈNCIA","kind":"connectors","rule":"","words":["perquè","ja que","per això","per tant"]},{"title":"AFEGIR","kind":"connectors","rule":"","words":["també","a més","igualment"]}]},{"id":"conn-instruccions","title":"Paraules · Donar instruccions","level":"CI-CM-CS","kind":"connectors","description":"Paraules per ordenar passos i instruccions.","tags":["instruccions"],"blocks":[{"title":"ORDRE","kind":"connectors","rule":"","words":["primer","després","a continuació","tot seguit","finalment"]},{"title":"VERBS ÚTILS","kind":"vocabulary","rule":"","words":["agafa","posa","talla","enganxa","barreja","obre","tanca","gira","espera","comprova"]}]},{"id":"verbs-moviment","title":"Verbs · Moviment","level":"CI-CM-CS","kind":"vocabulary","description":"Alternatives per descriure moviment.","tags":["verbs"],"blocks":[{"title":"MOVIMENT","kind":"vocabulary","rule":"","words":["anar","venir","caminar","córrer","saltar","entrar","sortir","pujar","baixar","girar","avançar","aturar-se","acostar-se","allunyar-se"]}]},{"id":"verbs-parla","title":"Verbs · Parlar i comunicar","level":"CM-CS","kind":"vocabulary","description":"Verbs per evitar repetir «dir».","tags":["verbs","sinònims"],"blocks":[{"title":"PARLAR","kind":"vocabulary","rule":"","words":["dir","explicar","preguntar","respondre","contestar","comentar","afirmar","negar","cridar","xiuxiuejar","avisar","demanar"]}]},{"id":"verbs-pensament","title":"Verbs · Pensar, mirar i descobrir","level":"CM-CS","kind":"vocabulary","description":"Verbs útils en narracions i explicacions.","tags":["verbs"],"blocks":[{"title":"PENSAR","kind":"vocabulary","rule":"","words":["pensar","creure","imaginar","recordar","oblidar","decidir","dubtar","entendre"]},{"title":"MIRAR I DESCOBRIR","kind":"vocabulary","rule":"","words":["mirar","veure","observar","descobrir","trobar","buscar","reconèixer"]}]},{"id":"verbs-emocio","title":"Verbs · Emocions i reaccions","level":"CM-CS","kind":"vocabulary","description":"Repertori per narrar reaccions.","tags":["verbs","emocions"],"blocks":[{"title":"REACCIONS","kind":"vocabulary","rule":"","words":["riure","somriure","plorar","espantar-se","sorprendre's","enfadar-se","alegrar-se","preocupar-se","calmar-se","emocionar-se"]}]},{"id":"adj-descripcio","title":"Adjectius · Descriure","level":"CI-CM-CS","kind":"vocabulary","description":"Vocabulari descriptiu agrupat per significat.","tags":["adjectius","descripció"],"blocks":[{"title":"MIDA I FORMA","kind":"vocabulary","rule":"","words":["gran","petit","alt","baix","llarg","curt","ample","estret","rodó","quadrat"]},{"title":"ASPECTE I ESTAT","kind":"vocabulary","rule":"","words":["net","brut","nou","vell","clar","fosc","suau","dur","sec","mullat"]},{"title":"CARÀCTER","kind":"vocabulary","rule":"","words":["amable","simpàtic","tranquil","nerviós","valent","tímid","curiós","pacient","generós","divertit"]}]},{"id":"emocions","title":"Vocabulari · Emocions","level":"CI-CM-CS","kind":"vocabulary","description":"Paraules per precisar com se sent un personatge o una persona.","tags":["emocions"],"blocks":[{"title":"EMOCIONS","kind":"vocabulary","rule":"","words":["alegre","content","trist","enfadat","espantat","sorprès","nerviós","tranquil","preocupat","il·lusionat","avorrit","orgullós","avergonyit","gelós"]}]},{"id":"temps","title":"Vocabulari · Temps i seqüència","level":"CI-CM","kind":"vocabulary","description":"Referent temporal per narrar i explicar.","tags":["temps"],"blocks":[{"title":"QUAN?","kind":"vocabulary","rule":"","words":["ahir","avui","demà","matí","migdia","tarda","vespre","nit"]},{"title":"EN QUIN ORDRE?","kind":"connectors","rule":"","words":["abans","ara","després","primer","llavors","més tard","finalment","mentrestant"]}]},{"id":"espai","title":"Vocabulari · Espai i posició","level":"CI-CM","kind":"vocabulary","description":"Paraules per situar elements.","tags":["espai"],"blocks":[{"title":"ON?","kind":"vocabulary","rule":"","words":["aquí","allà","dins","fora","davant","darrere","damunt","sota","a prop","lluny","al costat","entre","dreta","esquerra"]}]},{"id":"quantitat","title":"Vocabulari · Quantitat i intensitat","level":"CI-CM","kind":"vocabulary","description":"Paraules per precisar quantitat i grau.","tags":["quantitat"],"blocks":[{"title":"QUANTITAT","kind":"vocabulary","rule":"","words":["molt","poc","més","menys","tot","res","alguns","molts","pocs","cap"]},{"title":"INTENSITAT","kind":"vocabulary","rule":"","words":["molt","bastant","gaire","massa","una mica","gens"]}]},{"id":"ort-majuscules","title":"Ortografia · Majúscules","level":"CI-CM-CS","kind":"orthography","description":"Majúscula en inici d'escrit i noms propis.","tags":["ortografia"],"blocks":[{"title":"MAJÚSCULES","kind":"orthography","rule":"Comença els escrits amb majúscula i escriu amb majúscula els noms propis.","words":["Barcelona","Marta","Catalunya","Nil"]}]},{"id":"ort-puntuacio","title":"Ortografia · Puntuació bàsica","level":"CI-CM","kind":"orthography","description":"Recordatori de tancament i organització de frases.","tags":["ortografia","puntuació"],"blocks":[{"title":"PUNTUACIÓ","kind":"orthography","rule":"Acaba les frases amb el signe que correspon: punt, interrogació o admiració.","words":[".","?","!"]}]},{"id":"ort-brbl","title":"Ortografia · BR i BL","level":"CM","kind":"orthography","description":"Grups consonàntics freqüents.","tags":["ortografia"],"blocks":[{"title":"BR / BL","kind":"orthography","rule":"Fixa't en els grups br i bl.","words":["braç","branca","broma","abril","blanc","blau","moble","poble"]}]},{"id":"ort-plurals-es","title":"Ortografia · Plurals en -es","level":"CM-CS","kind":"orthography","description":"Exemples per recordar plurals femenins en -es.","tags":["ortografia","plural"],"blocks":[{"title":"PLURAL EN -ES","kind":"orthography","rule":"Molts noms i adjectius femenins acabats en -a fan el plural en -es.","words":["casa → cases","nena → nenes","porta → portes","platja → platges","adreça → adreces"]}]},{"id":"ort-cqu","title":"Ortografia · C i QU","level":"CM-CS","kind":"orthography","description":"Contrast ca/que/qui/co/cu.","tags":["ortografia"],"blocks":[{"title":"CA · QUE · QUI · CO · CU","kind":"orthography","rule":"Per mantenir el so de c davant de e i i, escrivim qu.","words":["casa","cama","que","aquest","qui","equip","cosa","cuc"]}]},{"id":"ort-ggu","title":"Ortografia · G i GU","level":"CM-CS","kind":"orthography","description":"Contrast ga/gue/gui/go/gu.","tags":["ortografia"],"blocks":[{"title":"GA · GUE · GUI · GO · GU","kind":"orthography","rule":"Per mantenir el so de g davant de e i i, escrivim gu.","words":["gat","gamba","guerra","joguet","guitarra","guineu","gota","gust"]}]},{"id":"ort-rr","title":"Ortografia · R i RR","level":"CM-CS","kind":"orthography","description":"Contrast de r i rr entre vocals.","tags":["ortografia"],"blocks":[{"title":"R / RR","kind":"orthography","rule":"Entre vocals, escrivim rr quan representa el so fort.","words":["cara","pera","carro","terra","córrer","arribar","sorra","carrer"]}]},{"id":"ort-ss","title":"Ortografia · S i SS entre vocals","level":"CM-CS","kind":"orthography","description":"Contrast visual de s i ss.","tags":["ortografia"],"blocks":[{"title":"S / SS","kind":"orthography","rule":"Entre vocals, la ss representa el so sord de essa.","words":["casa","camisa","rosa","passar","classe","massa","possible","dissabte"]}]},{"id":"ort-digrafs","title":"Ortografia · Dígrafs freqüents","level":"CM-CS","kind":"orthography","description":"Mostra de dígrafs explicitats al currículum.","tags":["ortografia"],"blocks":[{"title":"DÍGRAFS","kind":"orthography","rule":"Dues lletres poden representar conjuntament un so. Observa i memoritza els dígrafs en paraules conegudes.","words":["qu","gu","rr","ss","ix","ig","tg","tj"]}]},{"id":"ort-em-hem-amb","title":"Ortografia · EM, HEM i AMB","level":"CM-CS","kind":"orthography","description":"Contrast de tres formes que poden generar confusió.","tags":["ortografia"],"blocks":[{"title":"EM · HEM · AMB","kind":"orthography","rule":"Fixa't en la funció de cada forma: em, hem i amb no són intercanviables.","words":["em dic","em llevo","hem anat","hem fet","amb tu","amb una amiga"]}]},{"id":"ort-apostrof","title":"Ortografia · Apòstrof","level":"CM-CS","kind":"orthography","description":"Formes habituals d'apostrofació.","tags":["ortografia"],"blocks":[{"title":"APÒSTROF","kind":"orthography","rule":"L'apòstrof marca l'elisió d'una vocal en determinats contactes de paraules.","words":["l'avi","l'àvia","d'aigua","m'agrada","t'espero","s'ha acabat"]}]},{"id":"ort-contraccions","title":"Ortografia · Contraccions","level":"CS","kind":"orthography","description":"Contraccions freqüents.","tags":["ortografia"],"blocks":[{"title":"CONTRACCIONS","kind":"orthography","rule":"Algunes preposicions es contrauen amb els articles el i els.","words":["a + el → al","de + el → del","per + el → pel","a + els → als","de + els → dels","per + els → pels"]}]},{"id":"ort-imperfet-ava","title":"Ortografia · Imperfet en -ava","level":"CM-CS","kind":"orthography","description":"Terminació verbal treballada curricularment.","tags":["ortografia","verbs"],"blocks":[{"title":"-AVA","kind":"orthography","rule":"Els imperfets de la primera conjugació s'escriuen amb v: -ava, -aves, -àvem, -àveu, -aven.","words":["cantava","jugava","mirava","saltava","parlava","caminava"]}]},{"id":"ort-infinitiu-r","title":"Ortografia · Infinitius acabats en -r","level":"CM-CS","kind":"orthography","description":"Recordatori visual de la r final de molts infinitius.","tags":["ortografia","verbs"],"blocks":[{"title":"INFINITIU","kind":"orthography","rule":"Recorda la r escrita al final de l'infinitiu.","words":["cantar","menjar","córrer","conèixer","dormir","sortir"]}]},{"id":"ort-accent","title":"Ortografia · Accentuació","level":"CM-CS","kind":"orthography","description":"Bastida bàsica per recordar la síl·laba tònica i l'accent gràfic.","tags":["ortografia","accent"],"blocks":[{"title":"ACCENTUACIÓ","kind":"orthography","rule":"Localitza la síl·laba tònica i aplica les regles d'accentuació d'agudes, planes i esdrúixoles.","words":["camió","paper","màquina","fàcil","música","també"]}]},{"id":"ort-dieresi","title":"Ortografia · Dièresi","level":"CS","kind":"orthography","description":"Exemples habituals amb dièresi.","tags":["ortografia","dièresi"],"blocks":[{"title":"DIÈRESI","kind":"orthography","rule":"La dièresi té usos diferents: pot indicar que una vocal es pronuncia o que no forma diftong.","words":["raïm","veïna","pingüí","aigües","qüestió"]}]},{"id":"ort-ces","title":"Ortografia · C, Ç, S i SS","level":"CS","kind":"orthography","description":"Família de grafies del so de essa sorda.","tags":["ortografia"],"blocks":[{"title":"C · Ç · S · SS","kind":"orthography","rule":"Un mateix so pot correspondre a grafies diferents. Consulta exemples coneguts i la norma treballada.","words":["cel","cirera","plaça","braç","sabata","sopa","passar","classe"]}]},{"id":"ort-ela-geminada","title":"Ortografia · L·L","level":"CS","kind":"orthography","description":"Paraules habituals amb ela geminada.","tags":["ortografia"],"blocks":[{"title":"L·L","kind":"orthography","rule":"Algunes paraules s'escriuen amb ela geminada: l·l.","words":["col·legi","pel·lícula","il·lusió","tranquil·la","excel·lent","col·laborar"]}]},{"id":"ort-j-excepcions","title":"Ortografia · Paraules amb J","level":"CS","kind":"orthography","description":"Paraules habituals destacades en les orientacions curriculars.","tags":["ortografia"],"blocks":[{"title":"RECORDA LA J","kind":"orthography","rule":"Aquestes paraules habituals s'escriuen amb j.","words":["jersei","subjecte","projecte"]}]},{"id":"rev-frase","title":"Revisió · La frase","level":"CI-CM","kind":"mixed","description":"Mini bastida de revisió abans de donar el text per acabat.","tags":["revisió"],"blocks":[{"title":"COMPROVO","kind":"basic","rule":"","words":["He començat amb majúscula?","He escrit totes les paraules?","He separat bé les paraules?","He acabat la frase amb punt, ? o !?"]}]},{"id":"rev-text","title":"Revisió · El meu text","level":"CM-CS","kind":"mixed","description":"Pauta breu per revisar contingut, cohesió i forma.","tags":["revisió"],"blocks":[{"title":"CONTINGUT","kind":"basic","rule":"","words":["S'entén què vull explicar?","He posat la informació necessària?","Les idees segueixen un ordre?"]},{"title":"LLENGUA","kind":"basic","rule":"","words":["He evitat repeticions?","He utilitzat connectors?","He revisat les paraules que em fan dubtar?","He revisat majúscules i puntuació?"]}]}]};
+const U={
+ esc:s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])),
+ split:s=>String(s||"").split(/[\n,;]+/).map(x=>x.trim()).filter(Boolean),
+ download(name,text){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:"application/json"}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+};
+const Store={key:"referents.escriptura.v2",get(){try{return JSON.parse(localStorage.getItem(this.key)||"[]")}catch(e){return[]}},set(v){localStorage.setItem(this.key,JSON.stringify(v))}};
+const State={blocks:[],clear(){this.blocks=[];UI.selection();Renderer.build()},addBlock(b){if(!b.words?.length)return;this.blocks.push(b);UI.selection();Renderer.build()}};
+const Content={
+ block(x){return {id:Date.now()+"_"+Math.random().toString(36).slice(2),title:x.title||"",kind:x.kind||"basic",rule:x.rule||"",words:(x.words||[]).map(v=>String(v).trim()).filter(Boolean)}},
+ fromForm(){return this.block({title:document.querySelector("#blockTitle").value,kind:document.querySelector("#kind").value,rule:document.querySelector("#rule").value,words:U.split(document.querySelector("#words").value)})}
+};
+const SimpleJSON={
+ parse(raw){const d=typeof raw==="string"?JSON.parse(raw):raw,title=d.nom||d.name||"Referent d'escriptura";let bs=[];
+ if(Array.isArray(d.blocs||d.blocks))bs=(d.blocs||d.blocks).map(b=>Content.block({title:b.titol||b.title,kind:b.tipus||b.type||d.tipus||"basic",rule:b.norma||b.rule,words:b.paraules||b.words||b.items||[]}));
+ else bs=[Content.block({title:d.bloc||d.blockTitle,kind:d.tipus||d.type||"basic",rule:d.norma||d.rule,words:d.paraules||d.words||d.items||[]})];
+ return {title,blocks:bs.filter(b=>b.words.length)}},
+ apply(d){document.querySelector("#title").value=d.title;State.blocks=d.blocks;UI.selection();Renderer.build()}
+};
+const Typography={get:()=>document.querySelector("#textStyle").value||"print",transform(w){return this.get()==="uppercase"?String(w).toLocaleUpperCase("ca"):String(w)}};
+const PrintOrientation={
+ get(){return document.querySelector("#printOrientation")?.value||"auto"},
+ automatic(layout){
+   if(layout==="desk")return "landscape";
+   return "portrait";
+ },
+ resolve(layout=document.querySelector("#layout").value){
+   const chosen=this.get();
+   return chosen==="auto"?this.automatic(layout):chosen;
+ },
+ className(layout=document.querySelector("#layout").value){return "page-"+this.resolve(layout)},
+ applyPage(layout=document.querySelector("#layout").value){
+   const orientation=this.resolve(layout);
+   let style=document.querySelector("#dynamicPrintPage");
+   if(!style){style=document.createElement("style");style.id="dynamicPrintPage";document.head.appendChild(style)}
+   style.textContent=`@media print{@page{size:A4 ${orientation};margin:8mm}}`;
+   return orientation;
+ }
+};
+
+const Renderer={
+ labels:{basic:"PARAULES BÀSIQUES",orthography:"ORTOGRAFIA",vocabulary:"VOCABULARI",connectors:"CONNECTORS",mixed:"PARAULES"},
+ config(){
+   const mode=document.querySelector("#layout").value;
+   const orientation=PrintOrientation.resolve(mode);
+   const userCols=+document.querySelector("#columns").value||4;
+   const userSize=+document.querySelector("#fontSize").value||19;
+   const wide=orientation==="landscape";
+   if(mode==="desk") return {mode,orientation,cols:Math.min(7,Math.max(4,userCols+(wide?1:0))),size:Math.max(15,userSize-2),cardh:"1.18cm",gap:"5px",pad:"5px 4px",badge:`TAULA · ${wide?"HORITZONTAL":"VERTICAL"}`};
+   if(mode==="compact") return {mode,orientation,cols:Math.min(wide?5:4,Math.max(2,userCols-1)),size:Math.max(14,userSize-3),cardh:".92cm",gap:"4px",pad:"4px 3px",badge:`COMPACTE · ${wide?"HORITZONTAL":"VERTICAL"}`};
+   return {mode:"a4",orientation,cols:Math.min(wide?7:6,userCols+(wide?1:0)),size:userSize,cardh:"1.55cm",gap:"7px",pad:"8px 6px",badge:`A4 · ${wide?"HORITZONTAL":"VERTICAL"}`};
+ },
+ build(){
+   const box=document.querySelector("#sheet");
+   if(!State.blocks.length){box.innerHTML='<div class="empty">Afegeix paraules o obre un referent del Banc base 2.</div>';return}
+   const c=this.config(),title=U.esc(document.querySelector("#title").value||"Referent d'escriptura"),style=Typography.get();
+   const sections=State.blocks.map(b=>{
+     const heading=U.esc(b.title||this.labels[b.kind]||"PARAULES");
+     const rule=b.rule?`<div class="ruleBox"><b>RECORDA:</b> ${U.esc(b.rule)}</div>`:"";
+     const cards=b.words.map(w=>`<div class="wordCard text-${style}"><b>${U.esc(Typography.transform(w))}</b></div>`).join("");
+     return `<section class="referenceBlock block-${b.kind}"><h2>${heading}</h2>${rule}<div class="wordGrid" style="--cols:${c.cols};--label:${c.size}px;--cardh:${c.cardh};--gap:${c.gap};--pad:${c.pad}">${cards}</div></section>`;
+   }).join("");
+   box.innerHTML=`<section class="printSheet mode-${c.mode} ${PrintOrientation.className(c.mode)}"><div class="referenceHead"><div><small>REFERENT D'ESCRIPTURA</small><h1>${title}</h1></div><span class="formatBadge">${c.badge}</span></div>${sections}<p class="materialCredit">Banc base 2 · suport visual per a l'escriptura</p></section>`;
+ }
+};
+const Bank={
+ filtered(){const l=document.querySelector("#bankLevel").value,k=document.querySelector("#bankKind").value,q=document.querySelector("#bankSearch").value.trim().toLocaleLowerCase("ca");return VocabularyBank.packs.filter(p=>(!l||p.level.includes(l))&&(!k||p.kind===k)&&(!q||JSON.stringify(p).toLocaleLowerCase("ca").includes(q)))},
+ render(){const box=document.querySelector("#bankCards"),ps=this.filtered();box.innerHTML=ps.length?ps.map(p=>`<article class="savedCard"><h3>${U.esc(p.title)}</h3><p>${U.esc(p.level)} · ${p.blocks.reduce((n,b)=>n+b.words.length,0)} entrades</p><p>${U.esc(p.description)}</p><button class="primary" data-pack="${p.id}">Obrir referent</button></article>`).join(""):'<p class="muted">No hi ha resultats amb aquests filtres.</p>';box.querySelectorAll("[data-pack]").forEach(b=>b.onclick=()=>this.open(b.dataset.pack))},
+ open(id){const p=VocabularyBank.packs.find(x=>x.id===id);if(!p)return;document.querySelector("#title").value=p.title.replace(/ · (CI|CM|CS|CM-CS|CI-CM|CI-CM-CS)$/,"");State.blocks=p.blocks.map(b=>Content.block(b));UI.selection();Renderer.build();UI.show("create")}
+};
+const Library={
+ capture(){return {title:document.querySelector("#title").value,blocks:State.blocks,settings:{layout:document.querySelector("#layout").value,columns:document.querySelector("#columns").value,textStyle:document.querySelector("#textStyle").value,fontSize:document.querySelector("#fontSize").value,printOrientation:document.querySelector("#printOrientation").value}}},
+ save(){const all=Store.get();all.unshift({...this.capture(),id:Date.now(),savedAt:new Date().toISOString()});Store.set(all.slice(0,80));UI.saved()},
+ load(id){const d=Store.get().find(x=>x.id===id);if(d)Projects.apply(d)},remove(id){Store.set(Store.get().filter(x=>x.id!==id));UI.saved()}
+};
+const Projects={
+ capture(){return {schema:"referents-escriptura-project",version:2,bankVersion:VocabularyBank.version,...Library.capture()}},
+ apply(d){document.querySelector("#title").value=d.title||"Referent d'escriptura";State.blocks=Array.isArray(d.blocks)?d.blocks:[];const x=d.settings||{};["layout","columns","textStyle","fontSize","printOrientation"].forEach(k=>{if(x[k]!=null)document.querySelector("#"+k).value=String(x[k])});UI.selection();Renderer.build()},
+ export(){U.download("Referent_Escriptura_"+(document.querySelector("#title").value||"projecte").replace(/[^\wÀ-ÿ-]+/g,"_")+".json",JSON.stringify(this.capture(),null,2))}
+};
+const UI={
+ selection(){const box=document.querySelector("#selection"),es=State.blocks.flatMap((b,bi)=>b.words.map((w,wi)=>({w,bi,wi,kind:b.kind})));box.innerHTML=es.length?es.map(x=>`<div class="wordChip"><span>${U.esc(x.w)} <small>· ${(Renderer.labels[x.kind]||x.kind).toLowerCase()}</small></span><button data-remove="${x.bi}:${x.wi}">×</button></div>`).join(""):'<span class="muted">Encara no hi ha paraules.</span>';box.querySelectorAll("[data-remove]").forEach(btn=>btn.onclick=()=>{let [bi,wi]=btn.dataset.remove.split(":").map(Number);State.blocks[bi].words.splice(wi,1);State.blocks=State.blocks.filter(b=>b.words.length);UI.selection();Renderer.build()})},
+ saved(){const box=document.querySelector("#saved"),all=Store.get();box.innerHTML=all.length?all.map(d=>`<article class="savedCard"><h3>${U.esc(d.title)}</h3><p>${d.blocks.reduce((n,b)=>n+b.words.length,0)} entrades · ${d.blocks.length} blocs</p><div class="row"><button data-load="${d.id}" class="secondary">Obrir</button><button data-del="${d.id}">Eliminar</button></div></article>`).join(""):'<p class="muted">Encara no has desat cap referent.</p>';box.querySelectorAll("[data-load]").forEach(b=>b.onclick=()=>{Library.load(+b.dataset.load);UI.show("create")});box.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>Library.remove(+b.dataset.del))},
+ show(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.view===id))}
+};
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>UI.show(t.dataset.view));
+["bankLevel","bankKind"].forEach(id=>document.querySelector("#"+id).onchange=()=>Bank.render());document.querySelector("#bankSearch").oninput=()=>Bank.render();
+document.querySelector("#addWords").onclick=()=>{State.addBlock(Content.fromForm());document.querySelector("#words").value="";document.querySelector("#blockTitle").value="";document.querySelector("#rule").value=""};
+document.querySelector("#clearWords").onclick=()=>State.clear();document.querySelector("#build").onclick=()=>Renderer.build();document.querySelector("#print").onclick=()=>{Renderer.build();PrintOrientation.applyPage();setTimeout(()=>window.print(),50)};document.querySelector("#saveReference").onclick=()=>Library.save();
+["title","layout","columns","textStyle","fontSize","printOrientation"].forEach(id=>document.querySelector("#"+id).addEventListener("change",()=>Renderer.build()));
+document.querySelector("#importJson").onclick=()=>{try{SimpleJSON.apply(SimpleJSON.parse(document.querySelector("#jsonText").value))}catch(e){alert("JSON no vàlid: "+e.message)}};
+document.querySelector("#jsonFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{SimpleJSON.apply(SimpleJSON.parse(await f.text()))}catch(err){alert("JSON no vàlid: "+err.message)}};
+document.querySelector("#exportProject").onclick=()=>Projects.export();document.querySelector("#projectFile").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(d.schema!=="referents-escriptura-project")throw new Error("No és un projecte de referents d'escriptura");Projects.apply(d);UI.show("create")}catch(err){alert(err.message)}};
+Bank.render();UI.selection();UI.saved();Renderer.build();
+</script></body></html>

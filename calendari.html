@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Calendari Escolar</title>
+<style>
+:root{--bg:#f2f5f6;--panel:#fff;--text:#18333f;--muted:#73858d;--line:#dce5e7;--accent:#2d7774;--accent-dark:#205d5b;--accent2:#e8f2f1;--danger:#b34c4c;--shadow:0 16px 40px rgba(31,58,67,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(180deg,#edf3f3 0,#f6f8f8 300px);color:var(--text);-webkit-font-smoothing:antialiased}
+header{position:relative;overflow:hidden;background:linear-gradient(125deg,#173f47,#286c6b 60%,#39827e);color:#fff;padding:28px 34px 31px}
+header:after{content:"";position:absolute;width:330px;height:330px;border-radius:50%;right:-110px;top:-210px;border:1px solid rgba(255,255,255,.16);box-shadow:0 0 0 45px rgba(255,255,255,.035),0 0 0 90px rgba(255,255,255,.025)}
+header h1{position:relative;margin:0;font-size:1.7rem;letter-spacing:-.025em;font-weight:760}header p{position:relative;margin:6px 0 0;opacity:.8;font-size:.9rem}
+.app{max-width:1380px;margin:20px auto 42px;padding:0 20px}.toolbar{display:grid;grid-template-columns:auto auto auto auto 1fr auto auto;gap:8px;align-items:center;margin-bottom:12px}.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;padding:10px;background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:14px}
+button,select,input,textarea{font:inherit}button{border:1px solid transparent;border-radius:10px;padding:9px 13px;cursor:pointer;background:#fff;color:var(--text);font-weight:650;transition:.16s ease}button:hover{transform:translateY(-1px);box-shadow:0 5px 15px rgba(32,57,73,.08)}button.primary{background:var(--accent);color:#fff}button.primary:hover{background:var(--accent-dark)}button.ghost{border-color:var(--line);box-shadow:none;background:#fff}button.danger{background:#fff5f5;color:var(--danger);border-color:#efcece}
+select,input,textarea{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#fff;color:var(--text);outline:none;transition:.15s}select:focus,input:focus,textarea:focus{border-color:#79aaa7;box-shadow:0 0 0 3px rgba(45,119,116,.11)}.filters select{min-width:150px}input[type="date"],input[type="time"]{min-width:145px}#monthLabel{font-size:1.18rem;text-transform:capitalize;letter-spacing:-.015em;padding-left:5px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.topgrid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px}.calendar{padding:13px}.cal-head{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-bottom:7px}.cal-head div{font-size:.7rem;text-transform:uppercase;letter-spacing:.09em;color:#87979e;padding:5px 7px;font-weight:750}.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.day{position:relative;min-height:132px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:8px;overflow:hidden;transition:.15s}.day:hover{border-color:#b9cdcf;background:#fcfdfd}.day.out{background:#f8faf9;color:#a0abad;opacity:.68}.day.today{outline:none;border-color:#6da4a1;box-shadow:inset 0 0 0 1px #6da4a1}.daynum{display:inline-grid;place-items:center;min-width:27px;height:27px;padding:0 6px;border-radius:8px;font-weight:760;font-size:.82rem;margin-bottom:5px}.day.today .daynum{background:var(--accent);color:#fff}
+.event{font-size:.75rem;padding:7px 8px;border-radius:8px;margin:5px 0;background:var(--accent2);border:1px solid #d5e6e4;border-left:4px solid var(--accent);cursor:pointer;line-height:1.25;transition:.12s}.event:hover{transform:translateX(1px)}.event .meta{color:#61777e;font-size:.68rem;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side{padding:16px;background:linear-gradient(180deg,#fff,#fbfcfc)}.side h2{font-size:.94rem;margin:0 0 12px;letter-spacing:-.01em}.upcoming{display:flex;flex-direction:column;gap:8px}.card{border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff;cursor:pointer;transition:.15s}.card:hover{border-color:#b8cbcd;transform:translateY(-1px)}.card b{display:block;font-size:.84rem;margin-bottom:3px}.card span{font-size:.72rem;color:var(--muted);line-height:1.4}.empty{color:var(--muted);font-size:.84rem;padding:14px 2px}
+.modal{position:fixed;z-index:30;inset:0;background:rgba(14,35,43,.48);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}.modal.open{display:flex}.dialog{width:min(700px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:20px;box-shadow:0 25px 80px rgba(13,37,48,.25);padding:22px}.dialog h2{margin:0 0 17px;font-size:1.22rem}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:.74rem;color:#657981;font-weight:720}textarea{min-height:92px;resize:vertical}.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.viewlist{display:none;padding:8px 14px}.viewlist.active{display:block}.calendar.hidden{display:none}.listrow{display:grid;grid-template-columns:120px 80px minmax(0,1fr) 130px;gap:12px;padding:13px 8px;border-bottom:1px solid var(--line);align-items:center;cursor:pointer}.listrow:hover{background:#fafcfc}.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef3f3;color:#536d72;font-size:.69rem;font-weight:700}
+@media(max-width:900px){.toolbar{grid-template-columns:auto auto auto auto 1fr}.toolbar [data-view]{grid-row:2}.topgrid{grid-template-columns:1fr}.side{order:-1}.day{min-height:105px}.listrow{grid-template-columns:100px 70px 1fr}.listrow .extra{display:none}}
+@media(max-width:640px){header{padding:21px 18px 23px}.app{padding:0 10px;margin-top:12px}.toolbar{display:flex;flex-wrap:wrap}.toolbar #monthLabel{width:100%;order:-1;padding:2px 0 5px}.toolbar button{flex:1}.filters{overflow:auto;flex-wrap:nowrap}.filters select{min-width:145px}.cal-head div{font-size:.61rem;padding:3px}.grid{gap:3px}.calendar{padding:7px}.day{padding:4px;min-height:92px;border-radius:8px}.daynum{min-width:23px;height:23px;font-size:.72rem}.event{font-size:.64rem;padding:4px 5px;border-left-width:3px}.event .meta{display:none}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.dialog{padding:17px;border-radius:16px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Calendari Escolar</h1>
+  <p>Reunions, seguiments i esdeveniments vinculats a l’alumnat</p>
+</header>
+
+<div class="app">
+  <div class="toolbar">
+    <button class="primary" id="newBtn">+ Nou esdeveniment</button>
+    <button class="ghost" id="prevBtn">‹</button>
+    <button class="ghost" id="todayBtn">Avui</button>
+    <button class="ghost" id="nextBtn">›</button>
+    <strong id="monthLabel" style="margin-right:auto"></strong>
+    <button class="ghost" data-view="month">Mes</button>
+    <button class="ghost" data-view="list">Llista</button>
+  </div>
+
+  <div class="filters">
+    <select id="studentFilter"><option value="">Tots els alumnes</option></select>
+    <select id="groupFilter"><option value="">Tots els grups</option></select>
+    <select id="typeFilter"><option value="">Tots els tipus</option></select>
+    <select id="statusFilter"><option value="">Tots els estats</option><option>Pendent</option><option>Realitzat</option><option>Cancel·lat</option></select>
+    <button class="ghost" id="clearFilters">Neteja filtres</button>
+  </div>
+
+  <div class="topgrid">
+    <section class="panel calendar" id="calendarView">
+      <div class="cal-head">
+        <div>Dl</div><div>Dt</div><div>Dc</div><div>Dj</div><div>Dv</div><div>Ds</div><div>Dg</div>
+      </div>
+      <div class="grid" id="calendarGrid"></div>
+    </section>
+
+    <aside class="panel side">
+      <h2>Pròxims esdeveniments</h2>
+      <div class="upcoming" id="upcoming"></div>
+    </aside>
+  </div>
+
+  <section class="panel viewlist" id="listView"></section>
+</div>
+
+<div class="modal" id="modal">
+  <div class="dialog">
+    <h2 id="modalTitle">Nou esdeveniment</h2>
+    <form id="eventForm">
+      <input type="hidden" id="eventId">
+      <div class="formgrid">
+        <div class="field">
+          <label>Alumne</label>
+          <input id="student" placeholder="Nom i cognoms" required>
+        </div>
+        <div class="field">
+          <label>Grup / curs</label>
+          <input id="group" placeholder="Ex. 4t A">
+        </div>
+        <div class="field">
+          <label>Data</label>
+          <input id="date" type="date" required>
+        </div>
+        <div class="field">
+          <label>Hora</label>
+          <input id="time" type="time">
+        </div>
+        <div class="field">
+          <label>Tipus</label>
+          <select id="type">
+            <option>Reunió família</option><option>Tutoria</option><option>CAEI</option><option>EAP</option>
+            <option>CSMIJ</option><option>CREDA</option><option>Seguiment</option><option>Entrevista</option>
+            <option>Valoració</option><option>Coordinació externa</option><option>Altres</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Estat</label>
+          <select id="status"><option>Pendent</option><option>Realitzat</option><option>Cancel·lat</option></select>
+        </div>
+        <div class="field full">
+          <label>Títol</label>
+          <input id="title" placeholder="Motiu o títol de l'esdeveniment" required>
+        </div>
+        <div class="field full">
+          <label>Participants</label>
+          <input id="participants" placeholder="Família, tutor/a, EAP...">
+        </div>
+        <div class="field full">
+          <label>Notes</label>
+          <textarea id="notes" placeholder="Acords, observacions o informació rellevant"></textarea>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="danger" id="deleteBtn" style="margin-right:auto;display:none">Eliminar</button>
+        <button type="button" class="ghost" id="cancelBtn">Cancel·lar</button>
+        <button type="submit" class="primary">Desar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+const KEY='calendari_escolar_events_v1';
+let events=JSON.parse(localStorage.getItem(KEY)||'[]');
+let cursor=new Date(); cursor.setDate(1);
+let currentView='month';
+
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,'0');
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const fmtDate=s=>new Intl.DateTimeFormat('ca-ES',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(s+'T12:00:00'));
+const monthName=d=>new Intl.DateTimeFormat('ca-ES',{month:'long',year:'numeric'}).format(d);
+
+function save(){localStorage.setItem(KEY,JSON.stringify(events)); refreshAll()}
+function filtered(){
+  return events.filter(e =>
+    (!$('studentFilter').value || e.student===$('studentFilter').value) &&
+    (!$('groupFilter').value || e.group===$('groupFilter').value) &&
+    (!$('typeFilter').value || e.type===$('typeFilter').value) &&
+    (!$('statusFilter').value || e.status===$('statusFilter').value)
+  );
+}
+function unique(field){return [...new Set(events.map(e=>e[field]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ca'))}
+function rebuildFilters(){
+  const keep={s:$('studentFilter').value,g:$('groupFilter').value,t:$('typeFilter').value};
+  $('studentFilter').innerHTML='<option value="">Tots els alumnes</option>'+unique('student').map(v=>`<option>${esc(v)}</option>`).join('');
+  $('groupFilter').innerHTML='<option value="">Tots els grups</option>'+unique('group').map(v=>`<option>${esc(v)}</option>`).join('');
+  $('typeFilter').innerHTML='<option value="">Tots els tipus</option>'+unique('type').map(v=>`<option>${esc(v)}</option>`).join('');
+  $('studentFilter').value=keep.s;$('groupFilter').value=keep.g;$('typeFilter').value=keep.t;
+}
+function esc(s=''){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function renderMonth(){
+  $('monthLabel').textContent=monthName(cursor);
+  const first=new Date(cursor.getFullYear(),cursor.getMonth(),1);
+  let start=new Date(first); start.setDate(start.getDate()-((first.getDay()+6)%7));
+  const today=iso(new Date());
+  const arr=filtered();
+  $('calendarGrid').innerHTML='';
+  for(let i=0;i<42;i++){
+    const d=new Date(start); d.setDate(start.getDate()+i); const ds=iso(d);
+    const cell=document.createElement('div'); cell.className='day'+(d.getMonth()!=cursor.getMonth()?' out':'')+(ds===today?' today':'');
+    cell.innerHTML=`<div class="daynum">${d.getDate()}</div>`;
+    arr.filter(e=>e.date===ds).sort((a,b)=>(a.time||'').localeCompare(b.time||'')).forEach(e=>{
+      const el=document.createElement('div'); el.className='event';
+      const colors={CAEI:['#f1edf7','#765c9e'],EAP:['#eaf1f7','#4479a8'],CSMIJ:['#faecee','#a85e69'],CREDA:['#fff4dd','#a56a16'],'Reunió família':['#e9f4ef','#3f7f65'],Tutoria:['#e8f2f1','#2d7774'],Seguiment:['#e8f2f1','#2d7774'],Entrevista:['#eef3f3','#61777e'],Valoració:['#f1edf7','#765c9e'],'Coordinació externa':['#eaf1f7','#4479a8'],Altres:['#eef3f3','#61777e']};
+      const c=colors[e.type]||colors.Altres; el.style.background=c[0];el.style.borderLeftColor=c[1];
+      if(e.status==='Cancel·lat'){el.style.opacity='.48';el.style.textDecoration='line-through'}
+      el.innerHTML=`<b>${esc(e.time?e.time+' · ':'')}${esc(e.title)}</b><div class="meta">${esc(e.student||'')} · ${esc(e.type||'')}</div>`;
+      el.onclick=()=>openForm(e); cell.appendChild(el);
+    });
+    cell.ondblclick=()=>openForm({date:ds});
+    $('calendarGrid').appendChild(cell);
+  }
+}
+function renderUpcoming(){
+  const today=iso(new Date());
+  const arr=filtered().filter(e=>e.date>=today && e.status!=='Cancel·lat')
+    .sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,8);
+  $('upcoming').innerHTML=arr.length?arr.map(e=>`<div class="card" data-id="${e.id}"><b>${esc(e.title)}</b><span>${fmtDate(e.date)} ${esc(e.time||'')} · ${esc(e.student||'')} · ${esc(e.type||'')}</span></div>`).join(''):'<div class="empty">No hi ha esdeveniments pròxims.</div>';
+  $('upcoming').querySelectorAll('.card').forEach(c=>c.onclick=()=>openForm(events.find(e=>e.id===c.dataset.id)));
+}
+function renderList(){
+  const arr=filtered().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  $('listView').innerHTML=arr.length?arr.map(e=>`<div class="listrow" data-id="${e.id}">
+    <div><b>${fmtDate(e.date)}</b></div><div>${esc(e.time||'—')}</div>
+    <div><b>${esc(e.title)}</b><br><span style="color:var(--muted);font-size:.78rem">${esc(e.student||'')} · ${esc(e.group||'')} · ${esc(e.type||'')}</span></div>
+    <div class="extra"><span class="badge">${esc(e.status||'')}</span></div></div>`).join(''):'<div class="empty">No hi ha esdeveniments.</div>';
+  $('listView').querySelectorAll('.listrow').forEach(r=>r.onclick=()=>openForm(events.find(e=>e.id===r.dataset.id)));
+}
+function refreshAll(){rebuildFilters();renderMonth();renderUpcoming();renderList()}
+function openForm(e={}){
+  $('eventId').value=e.id||'';$('student').value=e.student||'';$('group').value=e.group||'';
+  $('date').value=e.date||iso(new Date());$('time').value=e.time||'';$('type').value=e.type||'Reunió família';
+  $('status').value=e.status||'Pendent';$('title').value=e.title||'';$('participants').value=e.participants||'';$('notes').value=e.notes||'';
+  $('deleteBtn').style.display=e.id?'inline-block':'none';$('modalTitle').textContent=e.id?'Editar esdeveniment':'Nou esdeveniment';$('modal').classList.add('open')
+}
+function closeForm(){$('modal').classList.remove('open')}
+$('eventForm').onsubmit=e=>{
+  e.preventDefault();
+  const obj={id:$('eventId').value||crypto.randomUUID(),student:$('student').value.trim(),group:$('group').value.trim(),
+    date:$('date').value,time:$('time').value,type:$('type').value,status:$('status').value,title:$('title').value.trim(),
+    participants:$('participants').value.trim(),notes:$('notes').value.trim()};
+  const i=events.findIndex(x=>x.id===obj.id); if(i>=0) events[i]=obj; else events.push(obj); closeForm();save();
+};
+$('deleteBtn').onclick=()=>{const id=$('eventId').value;if(id&&confirm('Vols eliminar aquest esdeveniment?')){events=events.filter(e=>e.id!==id);closeForm();save()}};
+$('newBtn').onclick=()=>openForm();$('cancelBtn').onclick=closeForm;$('modal').onclick=e=>{if(e.target===$('modal'))closeForm()};
+$('prevBtn').onclick=()=>{cursor.setMonth(cursor.getMonth()-1);renderMonth()};
+$('nextBtn').onclick=()=>{cursor.setMonth(cursor.getMonth()+1);renderMonth()};
+$('todayBtn').onclick=()=>{cursor=new Date();cursor.setDate(1);renderMonth()};
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{
+  currentView=b.dataset.view;
+  $('calendarView').classList.toggle('hidden',currentView!=='month');
+  $('listView').classList.toggle('active',currentView==='list');
+});
+['studentFilter','groupFilter','typeFilter','statusFilter'].forEach(id=>$(id).onchange=refreshAll);
+$('clearFilters').onclick=()=>{['studentFilter','groupFilter','typeFilter','statusFilter'].forEach(id=>$(id).value='');refreshAll()};
+refreshAll();
+</script>
+</body>
+</html>
