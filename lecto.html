@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="ca">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Lectura · Pseudoparaules, paraules i frases per nivells</title>
 <style>
 :root{--bg:#f5f7fb;--card:#fff;--text:#1d2433;--muted:#687184;--accent:#4f6bed;--accent-soft:#e9edff;--good:#22885d;--danger:#d64545;--border:#e4e8f0;--shadow:0 12px 35px rgba(30,40,80,.10)}
@@ -346,7 +347,6 @@ body{padding-top:72px!important;overflow-x:hidden!important}
 @media(max-width:700px){.workflow-bar{grid-template-columns:1fr 1fr}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 html,body{width:100%;max-width:100%;margin:0;overflow-x:hidden}
 body>*:not(.cloud-float-wrap){max-width:100%}
@@ -356,502 +356,430 @@ body>*:not(.cloud-float-wrap){max-width:100%}
   transform:none!important;
 }
 </style>
-
-</head>
+<style id="lecto-v3-ui">
+:root{--v3-bg:#f4f7fb;--v3-card:#fff;--v3-text:#172033;--v3-muted:#667085;--v3-line:#e3e8f0;--v3-blue:#3559d5;--v3-dark:#1d2f5f;--v3-soft:#eef3ff;--v3-shadow:0 16px 44px rgba(25,40,75,.08)}
+body{background:var(--v3-bg);padding:24px;align-items:flex-start}.app{width:min(1040px,100%);margin:20px auto;background:#fff;border-radius:28px;padding:30px;box-shadow:var(--v3-shadow)}
+h1{text-align:left;font-size:34px;letter-spacing:-.04em;margin:0}.subtitle{text-align:left;margin:4px 0 22px;color:var(--v3-muted)}
+#lectoMainNav{display:flex;gap:7px;padding:6px;background:#f3f5f9;border-radius:16px;margin:0 0 24px;overflow:auto}#lectoMainNav button{flex:1;min-width:110px;padding:11px 13px;border-radius:11px;background:transparent;color:#667085;font-size:14px}#lectoMainNav button.active{background:#fff;color:#172033;box-shadow:0 2px 10px rgba(20,35,65,.08)}
+.lecto-panel[hidden]{display:none!important}.lecto-panel{animation:v3in .16s ease}.lecto-panel-head{display:flex;justify-content:space-between;gap:20px;align-items:end;padding:4px 2px 18px;border-bottom:1px solid var(--v3-line);margin-bottom:20px}.lecto-panel-head h2{margin:2px 0 4px;font-size:25px}.lecto-panel-head p{margin:0;color:var(--v3-muted);max-width:680px;line-height:1.45}.eyebrow{font-size:11px;font-weight:900;letter-spacing:.12em;color:#667085}
+#lectoPanel-session .session-mode,#lectoPanel-session .mode,#lectoPanel-session .levels{margin-bottom:10px}#lectoPanel-session .level-info{margin-bottom:12px}#lectoPanel-session .student{margin-bottom:12px}.lecto-local-student{width:100%;margin:0 0 18px;background:var(--v3-dark);color:#fff;border-radius:15px;padding:14px 18px}.reading-box{border-radius:20px;min-height:230px}.top,.metrics{gap:8px}.stat{border:1px solid var(--v3-line)}
+.student-manager,.reader-profile-panel,.history-panel,.battery-runner,.adaptive-battery,.subtests-panel,.report-panel,.tools-panel{margin:0 0 14px!important;border:1px solid var(--v3-line)!important;border-radius:18px!important;box-shadow:none!important}.cloud-float-wrap{position:static!important;transform:none!important;width:100%!important;pointer-events:auto!important;margin-top:14px}.cloud-float-wrap .cloud-panel{box-shadow:none!important;border:1px solid var(--v3-line)!important}.view-switch,.screen-tools,.connection-note,.remote-status{margin-top:12px}
+#lectoLocalStudent{position:fixed;inset:0;z-index:30000;background:#fff;display:grid;grid-template-rows:auto 1fr auto;color:var(--v3-text)}#lectoLocalStudent[hidden]{display:none}#lectoLocalStudent header{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--v3-line)}#lectoLocalStudent header div{display:grid;gap:2px}#lectoLocalStudent header span{font-size:13px;color:var(--v3-muted)}#lectoLocalStudent header button{background:#f1f4f8;color:#344054;padding:10px 14px;font-size:13px}#lectoLocalStudent main{display:grid;place-items:center;padding:5vw}#lectoLocalStimulus{text-align:center;font-size:clamp(58px,11vw,150px);font-weight:850;line-height:1.15;max-width:1200px}#lectoLocalStimulus.phrase{font-size:clamp(34px,5.8vw,72px);line-height:1.3}#lectoLocalStudent footer{display:grid;place-items:center;gap:7px;padding:18px 24px 26px;border-top:1px solid #f0f2f5}#lectoLocalNext{min-width:min(480px,90vw);min-height:68px;background:var(--v3-blue);color:#fff;font-size:21px}#lectoLocalStudent footer span{font-size:12px;color:var(--v3-muted)}
+@keyframes v3in{from{opacity:.55;transform:translateY(3px)}to{opacity:1;transform:none}}@media(max-width:700px){body{padding:10px}.app{padding:18px;border-radius:20px}#lectoMainNav{display:grid;grid-template-columns:repeat(2,1fr)}#lectoMainNav button{min-width:0}.lecto-panel-head{align-items:start}.top,.metrics{grid-template-columns:1fr}.session-mode,.mode{grid-template-columns:1fr 1fr}.levels{grid-template-columns:repeat(2,1fr)}}
+</style></head>
 <body>
 
-<div class="cloud-float-wrap" id="cloudFloatWrap">
-  <section class="cloud-panel cloud-collapsible collapsed" id="cloudPanel">
-    <button type="button" class="cloud-summary" id="cloudSummaryBtn" aria-expanded="false">
-      <span id="cloudSummaryText">☁ Accés privat</span>
-      <span id="cloudChevron">▾</span>
-    </button>
-    <div class="cloud-body" id="cloudBody">
-      <div class="cloud-grid">
-        <input id="cloudEmail" type="email" autocomplete="email" placeholder="Correu electrònic">
-        <input id="cloudPassword" type="password" autocomplete="current-password" placeholder="Contrasenya">
-      </div>
-      <div class="cloud-actions">
-        <button type="button" id="cloudLoginBtn">Entrar</button>
-        <button type="button" id="cloudResetBtn">He oblidat la contrasenya</button>
-        <button type="button" id="cloudSyncBtn" disabled>Sincronitzar ara</button>
-        <button type="button" id="cloudLogoutBtn" disabled>Sortir</button>
-      </div>
-      <div class="cloud-status" id="cloudStatus">Accés privat. Inicia sessió amb el teu compte propietari.</div>
-    </div>
-  </section>
-</div>
-
-
-
-
 <main class="app">
-<h1>Lectura guiada</h1>
-<div class="small-note" id="bankInfo" style="margin-top:8px">
-  <strong>Banc ampli d'entrenament:</strong> 3000 paraules + 3000 pseudoparaules + 1000 frases. En mode entrenament, les frases es generen combinant el vocabulari disponible segons el nivell. Les bateries d'avaluació mantenen bancs tancats i estables.
-</div>
+<h1>Lecto</h1>
 
-<p class="subtitle">Avaluació i entrenament de la fluïdesa lectora</p>
+<p class="subtitle">Lectura, avaluació i seguiment</p><nav aria-label="Apartats de Lecto" id="lectoMainNav"><button data-panel="session" type="button">Sessió</button><button data-panel="students" type="button">Alumnat</button><button data-panel="evaluation" type="button">Avaluació</button><button data-panel="followup" type="button">Seguiment</button><button data-panel="settings" type="button">Configuració</button></nav>
 
 
-<section class="tools-panel collapsed" id="toolsPanel">
-  <button type="button" class="tools-summary" id="toolsSummaryBtn" aria-expanded="false">
-    <span>🧰 Eines professionals</span><span id="toolsChevron">▾</span>
-  </button>
-  <div class="tools-body">
-    <div class="tools-grid">
-      <div class="tool-card">
-        <h4>Gravadora de veu</h4>
-        <div class="tool-row"><button id="recStartBtn">Iniciar</button><button id="recStopBtn" disabled>Aturar</button><button id="recClearBtn">Esborrar</button></div>
-        <div id="recStatus" style="margin-top:8px;opacity:.8">Preparada.</div>
-        <div class="audio-list" id="audioList"></div>
-      </div>
-      <div class="tool-card">
-        <h4>Cronòmetre</h4>
-        <div class="tool-display" id="stopwatchDisplay">00:00.0</div>
-        <div class="tool-row"><button id="swStartBtn">Iniciar</button><button id="swPauseBtn">Pausar</button><button id="swResetBtn">Reiniciar</button></div>
-      </div>
-      <div class="tool-card">
-        <h4>Compte enrere</h4>
-        <input id="countdownSeconds" type="number" min="1" value="60" placeholder="Segons">
-        <div class="tool-display" id="countdownDisplay">01:00</div>
-        <div class="tool-row"><button id="cdStartBtn">Iniciar</button><button id="cdPauseBtn">Pausar</button><button id="cdResetBtn">Reiniciar</button></div>
-      </div>
-      <div class="tool-card">
-        <h4>Comptador manual</h4>
-        <div class="tool-display" id="manualCounterDisplay">0</div>
-        <div class="tool-row"><button id="counterMinusBtn">−1</button><button id="counterPlusBtn">+1</button><button id="counterResetBtn">0</button></div>
-      </div>
-      <div class="tool-card">
-        <h4>Calculadora</h4>
-        <input id="calcDisplay" type="text" inputmode="decimal" readonly value="">
-        <div class="calc-grid" id="calcGrid">
-          <button data-calc="7">7</button><button data-calc="8">8</button><button data-calc="9">9</button><button data-calc="/">÷</button>
-          <button data-calc="4">4</button><button data-calc="5">5</button><button data-calc="6">6</button><button data-calc="*">×</button>
-          <button data-calc="1">1</button><button data-calc="2">2</button><button data-calc="3">3</button><button data-calc="-">−</button>
-          <button data-calc="0">0</button><button data-calc=".">.</button><button data-calc="=">=</button><button data-calc="+">+</button>
-        </div>
-        <button id="calcClearBtn" style="margin-top:6px">Netejar</button>
-      </div>
-      <div class="tool-card">
-        <h4>Notes ràpides</h4>
-        <textarea id="quickNotes" placeholder="Observacions breus de la sessió..."></textarea>
-        <div class="tool-row"><button id="saveNoteBtn">Desar nota</button><button id="clearNoteBtn">Netejar</button></div>
-        <div id="noteStatus" style="margin-top:8px;opacity:.8"></div>
-      </div>
-    </div>
-  </div>
-</section>
 
 
-<div class="view-switch professional-only" aria-label="Vista de treball">
-  <button id="professionalViewBtn" class="active">Professional</button>
-  <button id="studentViewBtn">Vista alumne</button>
-</div>
-<div class="screen-tools professional-only">
-  <input id="sessionCode" inputmode="numeric" maxlength="6" placeholder="Codi de sessió" aria-label="Codi de sessió">
-  <button id="openStudentBtn">Obrir pantalla alumne ↗</button>
-</div>
-<div class="connection-note professional-only">Comparteix el <strong>codi de sessió</strong> amb el dispositiu de l’alumne. Tots dos dispositius han de tenir connexió a Internet. La vista de l’alumne només mostra l’estímul lector.</div>
-<div class="remote-status professional-only"><span><span class="remote-led waiting" id="remoteLed"></span><strong id="remoteStatus">Preparant connexió…</strong></span><span>Codi: <span class="session-code-display" id="sessionCodeDisplay">—</span></span></div>
-<section class="student-connect" id="studentConnectPanel">
-  <h2>Connectar amb el professional</h2>
-  <p>Escriu el codi de sis xifres que apareix al dispositiu del professional.</p>
-  <div class="student-connect-row"><input id="studentSessionCode" inputmode="numeric" maxlength="6" placeholder="Codi de sessió" aria-label="Codi de sessió de l'alumne"><button id="studentConnectBtn">Connectar</button></div>
-  <div class="connect-state" id="studentConnectState">Encara no connectat.</div>
-</section>
-<div class="student-screen-status" id="studentScreenStatus">Esperant que el professional iniciï la sessió…</div>
 
-<div class="session-mode professional-only" aria-label="Tipus de sessió">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="lecto-panel" data-panel-content="session" id="lectoPanel-session"><div class="lecto-panel-head"><div><span class="eyebrow">SESSIÓ DE LECTURA</span><h2>Prepara i comença</h2><p>Configura només el necessari. Durant la lectura, l’alumne pot veure una pantalla neta en aquest mateix dispositiu.</p></div></div><div aria-label="Tipus de sessió" class="session-mode professional-only">
 <section class="reading-font-selector" id="readingFontSelector">
-  <span class="label">Tipus de lletra per a l’alumne</span>
-  <div class="reading-font-options">
-    <button type="button" id="fontUpperBtn" class="active">MAJÚSCULA</button>
-    <button type="button" id="fontCursiveBtn">Lligada escolar</button>
-    <button type="button" id="fontPrintBtn">Impremta</button>
-  </div>
+<span class="label">Tipus de lletra per a l’alumne</span>
+<div class="reading-font-options">
+<button class="active" id="fontUpperBtn" type="button">MAJÚSCULA</button>
+<button id="fontCursiveBtn" type="button">Lligada escolar</button>
+<button id="fontPrintBtn" type="button">Impremta</button>
+</div>
 </section>
-
-  <button id="evaluationMode" class="active">Avaluació</button>
-  <button id="trainingMode">Entrenament</button>
-</div>
-
-<div class="training-options professional-only" id="trainingOptions">
-  <label>Durada de l’entrenament
+<button class="active" id="evaluationMode">Avaluació</button>
+<button id="trainingMode">Entrenament</button>
+</div><div class="training-options professional-only" id="trainingOptions">
+<label>Durada de l’entrenament
     <select id="trainingDuration">
-      <option value="30">30 segons</option>
-      <option value="60" selected>60 segons</option>
-      <option value="90">90 segons</option>
-      <option value="120">120 segons</option>
-      <option value="0">Sense límit</option>
-    </select>
-  </label>
-  <div class="small-note"><strong>Entrenament:</strong> permet ajustar o eliminar el temps. La sessió es pot finalitzar manualment quan convingui.</div>
+<option value="30">30 segons</option>
+<option selected="" value="60">60 segons</option>
+<option value="90">90 segons</option>
+<option value="120">120 segons</option>
+<option value="0">Sense límit</option>
+</select>
+</label>
+<div class="small-note"><strong>Entrenament:</strong> permet ajustar o eliminar el temps. La sessió es pot finalitzar manualment quan convingui.</div>
+</div><div class="mode professional-only">
+<button class="active" id="pseudoMode">Pseudoparaules</button>
+<button id="wordMode">Paraules reals</button>
+<button id="phraseMode">Frases</button>
+</div><div aria-label="Selecció de nivell" class="levels professional-only">
+<button class="level-btn active" data-level="1">Nivell 1</button>
+<button class="level-btn" data-level="2">Nivell 2</button>
+<button class="level-btn" data-level="3">Nivell 3</button>
+<button class="level-btn" data-level="4">Nivell 4</button>
+<button class="level-btn pseudo-extra" data-level="5">Nivell 5</button>
+<button class="level-btn pseudo-extra" data-level="6">Nivell 6</button>
+</div><div class="level-info professional-only" id="levelInfo"></div><div class="structure-chip professional-only" id="structureChip" style="display:none">Estructura actual: <strong id="structureText">—</strong></div><div class="student professional-only">
+<input id="studentName" placeholder="Nom de l’alumne/a"/>
+<input id="reportEmail" placeholder="Correu per a l’informe" type="email"/>
+</div><button class="lecto-local-student" id="lectoLocalStudentBtn" type="button">Obrir mode alumne en aquest dispositiu</button><section class="top professional-only">
+<div class="stat"><div class="label">Temps</div><div class="value timer" id="timer">60</div></div>
+<div class="stat"><div class="label" id="scoreLabel">Pseudoparaules llegides</div><div class="value" id="score">0</div></div>
+</section><section aria-label="Indicadors de sessió" class="metrics professional-only">
+<div class="stat"><div class="label">Precisió</div><div class="value" id="accuracyLive">—</div></div>
+<div class="stat"><div class="label">Correctes/min</div><div class="value" id="correctPerMinLive">—</div></div>
+<div class="stat"><div class="label">Autocorreccions</div><div class="value" id="selfCorrectionsLive">0</div></div>
+</section><section class="reading-box"><div class="word" id="readingText">mipa</div></section><section aria-label="Registre d’incidències lectores" class="error-panel professional-only">
+<div class="error-title">Registre docent d’incidències</div>
+<div class="error-grid">
+<button class="error-btn" data-error="omissio" disabled="">Omissió</button>
+<button class="error-btn" data-error="substitucio" disabled="">Substitució</button>
+<button class="error-btn" data-error="inversio" disabled="">Inversió</button>
+<button class="error-btn" data-error="sillabeig" disabled="">Sil·labeig</button>
+<button class="error-btn" data-error="autocorreccio" disabled="">Autocorrecció</button>
+<button class="error-btn" data-error="ajuda" disabled="">Necessita ajuda</button>
 </div>
-
-<div class="mode professional-only">
-  <button id="pseudoMode" class="active">Pseudoparaules</button>
-  <button id="wordMode">Paraules reals</button>
-  <button id="phraseMode">Frases</button>
+<div class="error-summary">
+<span class="badge">Incidències: <strong id="incidentCount">0</strong></span>
+<span class="badge">Estímuls amb incidència: <strong id="itemsWithIncident">0</strong></span>
 </div>
-
-<div class="levels professional-only" aria-label="Selecció de nivell">
-  <button class="level-btn active" data-level="1">Nivell 1</button>
-  <button class="level-btn" data-level="2">Nivell 2</button>
-  <button class="level-btn" data-level="3">Nivell 3</button>
-  <button class="level-btn" data-level="4">Nivell 4</button>
-  <button class="level-btn pseudo-extra" data-level="5">Nivell 5</button>
-  <button class="level-btn pseudo-extra" data-level="6">Nivell 6</button>
+<div class="secondary-actions">
+<button disabled="" id="undoErrorBtn">↶ Desfer última incidència</button>
+<button disabled="" id="clearCurrentBtn">Netejar estímul actual</button>
 </div>
-
-<div class="level-info professional-only" id="levelInfo"></div>
-<div class="structure-chip professional-only" id="structureChip" style="display:none">Estructura actual: <strong id="structureText">—</strong></div>
-
-<div class="student professional-only">
-  <input id="studentName" placeholder="Nom de l’alumne/a">
-  <input id="reportEmail" type="email" placeholder="Correu per a l’informe">
+<div class="undo-note">Es poden marcar diverses incidències en un mateix estímul abans de prémer «Llegida».</div>
+</section><section aria-label="Ajudes graduades d'entrenament" class="help-panel professional-only" id="helpPanel">
+<div class="help-title">Ajudes graduades · només entrenament</div>
+<div class="help-sub">Utilitza la mínima ajuda necessària. Cada ajuda queda registrada i es mostra també a la pantalla de l'alumne.</div>
+<div class="help-grid">
+<button class="help-btn" disabled="" id="segmentHelpBtn">1 · Segmentar</button>
+<button class="help-btn" disabled="" id="highlightHelpBtn">2 · Ressaltar dificultat</button>
+<button class="help-btn" disabled="" id="modelHelpBtn">3 · Model docent + repetició</button>
 </div>
-
-
-
-
-<section class="professional-only" id="stimulusBankPanel" style="margin:10px 0">
-  <details>
-    <summary style="cursor:pointer;font-weight:700">Banc d'estímuls · 3000 + 3000 + 1000</summary>
-    <div class="small-note" style="margin-top:8px">
+<div class="help-stats">
+<span class="badge">Ajudes totals: <strong id="helpTotal">0</strong></span>
+<span class="badge">Nivell màxim d'ajuda: <strong id="helpMax">0</strong></span>
+</div>
+</section><section aria-label="Comprensió breu" class="comprehension-panel professional-only" id="comprehensionPanel">
+<div class="help-title">Comprensió breu de la frase</div>
+<div class="help-sub">Només en entrenament. La resposta és oral i la valora el professional; no genera una qualificació automàtica.</div>
+<div class="comprehension-question" id="comprehensionQuestion">—</div>
+<div class="comprehension-actions">
+<button class="comp-ok" id="compIndependentBtn">Resposta autònoma</button>
+<button class="comp-help" id="compSupportedBtn">Resposta amb ajuda</button>
+</div>
+</section><div class="buttons professional-only">
+<button disabled="" id="readBtn">✓ Llegida</button>
+<button id="startBtn">Començar</button>
+<button class="finish-btn" disabled="" id="finishBtn">Finalitzar sessió</button>
+</div><div class="message" id="message">Prem «Començar» quan estigui preparat/da.</div><section class="report professional-only" id="report">
+<h2>Informe de lectura</h2>
+<p><strong>Alumne/a:</strong> <span id="rName">—</span></p>
+<p><strong>Modalitat:</strong> <span id="rMode">—</span></p>
+<p><strong>Nivell:</strong> <span id="rLevel">—</span></p>
+<p><strong>Tipus de sessió:</strong> <span id="rSessionType">Avaluació</span></p>
+<p><strong>Durada:</strong> <span id="rDuration">60 segons</span></p>
+<p><strong>Resultat:</strong> <span id="rScore">0</span></p>
+<p id="rWordsRow" style="display:none"><strong>Paraules totals en frases:</strong> <span id="rWords">0</span></p>
+<div class="report-metrics">
+<div class="report-metric"><span>Precisió</span><strong id="rAccuracy">—</strong></div>
+<div class="report-metric"><span>Correctes/min</span><strong id="rCorrectPerMin">—</strong></div>
+<div class="report-metric"><span>Errors de precisió</span><strong id="rAccuracyErrors">0</strong></div>
+</div>
+<p class="small-note">La precisió considera com a errors no resolts les omissions, substitucions i inversions registrades. El sil·labeig, l’ajuda i l’autocorrecció es descriuen com a incidències del procés lector.</p>
+<div class="report-errors" id="rHelpSection">
+<strong>Ajudes d'entrenament</strong>
+<ul id="rHelpList"></ul>
+</div>
+<div class="report-errors" id="rComprehensionSection">
+<strong>Comprensió de frases</strong>
+<ul id="rComprehensionList"></ul>
+</div>
+<p><strong>Data:</strong> <span id="rDate">—</span></p>
+<div class="report-errors">
+<p><strong>Lectures sense incidències:</strong> <span id="rClean">0</span></p>
+<p><strong>Estímuls amb incidències:</strong> <span id="rIncidentItems">0</span></p>
+<p><strong>Incidències registrades:</strong> <span id="rIncidentTotal">0</span></p>
+<ul id="rErrorList"></ul>
+</div>
+<div class="phonology-report" id="phonologyReport" style="display:none">
+<h3>Anàlisi per estructura fonològica</h3>
+<div class="small-note">Mostra en quines estructures s'han concentrat els errors de precisió i les incidències observades.</div>
+<table class="phonology-table">
+<thead><tr><th>Estructura</th><th>Intentats</th><th>Correctes</th><th>Precisió</th><th>Incidències</th></tr></thead>
+<tbody id="phonologyBody"></tbody>
+</table>
+</div>
+<button id="emailBtn">✉ Enviar informe per correu</button>
+</section></section><section class="lecto-panel" data-panel-content="students" hidden="" id="lectoPanel-students"><div class="lecto-panel-head"><div><span class="eyebrow">ALUMNAT</span><h2>Perfils i selecció</h2><p>Gestiona els perfils sense barrejar-los amb la pantalla de sessió.</p></div></div><section class="student-manager" id="studentManager">
+<h3>Alumnes</h3>
+<div class="student-manager-top">
+<input id="newStudentName" placeholder="Nom o codi de l'alumne" type="text"/>
+<input id="newStudentGroup" placeholder="Curs / grup (opcional)" type="text"/>
+<button id="addStudentBtn" type="button">Nou alumne</button>
+</div>
+<div class="student-list" id="studentList"></div>
+<div class="student-detail" id="studentDetail" style="display:none">
+<strong id="studentDetailName">—</strong>
+<div class="student-detail-grid">
+<div><small>Identificador intern</small><br/><span id="studentDetailId">—</span></div>
+<div><small>Curs / grup</small><br/><span id="studentDetailGroup">—</span></div>
+<div><small>Sessions registrades</small><br/><span id="studentDetailSessions">0</span></div>
+</div>
+<div class="student-actions">
+<button id="useStudentBtn" type="button">Treballar amb aquest alumne</button>
+<button id="exportStudentBtn" type="button">Exportar fitxa</button>
+<button id="deleteStudentBtn" type="button">Eliminar alumne</button>
+</div>
+</div>
+<div class="student-filebox">
+<strong>Importar fitxa d'alumne</strong><br/>
+<input accept=".json,application/json" id="importStudentFile" type="file"/>
+</div>
+</section><section class="reader-profile-panel" id="readerProfilePanel">
+<h3>Perfil lector i orientació de la sessió</h3>
+<div class="reader-profile-grid">
+<div class="reader-card">
+<strong>Síntesi descriptiva</strong>
+<div class="reader-summary" id="readerProfileSummary">Encara no hi ha prou sessions registrades per generar una síntesi.</div>
+</div>
+<div class="reader-card">
+<strong>Focus prioritari</strong>
+<div id="readerProfileFocus">—</div>
+</div>
+</div>
+<div class="session-plan" id="sessionPlan">
+<strong>Proposta per a la propera sessió</strong>
+<div id="sessionPlanText">Registra almenys dues sessions per obtenir una proposta.</div>
+</div>
+<div class="profile-actions">
+<button id="prepareSessionBtn" type="button">Preparar sessió</button>
+<button disabled="" id="applySessionBtn" type="button">Aplicar proposta</button>
+</div>
+</section></section><section class="lecto-panel" data-panel-content="evaluation" hidden="" id="lectoPanel-evaluation"><div class="lecto-panel-head"><div><span class="eyebrow">AVALUACIÓ</span><h2>Bateries i subproves</h2><p>Cribratge, aprofundiment i observació específica en un únic espai.</p></div></div><section class="battery-runner" id="batteryRunner">
+<h3>Bateria de lectura</h3>
+<div id="batteryIntro">
+<p>Prova guiada amb inici i final. La dificultat augmenta progressivament i s’atura quan es confirma el punt de dificultat.</p>
+<button id="batteryStartMainBtn" type="button">Iniciar bateria</button>
+</div>
+<div id="batteryActive" style="display:none">
+<div class="battery-progress-wrap">
+<div class="battery-progress-track"><div class="battery-progress-bar" id="batteryProgressBar"></div></div>
+<div class="battery-meta">
+<span id="batteryPhaseLabel">Fase 1</span>
+<span id="batteryCounter">0/0</span>
+</div>
+</div>
+<div class="battery-stimulus reading-font-uppercase" id="batteryStimulus">—</div>
+<div class="battery-controls">
+<button id="batteryCorrectMainBtn" type="button">Correcta</button>
+<button id="batteryAutoMainBtn" type="button">Autocorrecció</button>
+<button id="batteryErrorMainBtn" type="button">Error</button>
+<button id="batteryStopMainBtn" type="button">Finalitzar ara</button>
+</div>
+</div>
+<div class="battery-final" id="batteryFinal" style="display:none"></div>
+</section><section class="adaptive-battery" id="adaptiveBattery">
+<h3>Bateria d'avaluació adaptativa</h3>
+<div class="battery-grid">
+<div class="battery-card">
+<strong>Objectiu</strong>
+<div>Cribratge breu, escalada adaptativa i aprofundiment en el punt on apareix la dificultat.</div>
+</div>
+<div class="battery-card">
+<strong>Criteri</strong>
+<div>No és una prova estandarditzada. Genera un perfil funcional orientatiu a partir del rendiment observat.</div>
+</div>
+</div>
+<div class="battery-status" id="batteryStatus">Bateria preparada. Selecciona un alumne i inicia el cribratge.</div>
+<div class="battery-actions">
+<button id="startBatteryBtn" type="button">Iniciar cribratge</button>
+<button disabled="" id="batteryCorrectBtn" type="button">Correcta</button>
+<button disabled="" id="batteryErrorBtn" type="button">Error</button>
+<button disabled="" id="batteryAutoBtn" type="button">Autocorrecció</button>
+<button disabled="" id="batteryStopBtn" type="button">Finalitzar</button>
+</div>
+<div class="battery-result" id="batteryResult" style="display:none"></div>
+</section><section class="subtests-panel" id="specificSubtests">
+<h3>Subproves específiques</h3>
+<div class="subtest-list">
+<div class="subtest-card"><strong>Sinfons</strong><br/>Inicial, medial i final.</div>
+<div class="subtest-card"><strong>Inverses i CVC</strong><br/>VC, CVC i coda.</div>
+<div class="subtest-card"><strong>Longitud</strong><br/>2, 3 i 4 síl·labes.</div>
+<div class="subtest-card"><strong>Via lèxica</strong><br/>Paraula real i pseudoparaula comparables.</div>
+<div class="subtest-card"><strong>Fluïdesa</strong><br/>Precisió, temps i autocorreccions.</div>
+<div class="subtest-card"><strong>Comprensió</strong><br/>Literal, relacional i inferencial breu.</div>
+</div>
+<div class="battery-grid" style="margin-top:12px">
+<div class="battery-card">
+<strong>Subprova</strong>
+<select id="subtestTypeSelect" style="width:100%;margin-top:8px">
+<option value="suggested">Suggerida per la bateria</option>
+<option value="sinfon">Sinfons</option>
+<option value="inverse">Inverses i CVC</option>
+<option value="length">Longitud sil·làbica</option>
+<option value="lexical">Via lèxica</option>
+<option value="fluency">Fluïdesa</option>
+<option value="comprehension">Comprensió</option>
+</select>
+</div>
+<div class="battery-card">
+<strong>Criteri funcional</strong>
+<div>≥ 80% consolidat · 60–79% emergent · &lt; 60% prioritat de treball.</div>
+</div>
+</div>
+<div class="subtest-status" id="subtestStatus">Selecciona un alumne i completa una bateria o tria una subprova manualment.</div>
+<div class="battery-progress" style="margin-top:8px"><div id="subtestProgressBar" style="width:0%"></div></div>
+<div class="battery-meta" style="margin-top:6px"><span id="subtestCounter">0 / 0</span><span id="subtestPhaseLabel">Preparada</span></div>
+<div class="subtest-actions">
+<button id="startSuggestedSubtestBtn">Iniciar subprova</button>
+<button disabled="" id="subtestCorrectBtn">Correcta</button>
+<button disabled="" id="subtestAutoBtn">Autocorrecció</button>
+<button disabled="" id="subtestErrorBtn">Error</button>
+<button disabled="" id="subtestHelpBtn">Amb ajuda</button>
+<button disabled="" id="subtestStopBtn">Finalitzar</button>
+</div>
+<div class="subtest-result" id="subtestResult" style="display:none"></div>
+</section></section><section class="lecto-panel" data-panel-content="followup" hidden="" id="lectoPanel-followup"><div class="lecto-panel-head"><div><span class="eyebrow">SEGUIMENT</span><h2>Evolució i informes</h2><p>Consulta sessions anteriors i genera la síntesi pedagògica.</p></div></div><section class="history-panel" id="historyPanel">
+<h2>Historial i evolució</h2>
+<div class="profile-row">
+<input id="profileName" placeholder="Nom de l’alumne/a" type="text"/>
+<button id="saveProfileBtn" type="button">Desar perfil</button>
+</div>
+<div class="history-grid">
+<div>
+<h3>Sessions desades</h3>
+<div class="history-list" id="historyList"><div class="muted">Encara no hi ha sessions desades.</div></div>
+<div class="history-actions">
+<button id="saveSessionBtn" type="button">Desar sessió actual</button>
+<button id="clearHistoryBtn" type="button">Esborrar historial</button>
+</div>
+</div>
+<div>
+<h3>Evolució</h3>
+<div class="muted">Velocitat correcta/min i precisió de les últimes sessions.</div>
+<div class="chart-wrap"><canvas class="mini-chart" height="180" id="progressChart" width="560"></canvas></div>
+<div class="muted" id="progressSummary" style="margin-top:8px"></div>
+</div>
+</div>
+</section><section class="report-panel" id="integratedReport">
+<h3>Informe pedagògic de lectura</h3>
+<div class="report-actions">
+<button id="generateBriefReportBtn">Resum professional</button>
+<button id="generateFullReportBtn">Informe complet</button>
+<button id="printReportBtn">Imprimir / PDF</button>
+</div>
+<div class="report-doc" id="reportDocument"><span class="report-note">Selecciona un alumne i genera l'informe.</span></div>
+</section></section><section class="lecto-panel" data-panel-content="settings" hidden="" id="lectoPanel-settings"><div class="lecto-panel-head"><div><span class="eyebrow">CONFIGURACIÓ</span><h2>Eines i connexions</h2><p>Opcions que no necessites veure durant una sessió ordinària.</p></div></div><section class="tools-panel collapsed" id="toolsPanel">
+<button aria-expanded="false" class="tools-summary" id="toolsSummaryBtn" type="button">
+<span>🧰 Eines professionals</span><span id="toolsChevron">▾</span>
+</button>
+<div class="tools-body">
+<div class="tools-grid">
+<div class="tool-card">
+<h4>Gravadora de veu</h4>
+<div class="tool-row"><button id="recStartBtn">Iniciar</button><button disabled="" id="recStopBtn">Aturar</button><button id="recClearBtn">Esborrar</button></div>
+<div id="recStatus" style="margin-top:8px;opacity:.8">Preparada.</div>
+<div class="audio-list" id="audioList"></div>
+</div>
+<div class="tool-card">
+<h4>Cronòmetre</h4>
+<div class="tool-display" id="stopwatchDisplay">00:00.0</div>
+<div class="tool-row"><button id="swStartBtn">Iniciar</button><button id="swPauseBtn">Pausar</button><button id="swResetBtn">Reiniciar</button></div>
+</div>
+<div class="tool-card">
+<h4>Compte enrere</h4>
+<input id="countdownSeconds" min="1" placeholder="Segons" type="number" value="60"/>
+<div class="tool-display" id="countdownDisplay">01:00</div>
+<div class="tool-row"><button id="cdStartBtn">Iniciar</button><button id="cdPauseBtn">Pausar</button><button id="cdResetBtn">Reiniciar</button></div>
+</div>
+<div class="tool-card">
+<h4>Comptador manual</h4>
+<div class="tool-display" id="manualCounterDisplay">0</div>
+<div class="tool-row"><button id="counterMinusBtn">−1</button><button id="counterPlusBtn">+1</button><button id="counterResetBtn">0</button></div>
+</div>
+<div class="tool-card">
+<h4>Calculadora</h4>
+<input id="calcDisplay" inputmode="decimal" readonly="" type="text" value=""/>
+<div class="calc-grid" id="calcGrid">
+<button data-calc="7">7</button><button data-calc="8">8</button><button data-calc="9">9</button><button data-calc="/">÷</button>
+<button data-calc="4">4</button><button data-calc="5">5</button><button data-calc="6">6</button><button data-calc="*">×</button>
+<button data-calc="1">1</button><button data-calc="2">2</button><button data-calc="3">3</button><button data-calc="-">−</button>
+<button data-calc="0">0</button><button data-calc=".">.</button><button data-calc="=">=</button><button data-calc="+">+</button>
+</div>
+<button id="calcClearBtn" style="margin-top:6px">Netejar</button>
+</div>
+<div class="tool-card">
+<h4>Notes ràpides</h4>
+<textarea id="quickNotes" placeholder="Observacions breus de la sessió..."></textarea>
+<div class="tool-row"><button id="saveNoteBtn">Desar nota</button><button id="clearNoteBtn">Netejar</button></div>
+<div id="noteStatus" style="margin-top:8px;opacity:.8"></div>
+</div>
+</div>
+</div>
+</section><div aria-label="Vista de treball" class="view-switch professional-only">
+<button class="active" id="professionalViewBtn">Professional</button>
+<button id="studentViewBtn">Vista alumne</button>
+</div><div class="screen-tools professional-only">
+<input aria-label="Codi de sessió" id="sessionCode" inputmode="numeric" maxlength="6" placeholder="Codi de sessió"/>
+<button id="openStudentBtn">Obrir pantalla alumne ↗</button>
+</div><div class="connection-note professional-only">Comparteix el <strong>codi de sessió</strong> amb el dispositiu de l’alumne. Tots dos dispositius han de tenir connexió a Internet. La vista de l’alumne només mostra l’estímul lector.</div><div class="remote-status professional-only"><span><span class="remote-led waiting" id="remoteLed"></span><strong id="remoteStatus">Preparant connexió…</strong></span><span>Codi: <span class="session-code-display" id="sessionCodeDisplay">—</span></span></div><section class="student-connect" id="studentConnectPanel">
+<h2>Connectar amb el professional</h2>
+<p>Escriu el codi de sis xifres que apareix al dispositiu del professional.</p>
+<div class="student-connect-row"><input aria-label="Codi de sessió de l'alumne" id="studentSessionCode" inputmode="numeric" maxlength="6" placeholder="Codi de sessió"/><button id="studentConnectBtn">Connectar</button></div>
+<div class="connect-state" id="studentConnectState">Encara no connectat.</div>
+</section><div class="student-screen-status" id="studentScreenStatus">Esperant que el professional iniciï la sessió…</div><section class="professional-only" id="stimulusBankPanel" style="margin:10px 0">
+<details>
+<summary style="cursor:pointer;font-weight:700">Banc d'estímuls · 3000 + 3000 + 1000</summary>
+<div class="small-note" style="margin-top:8px">
       Entrenament: 3000 paraules i 3000 pseudoparaules graduades en 6 nivells (500 per nivell). Les 1000 frases queden distribuïdes en 5 nivells (200 per nivell) i es presenten de manera variable en entrenament.
     </div>
-  </details>
-</section>
-<div class="professional-only" id="workflowPanel">
-  <div class="workflow-bar">
-    <div class="workflow-step active" data-wstep="1">1 · Alumne</div>
-    <div class="workflow-step" data-wstep="2">2 · Avaluació</div>
-    <div class="workflow-step" data-wstep="3">3 · Aprofundiment</div>
-    <div class="workflow-step" data-wstep="4">4 · Informe</div>
-  </div>
-  <div class="next-action" id="nextActionBox">
-    <strong>Flux recomanat</strong>
-    <span class="muted">Selecciona un alumne i Lecto et proposarà el següent pas.</span>
-    <div class="actions" id="nextActionButtons"></div>
-  </div>
+</details>
+</section><div class="hint professional-only">A l’ordinador també es pot fer servir la barra espaiadora o Enter per marcar cada lectura.</div><div class="teacher-note professional-only"><strong>Ús docent:</strong> els nivells graduen la complexitat lectora, però no s’han d’interpretar com una prova diagnòstica automàtica. El registre d’incidències és observacional: permet descriure patrons de lectura, no diagnosticar-los. Per decidir el nivell següent convé considerar precisió, fluïdesa, autocorreccions, necessitat d’ajuda i esforç lector. En pseudoparaules, la Fase 2 registra també l’estructura sil·làbica de cada estímul per localitzar patrons de dificultat.</div><div class="small-note" id="bankInfo" style="margin-top:8px">
+<strong>Banc ampli d'entrenament:</strong> 3000 paraules + 3000 pseudoparaules + 1000 frases. En mode entrenament, les frases es generen combinant el vocabulari disponible segons el nivell. Les bateries d'avaluació mantenen bancs tancats i estables.
+</div><div class="cloud-float-wrap" id="cloudFloatWrap">
+<section class="cloud-panel cloud-collapsible collapsed" id="cloudPanel">
+<button aria-expanded="false" class="cloud-summary" id="cloudSummaryBtn" type="button">
+<span id="cloudSummaryText">☁ Accés privat</span>
+<span id="cloudChevron">▾</span>
+</button>
+<div class="cloud-body" id="cloudBody">
+<div class="cloud-grid">
+<input autocomplete="email" id="cloudEmail" placeholder="Correu electrònic" type="email"/>
+<input autocomplete="current-password" id="cloudPassword" placeholder="Contrasenya" type="password"/>
 </div>
-<div class="compact-nav professional-only" id="compactNav">
-  <label for="compactNavSelect">Ves a</label>
-  <select id="compactNavSelect">
-    <option value="">Selecciona un apartat…</option>
-    <option value="studentManager">Alumnes</option>
-    <option value="readerProfilePanel">Perfil lector</option>
-    <option value="historyPanel">Historial i evolució</option>
-    <option value="batteryRunner">Bateria de lectura</option>
-    <option value="adaptiveBattery">Bateria adaptativa</option>
-    <option value="specificSubtests">Subproves específiques</option>
-    <option value="integratedReport">Informe pedagògic</option>
-    <option value="report">Informe de sessió</option>
-  </select>
+<div class="cloud-actions">
+<button id="cloudLoginBtn" type="button">Entrar</button>
+<button id="cloudResetBtn" type="button">He oblidat la contrasenya</button>
+<button disabled="" id="cloudSyncBtn" type="button">Sincronitzar ara</button>
+<button disabled="" id="cloudLogoutBtn" type="button">Sortir</button>
 </div>
-<section class="top professional-only">
-  <div class="stat"><div class="label">Temps</div><div class="value timer" id="timer">60</div></div>
-  <div class="stat"><div class="label" id="scoreLabel">Pseudoparaules llegides</div><div class="value" id="score">0</div></div>
-</section>
-<section class="metrics professional-only" aria-label="Indicadors de sessió">
-  <div class="stat"><div class="label">Precisió</div><div class="value" id="accuracyLive">—</div></div>
-  <div class="stat"><div class="label">Correctes/min</div><div class="value" id="correctPerMinLive">—</div></div>
-  <div class="stat"><div class="label">Autocorreccions</div><div class="value" id="selfCorrectionsLive">0</div></div>
-</section>
-
-<section class="reading-box"><div id="readingText" class="word">mipa</div></section>
-
-<section class="error-panel professional-only" aria-label="Registre d’incidències lectores">
-  <div class="error-title">Registre docent d’incidències</div>
-  <div class="error-grid">
-    <button class="error-btn" data-error="omissio" disabled>Omissió</button>
-    <button class="error-btn" data-error="substitucio" disabled>Substitució</button>
-    <button class="error-btn" data-error="inversio" disabled>Inversió</button>
-    <button class="error-btn" data-error="sillabeig" disabled>Sil·labeig</button>
-    <button class="error-btn" data-error="autocorreccio" disabled>Autocorrecció</button>
-    <button class="error-btn" data-error="ajuda" disabled>Necessita ajuda</button>
-  </div>
-  <div class="error-summary">
-    <span class="badge">Incidències: <strong id="incidentCount">0</strong></span>
-    <span class="badge">Estímuls amb incidència: <strong id="itemsWithIncident">0</strong></span>
-  </div>
-  <div class="secondary-actions">
-    <button id="undoErrorBtn" disabled>↶ Desfer última incidència</button>
-    <button id="clearCurrentBtn" disabled>Netejar estímul actual</button>
-  </div>
-  <div class="undo-note">Es poden marcar diverses incidències en un mateix estímul abans de prémer «Llegida».</div>
-</section>
-
-<section class="help-panel professional-only" id="helpPanel" aria-label="Ajudes graduades d'entrenament">
-  <div class="help-title">Ajudes graduades · només entrenament</div>
-  <div class="help-sub">Utilitza la mínima ajuda necessària. Cada ajuda queda registrada i es mostra també a la pantalla de l'alumne.</div>
-  <div class="help-grid">
-    <button class="help-btn" id="segmentHelpBtn" disabled>1 · Segmentar</button>
-    <button class="help-btn" id="highlightHelpBtn" disabled>2 · Ressaltar dificultat</button>
-    <button class="help-btn" id="modelHelpBtn" disabled>3 · Model docent + repetició</button>
-  </div>
-  <div class="help-stats">
-    <span class="badge">Ajudes totals: <strong id="helpTotal">0</strong></span>
-    <span class="badge">Nivell màxim d'ajuda: <strong id="helpMax">0</strong></span>
-  </div>
-</section>
-
-<section class="comprehension-panel professional-only" id="comprehensionPanel" aria-label="Comprensió breu">
-  <div class="help-title">Comprensió breu de la frase</div>
-  <div class="help-sub">Només en entrenament. La resposta és oral i la valora el professional; no genera una qualificació automàtica.</div>
-  <div class="comprehension-question" id="comprehensionQuestion">—</div>
-  <div class="comprehension-actions">
-    <button class="comp-ok" id="compIndependentBtn">Resposta autònoma</button>
-    <button class="comp-help" id="compSupportedBtn">Resposta amb ajuda</button>
-  </div>
-</section>
-
-<div class="buttons professional-only">
-  <button id="readBtn" disabled>✓ Llegida</button>
-  <button id="startBtn">Començar</button>
-  <button id="finishBtn" class="finish-btn" disabled>Finalitzar sessió</button>
+<div class="cloud-status" id="cloudStatus">Accés privat. Inicia sessió amb el teu compte propietari.</div>
 </div>
-
-<div class="message" id="message">Prem «Començar» quan estigui preparat/da.</div>
-
-<section class="report professional-only" id="report">
-  <h2>Informe de lectura</h2>
-  <p><strong>Alumne/a:</strong> <span id="rName">—</span></p>
-  <p><strong>Modalitat:</strong> <span id="rMode">—</span></p>
-  <p><strong>Nivell:</strong> <span id="rLevel">—</span></p>
-  <p><strong>Tipus de sessió:</strong> <span id="rSessionType">Avaluació</span></p>
-  <p><strong>Durada:</strong> <span id="rDuration">60 segons</span></p>
-  <p><strong>Resultat:</strong> <span id="rScore">0</span></p>
-  <p id="rWordsRow" style="display:none"><strong>Paraules totals en frases:</strong> <span id="rWords">0</span></p>
-  <div class="report-metrics">
-    <div class="report-metric"><span>Precisió</span><strong id="rAccuracy">—</strong></div>
-    <div class="report-metric"><span>Correctes/min</span><strong id="rCorrectPerMin">—</strong></div>
-    <div class="report-metric"><span>Errors de precisió</span><strong id="rAccuracyErrors">0</strong></div>
-  </div>
-  <p class="small-note">La precisió considera com a errors no resolts les omissions, substitucions i inversions registrades. El sil·labeig, l’ajuda i l’autocorrecció es descriuen com a incidències del procés lector.</p>
-  <div class="report-errors" id="rHelpSection">
-    <strong>Ajudes d'entrenament</strong>
-    <ul id="rHelpList"></ul>
-  </div>
-  <div class="report-errors" id="rComprehensionSection">
-    <strong>Comprensió de frases</strong>
-    <ul id="rComprehensionList"></ul>
-  </div>
-  <p><strong>Data:</strong> <span id="rDate">—</span></p>
-  <div class="report-errors">
-    <p><strong>Lectures sense incidències:</strong> <span id="rClean">0</span></p>
-    <p><strong>Estímuls amb incidències:</strong> <span id="rIncidentItems">0</span></p>
-    <p><strong>Incidències registrades:</strong> <span id="rIncidentTotal">0</span></p>
-    <ul id="rErrorList"></ul>
-  </div>
-  <div class="phonology-report" id="phonologyReport" style="display:none">
-    <h3>Anàlisi per estructura fonològica</h3>
-    <div class="small-note">Mostra en quines estructures s'han concentrat els errors de precisió i les incidències observades.</div>
-    <table class="phonology-table">
-      <thead><tr><th>Estructura</th><th>Intentats</th><th>Correctes</th><th>Precisió</th><th>Incidències</th></tr></thead>
-      <tbody id="phonologyBody"></tbody>
-    </table>
-  </div>
-  <button id="emailBtn">✉ Enviar informe per correu</button>
 </section>
-
-<div class="hint professional-only">A l’ordinador també es pot fer servir la barra espaiadora o Enter per marcar cada lectura.</div>
-<div class="teacher-note professional-only"><strong>Ús docent:</strong> els nivells graduen la complexitat lectora, però no s’han d’interpretar com una prova diagnòstica automàtica. El registre d’incidències és observacional: permet descriure patrons de lectura, no diagnosticar-los. Per decidir el nivell següent convé considerar precisió, fluïdesa, autocorreccions, necessitat d’ajuda i esforç lector. En pseudoparaules, la Fase 2 registra també l’estructura sil·làbica de cada estímul per localitzar patrons de dificultat.</div>
-
-<section class="history-panel" id="historyPanel">
-  <h2>Historial i evolució</h2>
-  <div class="profile-row">
-    <input id="profileName" type="text" placeholder="Nom de l’alumne/a">
-    <button id="saveProfileBtn" type="button">Desar perfil</button>
-  </div>
-  <div class="history-grid">
-    <div>
-      <h3>Sessions desades</h3>
-      <div id="historyList" class="history-list"><div class="muted">Encara no hi ha sessions desades.</div></div>
-      <div class="history-actions">
-        <button id="saveSessionBtn" type="button">Desar sessió actual</button>
-        <button id="clearHistoryBtn" type="button">Esborrar historial</button>
-      </div>
-    </div>
-    <div>
-      <h3>Evolució</h3>
-      <div class="muted">Velocitat correcta/min i precisió de les últimes sessions.</div>
-      <div class="chart-wrap"><canvas id="progressChart" class="mini-chart" width="560" height="180"></canvas></div>
-      <div id="progressSummary" class="muted" style="margin-top:8px"></div>
-    </div>
-  </div>
-</section>
-
-
-
-
-
-
-
-<section class="battery-runner" id="batteryRunner">
-  <h3>Bateria de lectura</h3>
-  <div id="batteryIntro">
-    <p>Prova guiada amb inici i final. La dificultat augmenta progressivament i s’atura quan es confirma el punt de dificultat.</p>
-    <button type="button" id="batteryStartMainBtn">Iniciar bateria</button>
-  </div>
-
-  <div id="batteryActive" style="display:none">
-    <div class="battery-progress-wrap">
-      <div class="battery-progress-track"><div class="battery-progress-bar" id="batteryProgressBar"></div></div>
-      <div class="battery-meta">
-        <span id="batteryPhaseLabel">Fase 1</span>
-        <span id="batteryCounter">0/0</span>
-      </div>
-    </div>
-
-    <div class="battery-stimulus reading-font-uppercase" id="batteryStimulus">—</div>
-
-    <div class="battery-controls">
-      <button type="button" id="batteryCorrectMainBtn">Correcta</button>
-      <button type="button" id="batteryAutoMainBtn">Autocorrecció</button>
-      <button type="button" id="batteryErrorMainBtn">Error</button>
-      <button type="button" id="batteryStopMainBtn">Finalitzar ara</button>
-    </div>
-  </div>
-
-  <div class="battery-final" id="batteryFinal" style="display:none"></div>
-</section>
-
-<section class="adaptive-battery" id="adaptiveBattery">
-  <h3>Bateria d'avaluació adaptativa</h3>
-  <div class="battery-grid">
-    <div class="battery-card">
-      <strong>Objectiu</strong>
-      <div>Cribratge breu, escalada adaptativa i aprofundiment en el punt on apareix la dificultat.</div>
-    </div>
-    <div class="battery-card">
-      <strong>Criteri</strong>
-      <div>No és una prova estandarditzada. Genera un perfil funcional orientatiu a partir del rendiment observat.</div>
-    </div>
-  </div>
-  <div class="battery-status" id="batteryStatus">Bateria preparada. Selecciona un alumne i inicia el cribratge.</div>
-  <div class="battery-actions">
-    <button type="button" id="startBatteryBtn">Iniciar cribratge</button>
-    <button type="button" id="batteryCorrectBtn" disabled>Correcta</button>
-    <button type="button" id="batteryErrorBtn" disabled>Error</button>
-    <button type="button" id="batteryAutoBtn" disabled>Autocorrecció</button>
-    <button type="button" id="batteryStopBtn" disabled>Finalitzar</button>
-  </div>
-  <div class="battery-result" id="batteryResult" style="display:none"></div>
-</section>
-
-
-<section class="subtests-panel" id="specificSubtests">
-  <h3>Subproves específiques</h3>
-  <div class="subtest-list">
-    <div class="subtest-card"><strong>Sinfons</strong><br>Inicial, medial i final.</div>
-    <div class="subtest-card"><strong>Inverses i CVC</strong><br>VC, CVC i coda.</div>
-    <div class="subtest-card"><strong>Longitud</strong><br>2, 3 i 4 síl·labes.</div>
-    <div class="subtest-card"><strong>Via lèxica</strong><br>Paraula real i pseudoparaula comparables.</div>
-    <div class="subtest-card"><strong>Fluïdesa</strong><br>Precisió, temps i autocorreccions.</div>
-    <div class="subtest-card"><strong>Comprensió</strong><br>Literal, relacional i inferencial breu.</div>
-  </div>
-
-  <div class="battery-grid" style="margin-top:12px">
-    <div class="battery-card">
-      <strong>Subprova</strong>
-      <select id="subtestTypeSelect" style="width:100%;margin-top:8px">
-        <option value="suggested">Suggerida per la bateria</option>
-        <option value="sinfon">Sinfons</option>
-        <option value="inverse">Inverses i CVC</option>
-        <option value="length">Longitud sil·làbica</option>
-        <option value="lexical">Via lèxica</option>
-        <option value="fluency">Fluïdesa</option>
-        <option value="comprehension">Comprensió</option>
-      </select>
-    </div>
-    <div class="battery-card">
-      <strong>Criteri funcional</strong>
-      <div>≥ 80% consolidat · 60–79% emergent · &lt; 60% prioritat de treball.</div>
-    </div>
-  </div>
-
-  <div class="subtest-status" id="subtestStatus">Selecciona un alumne i completa una bateria o tria una subprova manualment.</div>
-  <div class="battery-progress" style="margin-top:8px"><div id="subtestProgressBar" style="width:0%"></div></div>
-  <div class="battery-meta" style="margin-top:6px"><span id="subtestCounter">0 / 0</span><span id="subtestPhaseLabel">Preparada</span></div>
-
-  <div class="subtest-actions">
-    <button id="startSuggestedSubtestBtn">Iniciar subprova</button>
-    <button id="subtestCorrectBtn" disabled>Correcta</button>
-    <button id="subtestAutoBtn" disabled>Autocorrecció</button>
-    <button id="subtestErrorBtn" disabled>Error</button>
-    <button id="subtestHelpBtn" disabled>Amb ajuda</button>
-    <button id="subtestStopBtn" disabled>Finalitzar</button>
-  </div>
-  <div class="subtest-result" id="subtestResult" style="display:none"></div>
-</section>
-
-
-<section class="report-panel" id="integratedReport">
- <h3>Informe pedagògic de lectura</h3>
- <div class="report-actions">
-  <button id="generateBriefReportBtn">Resum professional</button>
-  <button id="generateFullReportBtn">Informe complet</button>
-  <button id="printReportBtn">Imprimir / PDF</button>
- </div>
- <div id="reportDocument" class="report-doc"><span class="report-note">Selecciona un alumne i genera l'informe.</span></div>
-</section>
-
-<section class="student-manager" id="studentManager">
-  <h3>Alumnes</h3>
-  <div class="student-manager-top">
-    <input id="newStudentName" type="text" placeholder="Nom o codi de l'alumne">
-    <input id="newStudentGroup" type="text" placeholder="Curs / grup (opcional)">
-    <button type="button" id="addStudentBtn">Nou alumne</button>
-  </div>
-
-  <div class="student-list" id="studentList"></div>
-
-  <div class="student-detail" id="studentDetail" style="display:none">
-    <strong id="studentDetailName">—</strong>
-    <div class="student-detail-grid">
-      <div><small>Identificador intern</small><br><span id="studentDetailId">—</span></div>
-      <div><small>Curs / grup</small><br><span id="studentDetailGroup">—</span></div>
-      <div><small>Sessions registrades</small><br><span id="studentDetailSessions">0</span></div>
-    </div>
-    <div class="student-actions">
-      <button type="button" id="useStudentBtn">Treballar amb aquest alumne</button>
-      <button type="button" id="exportStudentBtn">Exportar fitxa</button>
-      <button type="button" id="deleteStudentBtn">Eliminar alumne</button>
-    </div>
-  </div>
-
-  <div class="student-filebox">
-    <strong>Importar fitxa d'alumne</strong><br>
-    <input id="importStudentFile" type="file" accept=".json,application/json">
-  </div>
-</section>
-
-<section class="reader-profile-panel" id="readerProfilePanel">
-  <h3>Perfil lector i orientació de la sessió</h3>
-  <div class="reader-profile-grid">
-    <div class="reader-card">
-      <strong>Síntesi descriptiva</strong>
-      <div id="readerProfileSummary" class="reader-summary">Encara no hi ha prou sessions registrades per generar una síntesi.</div>
-    </div>
-    <div class="reader-card">
-      <strong>Focus prioritari</strong>
-      <div id="readerProfileFocus">—</div>
-    </div>
-  </div>
-  <div class="session-plan" id="sessionPlan">
-    <strong>Proposta per a la propera sessió</strong>
-    <div id="sessionPlanText">Registra almenys dues sessions per obtenir una proposta.</div>
-  </div>
-  <div class="profile-actions">
-    <button type="button" id="prepareSessionBtn">Preparar sessió</button>
-    <button type="button" id="applySessionBtn" disabled>Aplicar proposta</button>
-  </div>
-</section>
-
-</main>
+</div></section></main>
 <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
 <script>
 const pseudoLevels = {
@@ -1439,8 +1367,6 @@ setSessionType("evaluation");updateControls();showNext();updateLiveMetrics();app
   setTimeout(render,100);
 })();
 </script>
-
-
 <script>
 (function(){
   const STUDENTS_KEY = "lectura_pt_students_v2";
@@ -1679,8 +1605,6 @@ setSessionType("evaluation");updateControls();showNext();updateLiveMetrics();app
   };
 })();
 </script>
-
-
 <script>
 (function(){
   const statusEl = document.getElementById("batteryStatus");
@@ -1921,8 +1845,6 @@ setSessionType("evaluation");updateControls();showNext();updateLiveMetrics();app
   stopBtn.addEventListener("click",finishBattery);
 })();
 </script>
-
-
 <script>
 (function(){
  const $=id=>document.getElementById(id);
@@ -2088,8 +2010,6 @@ setSessionType("evaluation");updateControls();showNext();updateLiveMetrics();app
  setTimeout(updateStatus,200);
 })();
 </script>
-
-
 <script>
 (function(){
  const $=id=>document.getElementById(id), out=$("reportDocument");
@@ -2151,8 +2071,6 @@ setSessionType("evaluation");updateControls();showNext();updateLiveMetrics();app
  $("printReportBtn").addEventListener("click",()=>window.print());
 })();
 </script>
-
-
 <script>
 (function(){
   const SUPABASE_URL="https://didehazzbdhgjpxvhycx.supabase.co";
@@ -2405,8 +2323,6 @@ window.LecturaPTCloud={sync:syncAll,client:sb,getUser:()=>currentUser};
   ensureSession().then(()=>{if(currentUser)setTimeout(syncAll,400)});
 })();
 </script>
-
-
 <script>
 (function(){
  const $=id=>document.getElementById(id);
@@ -2459,8 +2375,6 @@ window.LecturaPTCloud={sync:syncAll,client:sb,getUser:()=>currentUser};
  loadNote();
 })();
 </script>
-
-
 <script>
 (function(){
   const $=id=>document.getElementById(id);
@@ -2531,8 +2445,6 @@ window.LecturaPTCloud={sync:syncAll,client:sb,getUser:()=>currentUser};
   setMode(current);
 })();
 </script>
-
-
 <script>
 (function(){
   function applyRemoteFont(mode){
@@ -2563,8 +2475,6 @@ window.LecturaPTCloud={sync:syncAll,client:sb,getUser:()=>currentUser};
   setTimeout(()=>applyRemoteFont(saved),50);
 })();
 </script>
-
-
 <script>
 (function(){
   const $=id=>document.getElementById(id);
@@ -2814,8 +2724,6 @@ window.LecturaPTCloud={sync:syncAll,client:sb,getUser:()=>currentUser};
   $("batteryStopMainBtn").addEventListener("click",()=>finish(true));
 })();
 </script>
-
-
 <script>
 /* Fase 14.1 · blocs plegables i navegació ràpida */
 (function(){
@@ -2874,8 +2782,6 @@ window.LecturaPTCloud={sync:syncAll,client:sb,getUser:()=>currentUser};
   }
 })();
 </script>
-
-
 <script>
 /* Fase 14.3 · orientador de flux */
 (function(){
@@ -2941,6 +2847,5 @@ window.LecturaPTCloud={sync:syncAll,client:sb,getUser:()=>currentUser};
  window.addEventListener("storage",update);
 })();
 </script>
-
-</body>
+<section aria-hidden="true" hidden="" id="lectoLocalStudent"><header><div><strong>LECTO</strong><span id="lectoLocalMeta">Sessió de lectura</span></div><button id="lectoLocalExit" type="button">Tornar al docent</button></header><main><div id="lectoLocalStimulus">Prepara la sessió i prem Començar.</div></main><footer><button id="lectoLocalNext" type="button">SEGÜENT</button><span>També pots prémer la barra espaiadora</span></footer></section><script id="lecto-v3-controller">(()=>{const $=id=>document.getElementById(id);const panels=[...document.querySelectorAll("[data-panel-content]")],tabs=[...document.querySelectorAll("#lectoMainNav [data-panel]")];function show(k){panels.forEach(p=>p.hidden=p.dataset.panelContent!==k);tabs.forEach(b=>b.classList.toggle("active",b.dataset.panel===k));try{sessionStorage.setItem("lecto_v3_panel",k)}catch(e){}window.scrollTo(0,0)}tabs.forEach(b=>b.addEventListener("click",()=>show(b.dataset.panel)));let initial="session";try{initial=sessionStorage.getItem("lecto_v3_panel")||"session"}catch(e){}if(!tabs.some(b=>b.dataset.panel===initial))initial="session";show(initial);const ov=$("lectoLocalStudent"),stim=$("lectoLocalStimulus"),meta=$("lectoLocalMeta");function sync(){const src=$("readingText");if(!src)return;stim.innerHTML=src.innerHTML;stim.classList.toggle("phrase",$("phraseMode")?.classList.contains("active"));let n="";try{n=window.LecturaPTStudents?.getActive?.()?.name||$("studentName")?.value||""}catch(e){}meta.textContent=[n,$("phraseMode")?.classList.contains("active")?"Frases":$("wordMode")?.classList.contains("active")?"Paraules":"Pseudoparaules"].filter(Boolean).join(" · ")}function open(){sync();ov.hidden=false;ov.setAttribute("aria-hidden","false")}function close(){ov.hidden=true;ov.setAttribute("aria-hidden","true")}function next(){const b=$("readBtn");if(b&&!b.disabled){b.click();requestAnimationFrame(sync)}}$("lectoLocalStudentBtn")?.addEventListener("click",open);$("lectoLocalExit")?.addEventListener("click",close);$("lectoLocalNext")?.addEventListener("click",next);const rt=$("readingText");if(rt)new MutationObserver(sync).observe(rt,{subtree:true,childList:true,characterData:true,attributes:true});document.addEventListener("keydown",e=>{if(ov.hidden)return;if(e.key==="Escape"){e.preventDefault();close()}else if(e.code==="Space"){e.preventDefault();next()}},true)})();</script></body>
 </html>
