@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Gestor de Pictogrames Educació · v19</title>
+<title>Gestor de Pictogrames Educació · v24</title>
 <style>
 :root{--bg:#eef3f5;--panel:#fff;--ink:#18242b;--muted:#63747e;--line:#d7e0e4;--accent:#246b78;--soft:#e8f2f4;--danger:#9b3d3d;--shadow:0 10px 30px rgba(27,50,61,.08)}
 *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
@@ -68,20 +68,10 @@ button.secondary{background:var(--soft);border-color:transparent} button.danger{
 @media(max-width:700px){
  .printSheet.page-portrait,.printSheet.page-landscape{width:100%;max-width:100%}
 }
-
-/* Expressió oral · mòdul independent */
-.oralScenes{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
-.oralScene{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff;cursor:pointer;text-align:left}
-.oralScene:hover{background:var(--soft)} .oralScene b{display:block;font-size:16px;margin-bottom:5px}.oralScene small{color:var(--muted)}
-.oralHead{display:flex;align-items:center;gap:14px;margin-bottom:14px}.oralHead h2{margin:0}
-.oralCategories{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}.oralCat.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.oralTermGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
-.oralTerm{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:9px;background:#fff}
-.oralTerm input{width:18px;height:18px}.oralActions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-</style>
+.instructionRow{display:grid;grid-template-columns:100px minmax(0,1fr) 36px;gap:15px;align-items:center;border:1px solid #cad7dc;border-radius:12px;padding:12px;margin:10px 0;break-inside:avoid}.instructionRow img{width:95px;height:95px;object-fit:contain}.instructionCheck{appearance:none;-webkit-appearance:none;width:29px;height:29px;border:2px solid #506b73;border-radius:5px;background:white;cursor:pointer;display:grid;place-items:center;margin:0;justify-self:center}.instructionCheck:checked::after{content:"✓";font-size:25px;font-weight:900;color:#245d67;line-height:1}.instructionCheck:focus-visible{outline:3px solid #86c5ce;outline-offset:3px}@media print{.instructionCheck{print-color-adjust:exact;-webkit-print-color-adjust:exact;border:2px solid #333!important;background:#fff!important}.instructionCheck:checked::after{color:#111!important}}.instructionRow strong{font-size:20px;line-height:1.35;overflow-wrap:anywhere}.instructionEditor{display:grid;grid-template-columns:2fr 1fr;gap:8px;margin:8px 0}.instructionEditor textarea{min-height:65px}.instructionEditor input{width:100%}@media(max-width:650px){.instructionRow{grid-template-columns:70px minmax(0,1fr) 30px}.instructionRow img{width:65px;height:65px}.instructionRow strong{font-size:16px}.instructionEditor{grid-template-columns:1fr}}</style>
 </head>
 <body>
-<header><div><h1>Gestor de Pictogrames Educació</h1><small>v22 · navegació modular · ARASAAC</small></div><span class="badge">JSON + rutines personals</span></header>
+<header><div><h1>Gestor de Pictogrames Educació</h1><small>v24 · autoinstruccions · ARASAAC</small></div><span class="badge">JSON + rutines personals</span></header>
 <main>
 <section>
   <div class="panel noPrint">
@@ -89,7 +79,6 @@ button.secondary{background:var(--soft);border-color:transparent} button.danger{
       <button class="tab active" data-tab="json">Crear des de JSON</button>
       <button class="tab" data-tab="search">Cercar pictogrames</button>
       <button class="tab" data-tab="builtin">Rutines incorporades</button>
-      <button class="tab" data-tab="oral">Expressió oral</button>
       <button class="tab" data-tab="selected">Selecció actual</button>
     </div>
 
@@ -117,20 +106,6 @@ button.secondary{background:var(--soft);border-color:transparent} button.danger{
       <div id="builtinList" style="margin-top:10px"></div>
     </div>
 
-    <div id="tab-oral" class="hidden">
-      <h2>Làmines d’expressió oral</h2>
-      <p class="help">Tria primer una situació. Després podràs treballar només una categoria de vocabulari o seleccionar paraules concretes, sense barrejar-les amb les rutines.</p>
-      <div id="oralScenes" class="oralScenes"></div>
-      <div id="oralWorkspace" class="hidden">
-        <div class="oralHead">
-          <button id="oralBack" class="secondary">← Tornar a les làmines</button>
-          <div><h2 id="oralTitle"></h2><small id="oralHint" class="muted"></small></div>
-        </div>
-        <div id="oralCategories" class="oralCategories"></div>
-        <div id="oralTerms"></div>
-      </div>
-    </div>
-
     <div id="tab-selected" class="hidden">
       <h2>Selecció actual <span id="count" class="badge">0</span></h2>
       <div id="selectedList"></div>
@@ -146,7 +121,7 @@ button.secondary{background:var(--soft);border-color:transparent} button.danger{
         <option value="sequencia">Seqüència / rutina</option>
         <option value="fitxa">Fitxa de pictogrames</option>
         <option value="referent">Referent de vocabulari</option>
-        <option value="expressio">Suport a l'expressió oral</option>
+        <option value="expressio">Suport a l'expressió oral</option><option value="autoinstruccions">Autoinstruccions · frase + picto</option>
       </select>
       <select id="pictoSize" aria-label="Mida dels pictogrames">
         <option value="3">3 × 3 cm · compacte</option>
@@ -188,7 +163,7 @@ button.secondary{background:var(--soft);border-color:transparent} button.danger{
       <button id="btnPrint" class="primary">Imprimir</button>
     </div>
   </div>
-  <div id="sheet"></div>
+  <div id="instructionPanel" class="panel noPrint hidden"><h2>Editar autoinstruccions</h2><div id="instructionEditors"></div><button id="updateInstructions">Actualitzar frases i pictogrames</button></div><div id="sheet"></div>
 </section>
 
 <aside class="side">
@@ -224,10 +199,8 @@ button.secondary{background:var(--soft);border-color:transparent} button.danger{
 /* v19: aplicació reconstruïda. Mòduls: Data, Storage, ARASAAC, Selection,
    SimpleJSON, PersonalLibrary, Projects, Print, UI. */
 const API="https://api.arasaac.org/api";
-const ORAL_SCENES={"Sortida de l'escola a la tardor": {"Persones": ["nen", "nena", "mestra", "pare", "mare", "nadó"], "Com són / roba": ["cabells curts", "cabells llargs", "cua", "gorra", "casc", "jaqueta", "abric", "bufanda", "botes", "jersei", "pantalons", "sabates"], "Accions": ["caminar", "córrer", "parlar", "saludar", "pujar", "baixar", "anar amb patinet", "passejar", "agafar", "portar", "empènyer", "acariciar el gos", "esperar"], "Objectes i materials": ["motxilla", "cotxet", "patinet", "autobús", "cotxe", "semàfor", "pas de vianants", "banc", "paperera", "pluja", "paraigua", "vent"], "Entorn, animals i altres": ["arbre", "fulla", "colom", "gos", "sol", "núvols", "tarda", "tardor", "escola", "carrer"]}, "Anem a la platja": {"Persones": ["nen", "nena", "mare", "pare", "família"], "Com són / roba": ["cabells curts", "cabells llargs", "cua", "barret", "gorra", "ulleres de sol", "banyador", "biquini"], "Accions": ["nedar", "jugar", "jugar a pilota", "construir un castell de sorra", "excavar", "caminar", "passejar", "córrer", "seure", "descansar", "beure", "mirar", "bussejar", "esquitxar", "entrar a l'aigua", "sortir de l'aigua", "recollir petxines", "anar d'excursió"], "Objectes i materials": ["para-sol", "tovallola", "cadira de platja", "nevera portàtil", "cistella", "pilota", "galleda", "pala", "castell de sorra", "petxina", "estrella de mar", "ulleres de busseig", "tub de busseig", "motxilla", "vaixell de vela"], "Entorn, animals i altres": ["gos", "platja", "mar", "sorra", "aigua", "onada", "roques", "penya-segat", "cranc", "sol", "núvols", "gavina", "arbre", "camí", "estiu", "vacances"]}, "Sopar familiar": {"Persones": ["nen", "nena", "mare", "pare", "avi", "àvia", "nadó", "família"], "Com són / roba": ["cabells curts", "cabells llargs", "cabells blancs", "ulleres"], "Accions": ["menjar", "beure", "sopar", "parlar", "escoltar", "mirar", "seure", "servir", "compartir", "agafar", "donar", "tastar", "tallar", "punxar", "omplir el got"], "Objectes i materials": ["taula", "cadira", "trona", "plat", "bol", "got", "gerra", "forquilla", "ganivet", "cullera", "tovalló", "amanida", "pa", "pasta", "verdura", "tomàquet", "olives", "nevera", "sofà", "finestra", "rellotge", "llum", "llibre"], "Entorn, animals i altres": ["gos", "gat", "aigua", "cuina", "menjador", "planta", "nit", "lluna", "casa"]}, "Dia d'excursió": {"Persones": ["nen", "nena", "home", "dona", "mestre", "mestra", "grup"], "Com són / roba": ["cabells curts", "cabells llargs", "cua", "gorra", "barret"], "Accions": ["caminar", "anar d'excursió", "observar", "mirar", "buscar", "assenyalar", "descobrir", "explorar", "investigar", "seguir el camí", "creuar el pont", "pujar", "baixar", "aturar-se", "ajupir-se", "tocar", "agafar", "mirar amb prismàtics", "mirar amb lupa"], "Objectes i materials": ["motxilla", "prismàtics", "lupa", "llibre", "bastó", "senyal"], "Entorn, animals i altres": ["camí", "pont", "riu", "aigua", "cascada", "roca", "muntanya", "arbre", "planta", "fulla", "flor", "margarida", "sargantana", "marieta", "papallona", "ocell", "sol", "núvol", "cel", "poble", "església", "natura", "bosc"]}};
-
 const STATIC="https://static.arasaac.org/pictograms";
-const BUILTIN_PACKS={"Resolc un problema matemàtic": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Resolc un problema matemàtic", "terms": ["llegeixo l'enunciat", "subratllo les dades", "marco la pregunta", "penso què he de fer", "faig l'operació", "comprovo el resultat", "escric la resposta"]}, "Comprenc un text": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Comprenc un text", "terms": ["miro el títol", "llegeixo el text", "marco les paraules importants", "llegeixo les preguntes", "busco la informació", "responc", "reviso les respostes"]}, "Escric un text": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Escric un text", "terms": ["penso què vull explicar", "ordeno les idees", "escric", "reviso majúscules i punts", "corregeixo", "passo a net"]}, "Faig una activitat": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Faig una activitat", "terms": ["llegeixo la consigna", "preparo el material", "començo", "faig la feina", "comprovo", "entrego", "recullo"]}, "Treballo de manera autònoma": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Treballo de manera autònoma", "terms": ["miro què he de fer", "començo sol", "continuo treballant", "si em bloquejo demano ajuda", "reviso", "entrego"]}, "Estudio per una prova": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Estudio per una prova", "terms": ["miro què entra", "preparo el material", "llegeixo", "subratllo les idees importants", "faig un resum", "practico", "comprovo què recordo"]}, "Faig una prova": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Faig una prova", "terms": ["llegeixo totes les preguntes", "començo per una que sé", "penso abans de respondre", "si em bloquejo passo a la següent", "torno a les pendents", "reviso", "entrego"]}, "Preparo una presentació": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Preparo una presentació", "terms": ["trio el tema", "busco informació", "selecciono el més important", "ordeno les idees", "preparo el suport", "practico", "faig la presentació"]}, "Busco informació a internet": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Busco informació a internet", "terms": ["penso què vull saber", "escric paraules clau", "busco", "llegeixo", "comparo fonts", "selecciono informació", "anoto el que necessito"]}, "Corregeixo una feina": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Corregeixo una feina", "terms": ["miro la correcció", "busco l'error", "penso per què m'he equivocat", "corregeixo", "comprovo", "guardo la feina"]}, "Començo el dia": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "guided", "title": "Començo el dia", "terms": ["entro a classe", "guardo la motxilla", "trec l'agenda", "preparo el material", "miro l'horari", "començo la primera activitat"]}, "Canvio d'activitat": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "guided", "title": "Canvio d'activitat", "terms": ["acabo", "recullo", "guardo el material", "miro què toca", "preparo el material", "començo"]}, "Preparo la sortida": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "checklist", "title": "Preparo la sortida", "terms": ["acabo la feina", "apunto els deures", "guardo el material", "preparo la motxilla", "reviso la taula", "surto"]}, "Organitzo agenda i deures": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "checklist", "title": "Organitzo agenda i deures", "terms": ["miro els deures", "els apunto a l'agenda", "reviso què necessito", "preparo el material", "guardo la motxilla", "comprovo"]}, "Treball en grup": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "checklist", "title": "Treballem en grup", "terms": ["escoltem la tasca", "repartim responsabilitats", "compartim idees", "fem la nostra part", "posem en comú", "revisem", "entreguem"]}, "Si no entenc una consigna": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Si no entenc una consigna", "terms": ["paro", "torno a llegir", "miro l'exemple", "busco una paraula clau", "pregunto", "continuo"]}, "Si em bloquejo": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Si em bloquejo", "terms": ["paro", "respiro", "penso què sí que sé", "divideixo la tasca", "demano una pista", "torno a intentar"]}, "Si m'equivoco": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Si m'equivoco", "terms": ["paro", "miro l'error", "penso què ha passat", "corregeixo", "comprovo", "continuo"]}, "Demano ajuda": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Demano ajuda", "terms": ["intento entendre-ho", "penso què no entenc", "aixeco la mà", "espero", "explico el dubte", "escolto l'ajuda", "continuo"]}, "Gestiono l'enfadament": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Quan m'enfado", "terms": ["paro", "respiro", "m'allunyo si ho necessito", "explico què passa", "penso una solució", "demano ajuda", "torno quan estic preparat"]}, "Resolc un conflicte": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Resolc un conflicte", "terms": ["paro", "explico què ha passat", "escolto l'altra persona", "penso una solució", "arribem a un acord", "continuem"]}, "Quan acabo abans": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Quan acabo abans", "terms": ["reviso la feina", "corregeixo si cal", "ordeno el material", "llegeixo", "faig una activitat pendent", "espero sense molestar"]}, "Consignes de treball": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "Consignes de treball", "terms": ["llegeix", "copia", "subratlla", "encercla", "relaciona", "completa", "ordena", "classifica", "explica", "revisa"]}, "Matemàtiques · operacions": {"group": "Referents de contingut", "kind": "content", "activity": "vocabulari", "vocabStyle": "bands", "title": "Operacions matemàtiques", "terms": ["sumar", "restar", "multiplicar", "dividir", "igual", "resultat", "operació", "problema"]}, "Matemàtiques · valor posicional": {"group": "Referents de contingut", "kind": "content", "activity": "vocabulari", "vocabStyle": "cards", "title": "Valor posicional", "terms": ["unitat", "desena", "centena", "unitat de miler", "nombre", "xifra", "quantitat"]}, "Llengua · escriure bé": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "Abans d'entregar un text", "terms": ["majúscula", "punt", "coma", "frase", "paràgraf", "ortografia", "revisar"]}, "Llengua · parts d'un text": {"group": "Referents de contingut", "kind": "content", "activity": "vocabulari", "vocabStyle": "bands", "title": "Parts d'un text", "terms": ["títol", "introducció", "paràgraf", "idea principal", "conclusió"]}, "Temps i organització": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "M'organitzo en el temps", "terms": ["ara", "després", "primer", "últim", "abans", "més tard", "començar", "acabar", "temps"]}, "Emocions": {"group": "Referents de contingut", "kind": "content", "activity": "vocabulari", "vocabStyle": "bands", "title": "Com em sento?", "terms": ["content", "trist", "enfadat", "nerviós", "tranquil", "frustrat", "preocupat", "cansat", "emocionat", "incòmode"]}, "Participar a classe": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "Participo a classe", "terms": ["escolto", "penso", "aixeco la mà", "espero el torn", "parlo", "pregunto", "responc", "respecto"]}, "Ús de la tauleta": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "Fem un bon ús de la tauleta", "terms": ["tauleta", "contrasenya", "volum", "auriculars", "treballar", "guardar", "tancar aplicació", "apagar"]}};
+const BUILTIN_PACKS={"Resolc un problema matemàtic": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Resolc un problema matemàtic", "terms": ["llegeixo l'enunciat", "subratllo les dades", "marco la pregunta", "penso què he de fer", "faig l'operació", "comprovo el resultat", "escric la resposta"]}, "Comprenc un text": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Comprenc un text", "terms": ["miro el títol", "llegeixo el text", "marco les paraules importants", "llegeixo les preguntes", "busco la informació", "responc", "reviso les respostes"]}, "Escric un text": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Escric un text", "terms": ["penso què vull explicar", "ordeno les idees", "escric", "reviso majúscules i punts", "corregeixo", "passo a net"]}, "Faig una activitat": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Faig una activitat", "terms": ["llegeixo la consigna", "preparo el material", "començo", "faig la feina", "comprovo", "entrego", "recullo"]}, "Treballo de manera autònoma": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Treballo de manera autònoma", "terms": ["miro què he de fer", "començo sol", "continuo treballant", "si em bloquejo demano ajuda", "reviso", "entrego"]}, "Estudio per una prova": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Estudio per una prova", "terms": ["miro què entra", "preparo el material", "llegeixo", "subratllo les idees importants", "faig un resum", "practico", "comprovo què recordo"]}, "Faig una prova": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Faig una prova", "terms": ["llegeixo totes les preguntes", "començo per una que sé", "penso abans de respondre", "si em bloquejo passo a la següent", "torno a les pendents", "reviso", "entrego"]}, "Preparo una presentació": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Preparo una presentació", "terms": ["trio el tema", "busco informació", "selecciono el més important", "ordeno les idees", "preparo el suport", "practico", "faig la presentació"]}, "Busco informació a internet": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Busco informació a internet", "terms": ["penso què vull saber", "escric paraules clau", "busco", "llegeixo", "comparo fonts", "selecciono informació", "anoto el que necessito"]}, "Corregeixo una feina": {"group": "Seqüències de treball", "kind": "work", "activity": "sequencia", "style": "checklist", "title": "Corregeixo una feina", "terms": ["miro la correcció", "busco l'error", "penso per què m'he equivocat", "corregeixo", "comprovo", "guardo la feina"]}, "Començo el dia": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "guided", "title": "Començo el dia", "terms": ["entro a classe", "guardo la motxilla", "trec l'agenda", "preparo el material", "miro l'horari", "començo la primera activitat"]}, "Canvio d'activitat": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "guided", "title": "Canvio d'activitat", "terms": ["acabo", "recullo", "guardo el material", "miro què toca", "preparo el material", "començo"]}, "Preparo la sortida": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "checklist", "title": "Preparo la sortida", "terms": ["acabo la feina", "apunto els deures", "guardo el material", "preparo la motxilla", "reviso la taula", "surto"]}, "Organitzo agenda i deures": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "checklist", "title": "Organitzo agenda i deures", "terms": ["miro els deures", "els apunto a l'agenda", "reviso què necessito", "preparo el material", "guardo la motxilla", "comprovo"]}, "Treball en grup": {"group": "Rutines escolars", "kind": "routine", "activity": "sequencia", "style": "checklist", "title": "Treballem en grup", "terms": ["escoltem la tasca", "repartim responsabilitats", "compartim idees", "fem la nostra part", "posem en comú", "revisem", "entreguem"]}, "Si no entenc una consigna": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Si no entenc una consigna", "terms": ["paro", "torno a llegir", "miro l'exemple", "busco una paraula clau", "pregunto", "continuo"]}, "Si em bloquejo": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Si em bloquejo", "terms": ["paro", "respiro", "penso què sí que sé", "divideixo la tasca", "demano una pista", "torno a intentar"]}, "Si m'equivoco": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Si m'equivoco", "terms": ["paro", "miro l'error", "penso què ha passat", "corregeixo", "comprovo", "continuo"]}, "Demano ajuda": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Demano ajuda", "terms": ["intento entendre-ho", "penso què no entenc", "aixeco la mà", "espero", "explico el dubte", "escolto l'ajuda", "continuo"]}, "Gestiono l'enfadament": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Quan m'enfado", "terms": ["paro", "respiro", "m'allunyo si ho necessito", "explico què passa", "penso una solució", "demano ajuda", "torno quan estic preparat"]}, "Resolc un conflicte": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Resolc un conflicte", "terms": ["paro", "explico què ha passat", "escolto l'altra persona", "penso una solució", "arribem a un acord", "continuem"]}, "Quan acabo abans": {"group": "Estratègies", "kind": "strategy", "activity": "referent", "title": "Quan acabo abans", "terms": ["reviso la feina", "corregeixo si cal", "ordeno el material", "llegeixo", "faig una activitat pendent", "espero sense molestar"]}, "Consignes de treball": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "Consignes de treball", "terms": ["llegeix", "copia", "subratlla", "encercla", "relaciona", "completa", "ordena", "classifica", "explica", "revisa"]}, "Matemàtiques · operacions": {"group": "Referents de contingut", "kind": "content", "activity": "vocabulari", "vocabStyle": "bands", "title": "Operacions matemàtiques", "terms": ["sumar", "restar", "multiplicar", "dividir", "igual", "resultat", "operació", "problema"]}, "Matemàtiques · valor posicional": {"group": "Referents de contingut", "kind": "content", "activity": "vocabulari", "vocabStyle": "cards", "title": "Valor posicional", "terms": ["unitat", "desena", "centena", "unitat de miler", "nombre", "xifra", "quantitat"]}, "Llengua · escriure bé": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "Abans d'entregar un text", "terms": ["majúscula", "punt", "coma", "frase", "paràgraf", "ortografia", "revisar"]}, "Llengua · parts d'un text": {"group": "Referents de contingut", "kind": "content", "activity": "vocabulari", "vocabStyle": "bands", "title": "Parts d'un text", "terms": ["títol", "introducció", "paràgraf", "idea principal", "conclusió"]}, "Temps i organització": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "M'organitzo en el temps", "terms": ["ara", "després", "primer", "últim", "abans", "més tard", "començar", "acabar", "temps"]}, "Emocions": {"group": "Referents de contingut", "kind": "content", "activity": "vocabulari", "vocabStyle": "bands", "title": "Com em sento?", "terms": ["content", "trist", "enfadat", "nerviós", "tranquil", "frustrat", "preocupat", "cansat", "emocionat", "incòmode"]}, "Participar a classe": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "Participo a classe", "terms": ["escolto", "penso", "aixeco la mà", "espero el torn", "parlo", "pregunto", "responc", "respecto"]}, "Ús de la tauleta": {"group": "Referents de contingut", "kind": "content", "activity": "referent", "title": "Fem un bon ús de la tauleta", "terms": ["tauleta", "contrasenya", "volum", "auriculars", "treballar", "guardar", "tancar aplicació", "apagar"]}, "Sortida de l'escola a la tardor": {"group": "Expressió oral · Làmines", "kind": "oral", "activity": "expressio", "style": "vocabulari", "title": "Sortida de l'escola a la tardor", "terms": ["nen", "nena", "mestra", "pare", "mare", "nadó", "cabells curts", "cabells llargs", "cua", "gorra", "casc", "caminar", "córrer", "parlar", "saludar", "pujar", "baixar", "anar amb patinet", "passejar", "agafar", "portar", "empènyer", "acariciar el gos", "esperar", "motxilla", "cotxet", "patinet", "autobús", "cotxe", "semàfor", "pas de vianants", "banc", "paperera", "arbre", "fulla", "colom", "gos", "sol", "núvols", "jaqueta", "abric", "bufanda", "botes", "jersei", "pantalons", "sabates", "pluja", "paraigua", "vent", "tarda", "tardor", "escola", "carrer"]}, "Anem a la platja": {"group": "Expressió oral · Làmines", "kind": "oral", "activity": "expressio", "style": "vocabulari", "title": "Anem a la platja", "terms": ["nen", "nena", "mare", "pare", "família", "gos", "cabells curts", "cabells llargs", "cua", "barret", "gorra", "ulleres de sol", "banyador", "biquini", "nedar", "jugar", "jugar a pilota", "construir un castell de sorra", "excavar", "caminar", "passejar", "córrer", "seure", "descansar", "beure", "mirar", "bussejar", "esquitxar", "entrar a l'aigua", "sortir de l'aigua", "recollir petxines", "anar d'excursió", "platja", "mar", "sorra", "aigua", "onada", "roques", "penya-segat", "para-sol", "tovallola", "cadira de platja", "nevera portàtil", "cistella", "pilota", "galleda", "pala", "castell de sorra", "petxina", "estrella de mar", "cranc", "ulleres de busseig", "tub de busseig", "motxilla", "vaixell de vela", "sol", "núvols", "gavina", "arbre", "camí", "estiu", "vacances"]}, "Sopar familiar": {"group": "Expressió oral · Làmines", "kind": "oral", "activity": "expressio", "style": "vocabulari", "title": "Sopar familiar", "terms": ["nen", "nena", "mare", "pare", "avi", "àvia", "nadó", "família", "gos", "gat", "cabells curts", "cabells llargs", "cabells blancs", "ulleres", "menjar", "beure", "sopar", "parlar", "escoltar", "mirar", "seure", "servir", "compartir", "agafar", "donar", "tastar", "tallar", "punxar", "omplir el got", "taula", "cadira", "trona", "plat", "bol", "got", "gerra", "forquilla", "ganivet", "cullera", "tovalló", "amanida", "pa", "pasta", "verdura", "tomàquet", "olives", "aigua", "cuina", "menjador", "nevera", "sofà", "finestra", "rellotge", "llum", "planta", "llibre", "nit", "lluna", "casa"]}, "Dia d'excursió": {"group": "Expressió oral · Làmines", "kind": "oral", "activity": "expressio", "style": "vocabulari", "title": "Dia d'excursió", "terms": ["nen", "nena", "home", "dona", "mestre", "mestra", "grup", "cabells curts", "cabells llargs", "cua", "gorra", "barret", "caminar", "anar d'excursió", "observar", "mirar", "buscar", "assenyalar", "descobrir", "explorar", "investigar", "seguir el camí", "creuar el pont", "pujar", "baixar", "aturar-se", "ajupir-se", "tocar", "agafar", "mirar amb prismàtics", "mirar amb lupa", "motxilla", "prismàtics", "lupa", "llibre", "bastó", "senyal", "camí", "pont", "riu", "aigua", "cascada", "roca", "muntanya", "arbre", "planta", "fulla", "flor", "margarida", "sargantana", "marieta", "papallona", "ocell", "sol", "núvol", "cel", "poble", "església", "natura", "bosc"]}};
 const VISUAL_QUERY_EXACT={
   "faig l'operació":"calcular",
   "faig la feina":"treballar",
@@ -335,7 +308,7 @@ const Storage={
   set(k,v){localStorage.setItem(k,JSON.stringify(v))}
 };
 
-const State={selected:[],currentSimple:null};
+const State={selected:[],currentSimple:null,instructions:[]};
 
 const ARASAAC={
   queryFor(label){
@@ -376,6 +349,33 @@ const Selection={
   persist(){Storage.set("gestorPictos.v19.selection",State.selected)}
 };
 
+const Instructions={
+ async load(d){
+  if(!Array.isArray(d.autoinstruccions)||!d.autoinstruccions.length)throw Error("Falten autoinstruccions");
+  const rows=[];
+  for(const [i,x] of d.autoinstruccions.entries()){
+   if(typeof x.frase!=="string"||!x.frase.trim())throw Error("Frase incorrecta: "+(i+1));
+   const term=String(x.picto||"").trim(),id=String(x.pictoId||"").trim();
+   if(!term&&!id)throw Error("Falta picto: "+(i+1));
+   let picto=null;
+   if(/^\d+$/.test(id))picto={id,term:term||x.frase,url:`${STATIC}/${id}/${id}_500.png`,source:"ARASAAC"};
+   else if(term){const r=await ARASAAC.resolve(term);if(r.ok)picto=r.picto}
+   rows.push({frase:x.frase,term,id,picto});
+  }
+  State.instructions=rows;
+  Selection.set(rows.filter(x=>x.picto).map(x=>({...x.picto,term:x.frase})));
+  document.querySelector("#materialTitle").value=d.nom||"Autoinstruccions";
+  document.querySelector("#materialType").value="autoinstruccions";
+  this.editors();Print.build();
+  UI.setStatus("jsonStatus",`${rows.filter(x=>x.picto).length}/${rows.length} pictogrames resolts. Revisa les imatges.`);
+ },
+ editors(){
+  document.querySelector("#instructionPanel").classList.toggle("hidden",document.querySelector("#materialType").value!=="autoinstruccions");
+  document.querySelector("#instructionEditors").innerHTML=State.instructions.map((x,i)=>`<div class="instructionEditor"><textarea data-frase="${i}">${Utils.esc(x.frase)}</textarea><input data-term="${i}" value="${Utils.esc(x.term)}" placeholder="Concepte ARASAAC"><input data-id="${i}" value="${Utils.esc(x.id)}" placeholder="ID ARASAAC opcional"></div>`).join("");
+ },
+ async update(){const a=State.instructions.map((x,i)=>({frase:document.querySelector(`[data-frase="${i}"]`).value,picto:document.querySelector(`[data-term="${i}"]`).value,pictoId:document.querySelector(`[data-id="${i}"]`).value}));await this.load({nom:document.querySelector("#materialTitle").value,autoinstruccions:a})},
+ render(){const title=document.querySelector("#materialTitle").value;const typo=Typography.get();return `<section class="${MaterialLayout.sheetClass()}">${MaterialLayout.header(title,"AUTOINSTRUCCIONS")}${State.instructions.map((x,i)=>`<div class="instructionRow"><div>${x.picto?`<img src="${x.picto.url}" alt="">`:"Picto pendent"}</div><div><small>PAS ${i+1}</small><div><strong>${Utils.esc(typo.transform(x.frase))}</strong></div></div><input class="instructionCheck" type="checkbox" aria-label="Marcar pas ${i+1} com a fet"></div>`).join("")}${MaterialLayout.attribution()}</section>`}
+};
 const SimpleJSON={
   validate(d){
     if(!d||typeof d!=="object")throw new Error("El JSON no és un objecte.");
@@ -386,7 +386,8 @@ const SimpleJSON={
     return {schema:"gestor-pictogrames-simple",version:1,nom:String(d.nom||d.name||"Material personalitzat"),tipus:String(d.tipus||d.type||"rutina"),pictogrames:clean};
   },
   async resolve(data){
-    const d=this.validate(data);State.currentSimple=d;
+    if(data?.tipus==="autoinstruccions"||Array.isArray(data?.autoinstruccions)){await Instructions.load(data);return}
+    State.instructions=[];const d=this.validate(data);State.currentSimple=d;
     UI.setStatus("jsonStatus",`Resolent ${d.pictogrames.length} conceptes...`);
     const selected=[],missing=[];
     for(let i=0;i<d.pictogrames.length;i++){
@@ -417,8 +418,8 @@ const PersonalLibrary={
 };
 
 const Projects={
-  capture(){return {schema:"gestor-pictogrames-project",version:1,name:document.querySelector("#materialTitle").value||"Projecte visual",savedAt:new Date().toISOString(),type:document.querySelector("#materialType").value,pictoSize:+document.querySelector("#pictoSize").value,textStyle:document.querySelector("#textStyle").value,referentMode:document.querySelector("#referentMode").value,oralSupportMode:document.querySelector("#oralSupportMode").value,printOrientation:document.querySelector("#printOrientation").value,items:State.selected}},
-  apply(d){if(d?.schema!=="gestor-pictogrames-project"||!Array.isArray(d.items))throw new Error("No és un projecte compatible.");Selection.set(d.items);document.querySelector("#materialTitle").value=d.name||"Projecte visual";document.querySelector("#materialType").value=d.type||"sequencia";if(d.pictoSize)document.querySelector("#pictoSize").value=String(d.pictoSize);if(d.textStyle)document.querySelector("#textStyle").value=d.textStyle;if(d.referentMode)document.querySelector("#referentMode").value=d.referentMode;if(d.oralSupportMode)document.querySelector("#oralSupportMode").value=d.oralSupportMode;if(d.printOrientation)document.querySelector("#printOrientation").value=d.printOrientation;UI.syncMaterialOptions();Print.build();UI.openTab("selected")}
+  capture(){return {schema:"gestor-pictogrames-project",version:1,name:document.querySelector("#materialTitle").value||"Projecte visual",savedAt:new Date().toISOString(),type:document.querySelector("#materialType").value,pictoSize:+document.querySelector("#pictoSize").value,textStyle:document.querySelector("#textStyle").value,referentMode:document.querySelector("#referentMode").value,oralSupportMode:document.querySelector("#oralSupportMode").value,printOrientation:document.querySelector("#printOrientation").value,items:State.selected,instructions:State.instructions}},
+  apply(d){if(d?.schema!=="gestor-pictogrames-project"||!Array.isArray(d.items))throw new Error("No és un projecte compatible.");State.instructions=Array.isArray(d.instructions)?d.instructions:[];Selection.set(d.items);document.querySelector("#materialTitle").value=d.name||"Projecte visual";document.querySelector("#materialType").value=d.type||"sequencia";if(d.pictoSize)document.querySelector("#pictoSize").value=String(d.pictoSize);if(d.textStyle)document.querySelector("#textStyle").value=d.textStyle;if(d.referentMode)document.querySelector("#referentMode").value=d.referentMode;if(d.oralSupportMode)document.querySelector("#oralSupportMode").value=d.oralSupportMode;if(d.printOrientation)document.querySelector("#printOrientation").value=d.printOrientation;UI.syncMaterialOptions();Instructions.editors();Print.build();UI.openTab("selected")}
 };
 
 const Typography={
@@ -444,6 +445,7 @@ const Typography={
 const PrintOrientation={
   get(){return document.querySelector("#printOrientation")?.value||"auto"},
   automatic(type,count){
+    if(type==="autoinstruccions")return "portrait";
     if(type==="sequencia") return count<=3?"portrait":"landscape";
     if(type==="expressio") return "landscape";
     return "portrait";
@@ -576,9 +578,10 @@ const ExpressioOral={
 const Print={
   async build(){
     const box=document.querySelector("#sheet");
-    if(!State.selected.length){box.innerHTML="";return}
+    if(!State.selected.length&&!(document.querySelector("#materialType").value==="autoinstruccions"&&State.instructions.length)){box.innerHTML="";return}
     const title=document.querySelector("#materialTitle").value||"Material visual";
     const type=document.querySelector("#materialType").value;
+    if(type==="autoinstruccions"){box.innerHTML=Instructions.render();return}
     if(type==="referent"){box.innerHTML=ReferentVocabulari.render(State.selected,title);return}
     if(type==="expressio"){box.innerHTML=`<div class="loadingMaterial">Preparant el suport d’expressió oral…</div>`;box.innerHTML=await ExpressioOral.render(State.selected,title);return}
     const {size,cols,label}=MaterialLayout.layout();
@@ -596,64 +599,6 @@ const Builtins={
   }
 };
 
-
-const OralLibrary={
-  scene:null, category:null,
-  renderScenes(){
-    const box=document.querySelector("#oralScenes");
-    box.innerHTML=Object.entries(ORAL_SCENES).map(([name,cats])=>{
-      const total=Object.values(cats).reduce((n,a)=>n+a.length,0);
-      return `<button class="oralScene" data-oral-scene="${Utils.esc(name)}"><b>${Utils.esc(name)}</b><small>${Object.keys(cats).length} categories · ${total} paraules</small></button>`;
-    }).join("");
-    box.querySelectorAll("[data-oral-scene]").forEach(b=>b.onclick=()=>this.openScene(b.dataset.oralScene));
-  },
-  openScene(name){
-    this.scene=name; this.category=null;
-    document.querySelector("#oralScenes").classList.add("hidden");
-    document.querySelector("#oralWorkspace").classList.remove("hidden");
-    document.querySelector("#oralTitle").textContent=name;
-    document.querySelector("#oralHint").textContent="Tria una categoria per reduir el vocabulari visible.";
-    this.renderCategories();
-    document.querySelector("#oralTerms").innerHTML='<div class="status">Selecciona una categoria.</div>';
-  },
-  back(){
-    this.scene=null;this.category=null;
-    document.querySelector("#oralWorkspace").classList.add("hidden");
-    document.querySelector("#oralScenes").classList.remove("hidden");
-  },
-  renderCategories(){
-    const cats=ORAL_SCENES[this.scene]||{};
-    const box=document.querySelector("#oralCategories");
-    box.innerHTML=Object.entries(cats).map(([c,terms])=>`<button class="oralCat" data-oral-cat="${Utils.esc(c)}">${Utils.esc(c)} · ${terms.length}</button>`).join("");
-    box.querySelectorAll("[data-oral-cat]").forEach(b=>b.onclick=()=>this.openCategory(b.dataset.oralCat));
-  },
-  openCategory(cat){
-    this.category=cat;
-    document.querySelectorAll(".oralCat").forEach(b=>b.classList.toggle("active",b.dataset.oralCat===cat));
-    const terms=ORAL_SCENES[this.scene][cat]||[];
-    const box=document.querySelector("#oralTerms");
-    box.innerHTML=`<div class="oralActions"><button id="oralSelectAll" class="secondary">Marcar categoria</button><button id="oralGenerate" class="primary">Afegir seleccionats</button></div><div class="oralTermGrid">${terms.map((t,i)=>`<label class="oralTerm"><input type="checkbox" value="${Utils.esc(t)}"><span>${Utils.esc(t)}</span></label>`).join("")}</div>`;
-    document.querySelector("#oralSelectAll").onclick=()=>box.querySelectorAll('input[type="checkbox"]').forEach(x=>x.checked=true);
-    document.querySelector("#oralGenerate").onclick=()=>this.addChecked();
-  },
-  async addChecked(){
-    const terms=[...document.querySelectorAll("#oralTerms input:checked")].map(x=>x.value);
-    if(!terms.length)return;
-    document.querySelector("#oralHint").textContent=`Resolent ${terms.length} pictogrames d’ARASAAC...`;
-    const resolved=[];
-    for(let i=0;i<terms.length;i++){
-      document.querySelector("#oralHint").textContent=`${i+1}/${terms.length} · ${terms[i]}`;
-      const r=await ARASAAC.resolve(terms[i]); if(r.ok)resolved.push(r.picto);
-    }
-    Selection.set(resolved);
-    document.querySelector("#materialTitle").value=this.scene;
-    document.querySelector("#materialType").value="expressio";
-    UI.syncMaterialOptions(); Print.build();
-    document.querySelector("#oralHint").textContent=`${resolved.length} pictogrames preparats.`;
-    UI.openTab("selected");
-  }
-};
-
 const UI={
   syncMaterialOptions(){
     const type=document.querySelector("#materialType").value;
@@ -661,7 +606,7 @@ const UI={
     document.querySelector("#expressioOptions").hidden=type!=="expressio";
   },
   setStatus(id,t){document.querySelector("#"+id).textContent=t},
-  openTab(name){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));["json","search","builtin","oral","selected"].forEach(x=>document.querySelector("#tab-"+x).classList.toggle("hidden",x!==name))},
+  openTab(name){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));["json","search","builtin","selected"].forEach(x=>document.querySelector("#tab-"+x).classList.toggle("hidden",x!==name))},
   renderSelected(){
     document.querySelector("#count").textContent=State.selected.length;
     document.querySelector("#selectedList").innerHTML=State.selected.length?State.selected.map((p,i)=>`<div class="item"><img src="${p.url}"><div class="meta"><b>${Utils.esc(p.term)}</b><small>ARASAAC #${p.id} · cerca: ${Utils.esc(p.searched||p.term)}</small></div><div class="savedActions"><button data-up="${i}">↑</button><button data-down="${i}">↓</button><button data-del="${i}">×</button></div></div>`).join(""):'<div class="status">No hi ha pictogrames seleccionats.</div>';
@@ -701,16 +646,17 @@ function init(){
   document.querySelector("#btnClear").onclick=()=>Selection.clear();
   document.querySelector("#btnBuild").onclick=()=>Print.build();document.querySelector("#btnPrint").onclick=async()=>{await Print.build();PrintOrientation.applyPage(document.querySelector("#materialType").value);setTimeout(()=>window.print(),50)};
   document.querySelector("#materialTitle").oninput=()=>Print.build();
-document.querySelector("#materialType").onchange=()=>{UI.syncMaterialOptions();Print.build();};
+document.querySelector("#materialType").onchange=()=>{UI.syncMaterialOptions();Instructions.editors();Print.build();};
 document.querySelector("#printOrientation").onchange=()=>Print.build();
 document.querySelector("#pictoSize").onchange=()=>Print.build();
 document.querySelector("#textStyle").onchange=()=>Print.build();
 document.querySelector("#referentMode").onchange=()=>Print.build();
 document.querySelector("#oralSupportMode").onchange=()=>Print.build();
+  document.querySelector("#updateInstructions").onclick=()=>Instructions.update();
   document.querySelector("#btnSave").onclick=()=>PersonalLibrary.save();
   document.querySelector("#btnExportProject").onclick=()=>{const d=Projects.capture();Utils.download(Utils.slug(d.name)+"_projecte.json",d)};
   document.querySelector("#projectFile").onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{Projects.apply(JSON.parse(await f.text()))}catch(err){alert(err.message)}e.target.value=""};
-  UI.renderSelected();UI.renderSaved();UI.renderBuiltins();OralLibrary.renderScenes();document.querySelector("#oralBack").onclick=()=>OralLibrary.back();
+  UI.renderSelected();UI.renderSaved();UI.renderBuiltins();
 }
 init();
 </script>
