@@ -1,0 +1,17 @@
+Genera una unidad de lectoescritura en catalán para LECTO Publisher v1.3.
+Entrega un archivo JSON UTF-8 siguiendo literalmente las claves y tipos de ejemplo_lecto.publisher.v1.json.
+schema debe ser "lecto.publisher.v1". No inventes otro esquema ni envuelvas la unidad dentro de otra clave.
+title, unit, grade, reading y before son textos. focus tiene letter, sound y description como textos.
+Lectura coherente de 130–160 palabras, catalán normativo.
+vocabulary, questions, sequence, classification, class_labels, position_words, joined_sentences, models, fluency, copy y dictation son listas de textos.
+Usa 3 preguntas literales (máximo 4), 3 frases para ordenar cronológicamente, 16–32 palabras para clasificar y 2 class_labels.
+syllables: 6–10 objetos {"word":"paraula","parts":["pa","rau","la"]}. Las partes unidas deben reproducir word exactamente.
+scramble: objetos {"answer":"paraula","parts":["rau","la","pa"]}. Las piezas deben permitir reconstruir answer sin añadir ni quitar letras.
+missing: objetos {"answer":"paraula","parts":["pa","___","la"]}.
+sentence_order: objetos {"words":["fragment","fragment","fragment"]}.
+scaffold: objeto con cuatro categorías como Personatges, Objectes, Accions y Connectors; cada valor es una lista de textos.
+models: tres frases modelo.
+fluency: exactamente 40 palabras (se presentan en cuatro columnas de diez).
+copy: 1–3 frases. dictation: 2–6 palabras. Revisa sílabas, grafías, correspondencia con el texto y que todos los ejercicios sean resolubles.
+No incluyas HTML ni código ni ilustraciones codificadas en JSON. La imagen se añade después desde el editor con «Afegeix una imatge». No incluyas una clave de imagen ni inventes campos pedagógicos adicionales en el JSON generado. El editor puede incorporar opcionalmente illustration con src (data URL) y alt al descargar una unidad con imagen; conserva ese campo si se te pide editar un JSON que ya lo contiene.
+El JSON de ejemplo adjunto es la referencia técnica completa de estructura.

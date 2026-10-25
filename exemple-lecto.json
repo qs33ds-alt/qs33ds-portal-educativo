@@ -1,0 +1,358 @@
+{
+  "schema": "lecto.publisher.v1",
+  "title": "La bicicleta vermella",
+  "unit": "06",
+  "grade": "3r de primària",
+  "focus": {
+    "letter": "P",
+    "sound": "/p/",
+    "description": "Escoltem i reconeixem el so /p/."
+  },
+  "reading": "La Júlia va arribar a l'escola amb una bicicleta vermella. Al pati, va trobar en Pol i la Paula, que preparaven una passejada pel parc. La mestra els havia donat un mapa amb tres pistes. Primer, van passar per la font i van observar una papallona damunt d'una planta. Després, van seguir un caminet fins a una palmera. A terra hi havia una petjada dibuixada amb guix. En Pol va pensar que era la segona pista. La Paula va obrir la carpeta i va comprovar el mapa. Finalment, van arribar a un banc de fusta. A sota hi van descobrir una capsa petita amb una nota: «Compartiu aquesta aventura amb la classe». La Júlia va guardar el mapa a la motxilla. Quan van tornar a l'escola, els tres infants van explicar la descoberta, van dibuixar el recorregut i van escriure les paraules noves a la llibreta.",
+  "before": "Què creus que descobriran al parc?",
+  "vocabulary": [
+    "bicicleta",
+    "vermella",
+    "passejada",
+    "papallona",
+    "petjada",
+    "carpeta",
+    "palmera",
+    "compartir"
+  ],
+  "questions": [
+    "De quin color era la bicicleta de la Júlia?",
+    "Què van observar a prop de la font?",
+    "On van trobar la capsa amb una nota?"
+  ],
+  "sequence": [
+    "Van trobar una capsa sota un banc.",
+    "Van veure una papallona a prop de la font.",
+    "Van tornar a l’escola i van explicar la descoberta."
+  ],
+  "classification": [
+    "papallona",
+    "petjada",
+    "passejada",
+    "palmera",
+    "paper",
+    "pintura",
+    "pàgina",
+    "paraigua",
+    "pilota",
+    "poma",
+    "pista",
+    "poble",
+    "carpeta",
+    "compartir",
+    "ampolla",
+    "campana",
+    "tempesta",
+    "empenta",
+    "espatlla",
+    "caputxa",
+    "sopar",
+    "tapadora",
+    "repàs",
+    "espiral"
+  ],
+  "class_labels": [
+    "P al principi",
+    "P al mig o al final"
+  ],
+  "syllables": [
+    {
+      "word": "papallona",
+      "parts": [
+        "pa",
+        "pa",
+        "llo",
+        "na"
+      ]
+    },
+    {
+      "word": "petjada",
+      "parts": [
+        "pet",
+        "ja",
+        "da"
+      ]
+    },
+    {
+      "word": "passejada",
+      "parts": [
+        "pas",
+        "se",
+        "ja",
+        "da"
+      ]
+    },
+    {
+      "word": "palmera",
+      "parts": [
+        "pal",
+        "me",
+        "ra"
+      ]
+    },
+    {
+      "word": "carpeta",
+      "parts": [
+        "car",
+        "pe",
+        "ta"
+      ]
+    },
+    {
+      "word": "ampolla",
+      "parts": [
+        "am",
+        "po",
+        "lla"
+      ]
+    },
+    {
+      "word": "campana",
+      "parts": [
+        "cam",
+        "pa",
+        "na"
+      ]
+    },
+    {
+      "word": "tempesta",
+      "parts": [
+        "tem",
+        "pes",
+        "ta"
+      ]
+    },
+    {
+      "word": "tapadora",
+      "parts": [
+        "ta",
+        "pa",
+        "do",
+        "ra"
+      ]
+    },
+    {
+      "word": "caputxa",
+      "parts": [
+        "ca",
+        "put",
+        "xa"
+      ]
+    }
+  ],
+  "scramble": [
+    {
+      "answer": "papallona",
+      "parts": [
+        "llo",
+        "pa",
+        "na",
+        "pa"
+      ]
+    },
+    {
+      "answer": "passejada",
+      "parts": [
+        "ja",
+        "pas",
+        "da",
+        "se"
+      ]
+    },
+    {
+      "answer": "palmera",
+      "parts": [
+        "me",
+        "ra",
+        "pal"
+      ]
+    },
+    {
+      "answer": "carpeta",
+      "parts": [
+        "ta",
+        "car",
+        "pe"
+      ]
+    },
+    {
+      "answer": "campana",
+      "parts": [
+        "na",
+        "cam",
+        "pa"
+      ]
+    },
+    {
+      "answer": "tapadora",
+      "parts": [
+        "do",
+        "ta",
+        "ra",
+        "pa"
+      ]
+    }
+  ],
+  "missing": [
+    {
+      "answer": "papallona",
+      "parts": [
+        "pa",
+        "___",
+        "llo",
+        "na"
+      ]
+    },
+    {
+      "answer": "palmera",
+      "parts": [
+        "pal",
+        "___",
+        "ra"
+      ]
+    },
+    {
+      "answer": "carpeta",
+      "parts": [
+        "car",
+        "pe",
+        "___"
+      ]
+    },
+    {
+      "answer": "campana",
+      "parts": [
+        "cam",
+        "___",
+        "na"
+      ]
+    }
+  ],
+  "position_words": [
+    "papallona",
+    "petjada",
+    "carpeta",
+    "ampolla",
+    "campana",
+    "sopar",
+    "tapadora",
+    "repàs"
+  ],
+  "sentence_order": [
+    {
+      "words": [
+        "vermella",
+        "és",
+        "La bicicleta",
+        "de la Júlia"
+      ]
+    },
+    {
+      "words": [
+        "una papallona",
+        "veuen",
+        "al parc",
+        "Els infants"
+      ]
+    },
+    {
+      "words": [
+        "una capsa",
+        "troben",
+        "Sota el banc"
+      ]
+    }
+  ],
+  "joined_sentences": [
+    "LaJúliaportaunabicicletavermella.",
+    "EnPoltrobaunapetjadaalcamí."
+  ],
+  "scaffold": {
+    "Personatges": [
+      "la Júlia",
+      "en Pol",
+      "la Paula",
+      "la mestra"
+    ],
+    "Objectes": [
+      "la bicicleta",
+      "el mapa",
+      "la capsa",
+      "la carpeta"
+    ],
+    "Accions": [
+      "observa",
+      "descobreix",
+      "comparteix",
+      "explica"
+    ],
+    "Connectors": [
+      "primer",
+      "després",
+      "més tard",
+      "finalment"
+    ]
+  },
+  "models": [
+    "Primer, la Júlia arriba amb la bicicleta vermella.",
+    "Després, els infants segueixen les pistes del mapa.",
+    "Finalment, expliquen la descoberta a la classe."
+  ],
+  "fluency": [
+    "papa",
+    "pipa",
+    "poma",
+    "pala",
+    "pota",
+    "paper",
+    "pista",
+    "pilota",
+    "petita",
+    "parc",
+    "palmera",
+    "petjada",
+    "pintura",
+    "pàgina",
+    "poble",
+    "passeig",
+    "passejada",
+    "papallona",
+    "paraigua",
+    "carpeta",
+    "ampolla",
+    "campana",
+    "tempesta",
+    "empenta",
+    "espatlla",
+    "caputxa",
+    "sopar",
+    "tapadora",
+    "repàs",
+    "espiral",
+    "mapa",
+    "planta",
+    "porta",
+    "pintar",
+    "passejar",
+    "poma",
+    "petjada",
+    "palmera",
+    "carpeta",
+    "papallona"
+  ],
+  "copy": [
+    "La Júlia porta una bicicleta vermella.",
+    "En Pol observa una papallona al parc."
+  ],
+  "dictation": [
+    "papallona",
+    "passejada",
+    "carpeta",
+    "petjada"
+  ]
+}
