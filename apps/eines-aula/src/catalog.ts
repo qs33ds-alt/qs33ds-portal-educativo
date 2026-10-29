@@ -11,5 +11,5 @@ export const tools:Tool[]=[
 {id:'words',name:'Banc de Paraules per Sons',category:'Llenguatge',description:'Cerca lletres i síl·labes escrites en paraules.',ready:true,index:'07'},
 {id:'guidelines',name:'Generador de Pautes',category:'Materials',description:"Pautes d'escriptura i materials imprimibles.",ready:true,index:'08'}];
 
-export const APP_VERSION='1.3.0';
+export const APP_VERSION='1.4.0';
 

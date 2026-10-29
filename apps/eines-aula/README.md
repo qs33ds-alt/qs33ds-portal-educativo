@@ -58,3 +58,6 @@ Adaptació funcional de la llista i el progrés de https://github.com/qs33ds-alt
 
 ## V1.3.0
 Ocho herramientas activas. Observación reutiliza ObservaPT; sílabas y palabras usan src/data/vocabulary.ts; pautas produce A4 con altura de escritura configurable y acceso al gestor de referentes. Ver VALIDACION_V1_3.md para alcance y pruebas. Se conserva el dashboard incorporado al repositorio.
+
+## V1.4.0
+Banco ampliable y compartido con el laboratorio. Añadir palabras manualmente o importar JSON (archivo o texto), revisar vista previa y exportar copias. El modelo se descarga desde la herramienta. Esquema y pruebas documentados en VALIDACION_V1_4.md. Persistencia en el navegador, sin nube ni transmisión de las palabras añadidas.
