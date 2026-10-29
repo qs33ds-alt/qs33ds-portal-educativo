@@ -1,7 +1,7 @@
 # Publicación de Eines d’Aula
 
-Código fuente React en apps/eines-aula; compilación pública en eines-aula.
+Fuente React: apps/eines-aula. Aplicación publicada: /eines-aula/.
 
-Para actualizar: npm ci, npm test y npm run build dentro de apps/eines-aula. Copiar el contenido de dist a ../../eines-aula y subir ambos cambios en un mismo commit a main. GitHub Pages publica automáticamente el commit. No modificar el index.html del portal ni la versión V1.0.
+El flujo .github/workflows/pages.yml se ejecuta en cada push a main y manualmente. Instala con npm ci, valida con npm test, compila con npm run build y sustituye únicamente la carpeta /eines-aula del artefacto público por la compilación actual. Conserva los archivos del portal. No requiere subir dist manualmente para futuras actualizaciones.
 
-Este flujo automatiza el despliegue del contenido compilado; no compila cambios de TypeScript automáticamente. Cloudflare no se modifica.
+GitHub Pages debe tener GitHub Actions como origen de publicación. Consultar el resultado de Actions antes de dar un cambio por publicado. No se modifica Cloudflare. La V1.0 original no se sobrescribe.
