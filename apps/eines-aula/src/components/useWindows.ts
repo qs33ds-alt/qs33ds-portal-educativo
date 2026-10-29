@@ -6,6 +6,8 @@ export function useWindows(){
  const [items,setItems]=useState<WindowState[]>([]);
  function focus(id:ToolId){setItems(a=>a.map(w=>w.id===id?{...w,z:Math.max(0,...a.map(v=>v.z))+1}:w))}
  return {items,open:(id:ToolId)=>setItems(a=>a.some(w=>w.id===id)?a.map(w=>w.id===id?{...w,minimized:false,z:Math.max(0,...a.map(v=>v.z))+1}:w):[...a,{id,minimized:false,...constrain(40+a.length*28,90+a.length*24,window.innerWidth,window.innerHeight),z:Math.max(0,...a.map(v=>v.z))+1}]),focus,
+ minimizeAll:()=>setItems(a=>a.map(w=>({...w,minimized:true}))),
  minimize:(id:ToolId)=>setItems(a=>a.map(w=>w.id===id?{...w,minimized:true}:w)),
  move:(id:ToolId,x:number,y:number)=>setItems(a=>a.map(w=>w.id===id?{...w,...constrain(x,y,window.innerWidth,window.innerHeight)}:w))};
 }
+

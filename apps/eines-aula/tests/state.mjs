@@ -18,6 +18,7 @@ function useWindows() {
     items,
     open: (id) => setItems((a) => a.some((w) => w.id === id) ? a.map((w) => w.id === id ? { ...w, minimized: false, z: Math.max(0, ...a.map((v) => v.z)) + 1 } : w) : [...a, { id, minimized: false, ...constrain(40 + a.length * 28, 90 + a.length * 24, window.innerWidth, window.innerHeight), z: Math.max(0, ...a.map((v) => v.z)) + 1 }]),
     focus,
+    minimizeAll: () => setItems((a) => a.map((w) => ({ ...w, minimized: true }))),
     minimize: (id) => setItems((a) => a.map((w) => w.id === id ? { ...w, minimized: true } : w)),
     move: (id, x, y) => setItems((a) => a.map((w) => w.id === id ? { ...w, ...constrain(x, y, window.innerWidth, window.innerHeight) } : w))
   };
@@ -132,6 +133,11 @@ assert(manager.items[0].z > manager.items[1].z);
 await act(() => manager.move("timer", -30, 3e3));
 assert.equal(manager.items[0].x, 12);
 assert.equal(manager.items[0].y, 820);
+await act(() => manager.minimizeAll());
+assert(manager.items.every((w) => w.minimized));
+await act(() => manager.open("sequence"));
+assert(!manager.items[1].minimized);
+assert(manager.items[0].minimized);
 await act(() => root.unmount());
 var t;
 await act(() => {

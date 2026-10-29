@@ -67,3 +67,7 @@ Rutinas y secuencias se conservan al recargar. Copias JSON compartidas: exportar
 
 ## V1.6.0
 Separació sil·làbica: 177 palabras, tres actividades, diez temas y filtros por número de sílabas. Revisión de catalán de interfaz y banco inicial documentada en REVISION_LINGUISTICA_V1_6.md. Se conservan vocabulario importado y copias anteriores.
+
+## V1.7 · Disseny clar i espai de treball
+
+Interfície blanca amb accents verds i tipografia editorial coherent amb el Portal educatiu. Cerca sense accents, accés al portal, recompte de resultats i accés a les eines obertes amb minimització conjunta. Tema fosc opcional. Vegeu `VALIDACION_V1_7.md`.

@@ -12,6 +12,8 @@ await act(()=>manager.open('timer'));await act(()=>manager.open('sequence'));ass
 await act(()=>manager.minimize('timer'));assert(manager.items[0].minimized);
 await act(()=>manager.open('timer'));assert.equal(manager.items.length,2);assert(!manager.items[0].minimized);assert(manager.items[0].z>manager.items[1].z);
 await act(()=>manager.move('timer',-30,3000));assert.equal(manager.items[0].x,12);assert.equal(manager.items[0].y,820);
+await act(()=>manager.minimizeAll());assert(manager.items.every(w=>w.minimized));await act(()=>manager.open('sequence'));assert(!manager.items[1].minimized);assert(manager.items[0].minimized);
 await act(()=>root.unmount());
 let t;await act(()=>{t=create(<Timer/>)});const button=(name)=>t.root.findAllByType('button').find(b=>b.children.filter(c=>typeof c==='string'||typeof c==='number').join('').trim()===name);
 await act(()=>button('1 min').props.onClick());await act(()=>button('Inicia').props.onClick());await act(async()=>{await new Promise(r=>setTimeout(r,1250))});assert.equal(t.root.findByType('output').children.join(''),'00:59');await act(()=>button('Pausa').props.onClick());const paused=t.root.findByType('output').children.join('');await act(async()=>{await new Promise(r=>setTimeout(r,1100))});assert.equal(t.root.findByType('output').children.join(''),paused);await act(()=>button('Reinicia').props.onClick());assert.equal(t.root.findByType('output').children.join(''),'01:00');await act(()=>t.unmount());console.log('PASS: window open/minimize/restore/dedup/focus/clamp; timer start/tick/pause/reset.');
+
