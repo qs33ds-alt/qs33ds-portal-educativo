@@ -1,0 +1,2 @@
+export function downloadJson(name:string,value:unknown){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+export function readJson(text:string):unknown{if(text.length>1_000_000)throw Error('El document supera el límit d’1 MB.');try{return JSON.parse(text)}catch{throw Error('El document no és un JSON vàlid.')}}

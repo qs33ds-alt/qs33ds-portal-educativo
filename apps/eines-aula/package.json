@@ -1,13 +1,13 @@
 {
   "name": "eines-aula-qs33ds",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "node tests/validation.mjs && node tests/state.mjs && node tests/autonomy.mjs && node tests/language.mjs && node tests/vocabulary-import.mjs"
+    "test": "node tests/validation.mjs && node tests/state.mjs && node tests/autonomy.mjs && node tests/language.mjs && node tests/vocabulary-import.mjs && node tests/classroom-documents.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

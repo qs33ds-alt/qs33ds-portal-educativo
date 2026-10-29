@@ -181,8 +181,9 @@ import { useId as useId2, useState as useState2 } from "react";
 
 // src/components/VocabularyEditor.tsx
 import { useId, useRef, useState } from "react";
-import { jsx, jsxs } from "react/jsx-runtime";
-function download(name, value) {
+
+// src/utils/jsonFiles.ts
+function downloadJson(name, value) {
   const url = URL.createObjectURL(new Blob([JSON.stringify(value, null, 2)], { type: "application/json" }));
   const a = document.createElement("a");
   a.href = url;
@@ -192,6 +193,9 @@ function download(name, value) {
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1e3);
 }
+
+// src/components/VocabularyEditor.tsx
+import { jsx, jsxs } from "react/jsx-runtime";
 var example = vocabularyDocument([{ word: "motxilla", syllables: ["mot", "xi", "lla"] }]);
 function VocabularyEditor() {
   const id = useId(), bank = useVocabulary();
@@ -258,8 +262,8 @@ function VocabularyEditor() {
     ] }),
     /* @__PURE__ */ jsxs("div", { className: "timer-actions", children: [
       /* @__PURE__ */ jsx("button", { className: "action", disabled: busy, onClick: () => file.current?.click(), children: busy ? "Llegint..." : "Importa JSON" }),
-      /* @__PURE__ */ jsx("button", { className: "action", onClick: () => download("QS33DS_vocabulari.json", vocabularyDocument(bank.words)), children: "Exporta el banc JSON" }),
-      /* @__PURE__ */ jsx("button", { className: "action", onClick: () => download("QS33DS_vocabulari_model.json", example), children: "Descarrega el model JSON" })
+      /* @__PURE__ */ jsx("button", { className: "action", onClick: () => downloadJson("QS33DS_vocabulari.json", vocabularyDocument(bank.words)), children: "Exporta el banc JSON" }),
+      /* @__PURE__ */ jsx("button", { className: "action", onClick: () => downloadJson("QS33DS_vocabulari_model.json", example), children: "Descarrega el model JSON" })
     ] }),
     /* @__PURE__ */ jsx("input", { className: "visually-hidden", ref: file, type: "file", "aria-label": "Fitxer JSON de vocabulari", accept: ".json,application/json", onChange: (e) => {
       void readFile(e.target.files?.[0]);

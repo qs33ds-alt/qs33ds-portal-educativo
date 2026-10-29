@@ -61,3 +61,6 @@ Ocho herramientas activas. Observación reutiliza ObservaPT; sílabas y palabras
 
 ## V1.4.0
 Banco ampliable y compartido con el laboratorio. Añadir palabras manualmente o importar JSON (archivo o texto), revisar vista previa y exportar copias. El modelo se descarga desde la herramienta. Esquema y pruebas documentados en VALIDACION_V1_4.md. Persistencia en el navegador, sin nube ni transmisión de las palabras añadidas.
+
+## V1.5.0
+Rutinas y secuencias se conservan al recargar. Copias JSON compartidas: exportar, importar, revisar y deshacer. Se guardan en el navegador; no en la nube. Ver VALIDACION_V1_5.md.
