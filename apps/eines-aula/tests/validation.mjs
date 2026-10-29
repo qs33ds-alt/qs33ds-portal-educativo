@@ -211,7 +211,9 @@ function Groups() {
 // src/components/useWindows.ts
 import { useState as useState4 } from "react";
 function constrain(x, y, width, height) {
-  return { x: Math.max(0, Math.min(x, Math.max(0, width - 280))), y: Math.max(0, Math.min(y, Math.max(0, height - 80))) };
+  const windowWidth = Math.min(740, Math.max(0, width - 24));
+  const margin = Math.min(12, Math.max(0, width - windowWidth));
+  return { x: Math.max(margin, Math.min(x, Math.max(margin, width - windowWidth - margin))), y: Math.max(0, Math.min(y, Math.max(0, height - 80))) };
 }
 
 // src/catalog.ts
@@ -219,7 +221,7 @@ var tools = [
   { id: "timer", name: "Temporitzador Visual", category: "Gesti\xF3", description: "Fes visible el temps i facilita les transicions.", ready: true, index: "01" },
   { id: "sequence", name: "Ara i Despr\xE9s", category: "Suport", description: "Anticipa qu\xE8 fem ara i qu\xE8 vindr\xE0 despr\xE9s.", ready: true, index: "02" },
   { id: "groups", name: "Selector d'Alumnes", category: "Gesti\xF3", description: "Organitza torns, parelles i petits grups.", ready: true, index: "03" },
-  { id: "autonomy", name: "Checklist d'Autonomia", category: "Suport", description: "Descompon rutines en passos accessibles.", ready: false, index: "04" },
+  { id: "autonomy", name: "Checklist d'Autonomia", category: "Suport", description: "Descompon rutines en passos accessibles.", ready: true, index: "04" },
   { id: "observation", name: "Registre d'Observaci\xF3", category: "Seguiment", description: "Registra evid\xE8ncies educatives amb privacitat.", ready: false, index: "05" },
   { id: "syllables", name: "Laboratori de S\xEDl\xB7labes", category: "Llenguatge", description: "Activitats de consci\xE8ncia sil\xB7l\xE0bica.", ready: false, index: "06" },
   { id: "words", name: "Banc de Paraules per Sons", category: "Llenguatge", description: "Consulta vocabulari classificat per sons.", ready: false, index: "07" },
@@ -236,10 +238,10 @@ for (const [style] of styles) for (const progress of [0, 0.5, 1, -1, 2]) {
   assert(html.includes("05:00"));
   assert(!html.includes("NaN"));
 }
-assert.deepEqual(constrain(-1, -20, 390, 844), { x: 0, y: 0 });
-assert.deepEqual(constrain(900, 900, 390, 844), { x: 110, y: 764 });
-assert.deepEqual(constrain(900, 900, 100, 50), { x: 0, y: 0 });
-assert.equal(tools.filter((t) => t.ready).length, 3);
+assert.deepEqual(constrain(-1, -20, 390, 844), { x: 12, y: 0 });
+assert.deepEqual(constrain(900, 900, 390, 844), { x: 12, y: 764 });
+assert.deepEqual(constrain(900, 900, 100, 50), { x: 12, y: 0 });
+assert.equal(tools.filter((t) => t.ready).length, 4);
 assert.equal(tools.length, 8);
 assert(renderToStaticMarkup(/* @__PURE__ */ jsx5(Timer, {})).includes("05:00"));
 assert(renderToStaticMarkup(/* @__PURE__ */ jsx5(Sequence, {})).includes("Fem una activitat"));

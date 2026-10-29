@@ -5,7 +5,9 @@ import { create, act } from "react-test-renderer";
 // src/components/useWindows.ts
 import { useState } from "react";
 function constrain(x, y, width, height) {
-  return { x: Math.max(0, Math.min(x, Math.max(0, width - 280))), y: Math.max(0, Math.min(y, Math.max(0, height - 80))) };
+  const windowWidth = Math.min(740, Math.max(0, width - 24));
+  const margin = Math.min(12, Math.max(0, width - windowWidth));
+  return { x: Math.max(margin, Math.min(x, Math.max(margin, width - windowWidth - margin))), y: Math.max(0, Math.min(y, Math.max(0, height - 80))) };
 }
 function useWindows() {
   const [items, setItems] = useState([]);
@@ -14,7 +16,7 @@ function useWindows() {
   }
   return {
     items,
-    open: (id) => setItems((a) => a.some((w) => w.id === id) ? a.map((w) => w.id === id ? { ...w, minimized: false, z: Math.max(0, ...a.map((v) => v.z)) + 1 } : w) : [...a, { id, minimized: false, x: Math.min(40 + a.length * 28, 180), y: 90 + a.length * 24, z: Math.max(0, ...a.map((v) => v.z)) + 1 }]),
+    open: (id) => setItems((a) => a.some((w) => w.id === id) ? a.map((w) => w.id === id ? { ...w, minimized: false, z: Math.max(0, ...a.map((v) => v.z)) + 1 } : w) : [...a, { id, minimized: false, ...constrain(40 + a.length * 28, 90 + a.length * 24, window.innerWidth, window.innerHeight), z: Math.max(0, ...a.map((v) => v.z)) + 1 }]),
     focus,
     minimize: (id) => setItems((a) => a.map((w) => w.id === id ? { ...w, minimized: true } : w)),
     move: (id, x, y) => setItems((a) => a.map((w) => w.id === id ? { ...w, ...constrain(x, y, window.innerWidth, window.innerHeight) } : w))
@@ -128,7 +130,7 @@ assert.equal(manager.items.length, 2);
 assert(!manager.items[0].minimized);
 assert(manager.items[0].z > manager.items[1].z);
 await act(() => manager.move("timer", -30, 3e3));
-assert.equal(manager.items[0].x, 0);
+assert.equal(manager.items[0].x, 12);
 assert.equal(manager.items[0].y, 820);
 await act(() => root.unmount());
 var t;

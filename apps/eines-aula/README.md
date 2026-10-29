@@ -1,4 +1,4 @@
-# Eines d'Aula · QS33DS V1.1.0
+# Eines d'Aula · QS33DS V1.2.0
 
 Portal React + TypeScript + Vite, independiente del Portal Educatiu existente.
 
@@ -25,7 +25,7 @@ El contenido compilado se genera en `dist/` y puede publicarse como sitio estát
 
 ## Módulos pendientes de integración
 
-Checklist d'Autonomia, Registre d'Observació, Laboratori de Síl·labes, Banc de Paraules per Sons y Generador de Pautes.
+Registre d'Observació, Laboratori de Síl·labes, Banc de Paraules per Sons y Generador de Pautes.
 
 **Integraciones pendientes de auditar:** Portal Educatiu QS33DS, LECTO PUBLISHER, LECTO ADAPT PUBLISHER, pictogramas, vocabulario y Supabase. No se ha copiado código de estos sistemas ni se ha supuesto compatibilidad.
 
@@ -50,3 +50,7 @@ Las tres herramientas usan un gestor compartido. Arrastra la cabecera o enfócal
 
 Instalación reproducible: `npm ci`. Validación: `npm test` y `npm run build`.
 Los tests .mjs son las versiones ejecutables de los .tsx incluidas para no necesitar un compilador de tests adicional. El test browser.cjs requiere instalar Playwright y Chromium; no se ejecutó con éxito en este entorno. Ver INFORME_VALIDACION.md.
+
+## V1.2
+Checklist d’Autonomia activa: títol i passos editables, marcar/desmarcar, progrés, afegir fins a 30 passos, eliminar amb opció de desfer i tornar a començar. Estat de sessió conservat en minimitzar; sense desar dades personals. Finestres ajustades a l’amplada visible en obrir i moure. Comptadors del catàleg derivats de les eines actives.
+Adaptació funcional de la llista i el progrés de https://github.com/qs33ds-alt/mi-rutina (index.html, c3af4a73f7e282958df7fb5fefffdcd2a944b2ad). La font és HTML, sense components React exportables; es reutilitza el gestor, la superfície i els controls React existents d’Eines d’Aula.
