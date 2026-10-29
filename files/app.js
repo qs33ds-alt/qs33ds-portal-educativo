@@ -1,4 +1,5 @@
 'use strict';
+if(new URLSearchParams(location.search).get('embed')==='1')document.body.classList.add('files-embedded');
 const $=id=>document.getElementById(id);
 const state={token:null,roots:{},root:'downloads',path:'',items:[],selected:new Set(),active:null,previewUrl:null,previewSerial:0};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
