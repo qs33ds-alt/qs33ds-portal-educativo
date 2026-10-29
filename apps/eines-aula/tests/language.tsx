@@ -7,16 +7,16 @@ import Words from '../src/modules/Words';
 import Guidelines from '../src/modules/Guidelines';
 import Observation from '../src/modules/Observation';
 assert.equal(new Set(vocabulary.map(w=>w.word)).size,vocabulary.length);
-for(const w of vocabulary){assert.equal(w.syllables.join(''),w.word);assert(w.syllables.length>=1&&w.syllables.length<=4)}
+for(const w of vocabulary){assert.equal(w.syllables.join(''),w.word);assert(w.syllables.length>=1&&w.syllables.length<=8)}
 assert(matchesWritten('mà','ma','start'));assert(matchesWritten('poma','ma','end'));assert(matchesWritten('caramel','ra','middle'));assert(!matchesWritten('mama','ma','middle'));assert(!matchesWritten('mar','ma','end'));
 assert(renderToStaticMarkup(<Syllables/>).includes('CASA'));assert(renderToStaticMarkup(<Words/>).includes('PAPALLONA'));
 const g=renderToStaticMarkup(<Guidelines/>);assert(g.includes('--rule-height:2cm'));assert.equal((g.match(/class="writing-rule"/g)||[]).length,7);assert(renderToStaticMarkup(<Observation/>).includes('../observapt.html'));
-console.log('PASS: 26 explicit syllabifications, shared bank, written-position filters, 7 print rules at 2cm, existing ObservaPT adapter.');
+console.log('PASS: 177 explicit syllabifications, shared bank, written-position filters, 7 print rules at 2cm, existing ObservaPT adapter.');
 const {create,act}=await import('react-test-renderer');globalThis.IS_REACT_ACT_ENVIRONMENT=true;
 let syllables;await act(()=>{syllables=create(<Syllables/>)});
 const findButton=(view,name)=>view.root.findAllByType('button').find(b=>b.children.filter(c=>typeof c==='string'||typeof c==='number').join('').trim()===name);
 await act(()=>findButton(syllables,'1').props.onClick());assert(syllables.root.findByProps({role:'status'}).children.join('').includes('TORNA'));
 await act(()=>findButton(syllables,'2').props.onClick());assert(syllables.root.findByProps({role:'status'}).children.join('').includes('MOLT BÉ'));
 await act(()=>findButton(syllables,'Paraula següent →').props.onClick());assert.equal(syllables.root.findByProps({className:'syllable-word'}).children.join(''),'PILOTA');assert.equal(syllables.root.findAllByProps({className:'syllable-parts'}).length,0);await act(()=>syllables.unmount());
-let words;await act(()=>{words=create(<Words/>)});await act(()=>words.root.findAllByType('input').find(x=>x.props.placeholder==='Ex.: ma, p, ca...').props.onChange({target:{value:'ma'}}));await act(()=>words.root.findByType('select').props.onChange({target:{value:'end'}}));assert.deepEqual(words.root.findAllByType('article').map(a=>a.findByType('strong').children.join('')),['MAMA','POMA','MÀ']);await act(()=>findButton(words,'Neteja els filtres').props.onClick());assert.equal(words.root.findAllByType('article').length,26);await act(()=>words.unmount());
+let words;await act(()=>{words=create(<Words/>)});await act(()=>words.root.findAllByType('input').find(x=>x.props.placeholder==='Ex.: ma, p, ca...').props.onChange({target:{value:'ma'}}));await act(()=>words.root.findByType('select').props.onChange({target:{value:'end'}}));assert.deepEqual(words.root.findAllByType('article').map(a=>a.findByType('strong').children.join('')),['MAMA','POMA','MÀ','GOMA','CAMA']);await act(()=>findButton(words,'Neteja els filtres').props.onClick());assert.equal(words.root.findAllByType('article').length,vocabulary.length);await act(()=>words.unmount());
 let rules;await act(()=>{rules=create(<Guidelines/>)});await act(()=>rules.root.findAllByType('select')[0].props.onChange({target:{value:'1.5'}}));await act(()=>rules.root.findAllByType('select')[1].props.onChange({target:{value:'4'}}));assert.equal(rules.root.findAllByProps({className:'writing-rule'}).length,4);assert.equal(rules.root.findByProps({className:'writing-sheet'}).props.style['--rule-height'],'1.5cm');await act(()=>rules.unmount());console.log('PASS: syllable feedback and next-word reset, word query/position/reset, print height and row controls.');

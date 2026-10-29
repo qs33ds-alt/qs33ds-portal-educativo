@@ -3,33 +3,1475 @@ import assert from "node:assert/strict";
 import { create, act } from "react-test-renderer";
 
 // src/data/vocabulary.ts
+var topics = { animals: "Animals", aula: "Aula", casa: "Casa", aliments: "Aliments", natura: "Natura", transport: "Transports", cos: "Cos", roba: "Roba", joc: "Jocs i m\xFAsica", persones: "Persones" };
 var vocabulary = [
-  { word: "casa", syllables: ["ca", "sa"] },
-  { word: "pilota", syllables: ["pi", "lo", "ta"] },
-  { word: "taula", syllables: ["tau", "la"] },
-  { word: "escola", syllables: ["es", "co", "la"] },
-  { word: "mama", syllables: ["ma", "ma"] },
-  { word: "papa", syllables: ["pa", "pa"] },
-  { word: "pera", syllables: ["pe", "ra"] },
-  { word: "poma", syllables: ["po", "ma"] },
-  { word: "lluna", syllables: ["llu", "na"] },
-  { word: "sabata", syllables: ["sa", "ba", "ta"] },
-  { word: "m\xE0", syllables: ["m\xE0"] },
-  { word: "mar", syllables: ["mar"] },
-  { word: "sol", syllables: ["sol"] },
-  { word: "gat", syllables: ["gat"] },
-  { word: "gos", syllables: ["gos"] },
-  { word: "tren", syllables: ["tren"] },
-  { word: "flor", syllables: ["flor"] },
-  { word: "platja", syllables: ["plat", "ja"] },
-  { word: "aigua", syllables: ["ai", "gua"] },
-  { word: "finestra", syllables: ["fi", "nes", "tra"] },
-  { word: "cotxe", syllables: ["cot", "xe"] },
-  { word: "llibre", syllables: ["lli", "bre"] },
-  { word: "paper", syllables: ["pa", "per"] },
-  { word: "caramel", syllables: ["ca", "ra", "mel"] },
-  { word: "cadira", syllables: ["ca", "di", "ra"] },
-  { word: "papallona", syllables: ["pa", "pa", "llo", "na"] }
+  {
+    "word": "casa",
+    "syllables": [
+      "ca",
+      "sa"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "pilota",
+    "syllables": [
+      "pi",
+      "lo",
+      "ta"
+    ],
+    "topic": "joc"
+  },
+  {
+    "word": "taula",
+    "syllables": [
+      "tau",
+      "la"
+    ],
+    "topic": "casa",
+    "note": "Les vocals au formen un diftong i es mantenen juntes."
+  },
+  {
+    "word": "escola",
+    "syllables": [
+      "es",
+      "co",
+      "la"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "mama",
+    "syllables": [
+      "ma",
+      "ma"
+    ],
+    "topic": "persones"
+  },
+  {
+    "word": "papa",
+    "syllables": [
+      "pa",
+      "pa"
+    ],
+    "topic": "persones"
+  },
+  {
+    "word": "pera",
+    "syllables": [
+      "pe",
+      "ra"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "poma",
+    "syllables": [
+      "po",
+      "ma"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "lluna",
+    "syllables": [
+      "llu",
+      "na"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "sabata",
+    "syllables": [
+      "sa",
+      "ba",
+      "ta"
+    ],
+    "topic": "roba"
+  },
+  {
+    "word": "m\xE0",
+    "syllables": [
+      "m\xE0"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "mar",
+    "syllables": [
+      "mar"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "sol",
+    "syllables": [
+      "sol"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "gat",
+    "syllables": [
+      "gat"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "gos",
+    "syllables": [
+      "gos"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "tren",
+    "syllables": [
+      "tren"
+    ],
+    "topic": "transport"
+  },
+  {
+    "word": "flor",
+    "syllables": [
+      "flor"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "platja",
+    "syllables": [
+      "plat",
+      "ja"
+    ],
+    "topic": "natura",
+    "note": "El grup tj se separa: plat-ja."
+  },
+  {
+    "word": "aigua",
+    "syllables": [
+      "ai",
+      "gua"
+    ],
+    "topic": "natura",
+    "note": "Els grups ai i gua es mantenen dins les seves s\xEDl\xB7labes."
+  },
+  {
+    "word": "finestra",
+    "syllables": [
+      "fi",
+      "nes",
+      "tra"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "cotxe",
+    "syllables": [
+      "cot",
+      "xe"
+    ],
+    "topic": "transport",
+    "note": "El grup tx se separa: cot-xe."
+  },
+  {
+    "word": "llibre",
+    "syllables": [
+      "lli",
+      "bre"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "paper",
+    "syllables": [
+      "pa",
+      "per"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "caramel",
+    "syllables": [
+      "ca",
+      "ra",
+      "mel"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "cadira",
+    "syllables": [
+      "ca",
+      "di",
+      "ra"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "papallona",
+    "syllables": [
+      "pa",
+      "pa",
+      "llo",
+      "na"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "vaca",
+    "syllables": [
+      "va",
+      "ca"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "cavall",
+    "syllables": [
+      "ca",
+      "vall"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "ovella",
+    "syllables": [
+      "o",
+      "ve",
+      "lla"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "conill",
+    "syllables": [
+      "co",
+      "nill"
+    ],
+    "topic": "animals",
+    "note": "El d\xEDgraf ll es mant\xE9 junt."
+  },
+  {
+    "word": "gallina",
+    "syllables": [
+      "ga",
+      "lli",
+      "na"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "pollet",
+    "syllables": [
+      "po",
+      "llet"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "\xE0nec",
+    "syllables": [
+      "\xE0",
+      "nec"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "ocell",
+    "syllables": [
+      "o",
+      "cell"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "peix",
+    "syllables": [
+      "peix"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "bou",
+    "syllables": [
+      "bou"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "porc",
+    "syllables": [
+      "porc"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "cargol",
+    "syllables": [
+      "car",
+      "gol"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "formiga",
+    "syllables": [
+      "for",
+      "mi",
+      "ga"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "mosca",
+    "syllables": [
+      "mos",
+      "ca"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "aranya",
+    "syllables": [
+      "a",
+      "ra",
+      "nya"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "abella",
+    "syllables": [
+      "a",
+      "be",
+      "lla"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "girafa",
+    "syllables": [
+      "gi",
+      "ra",
+      "fa"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "elefant",
+    "syllables": [
+      "e",
+      "le",
+      "fant"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "tortuga",
+    "syllables": [
+      "tor",
+      "tu",
+      "ga"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "granota",
+    "syllables": [
+      "gra",
+      "no",
+      "ta"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "serp",
+    "syllables": [
+      "serp"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "ratol\xED",
+    "syllables": [
+      "ra",
+      "to",
+      "l\xED"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "esquirol",
+    "syllables": [
+      "es",
+      "qui",
+      "rol"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "dof\xED",
+    "syllables": [
+      "do",
+      "f\xED"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "balena",
+    "syllables": [
+      "ba",
+      "le",
+      "na"
+    ],
+    "topic": "animals"
+  },
+  {
+    "word": "lle\xF3",
+    "syllables": [
+      "lle",
+      "\xF3"
+    ],
+    "topic": "animals",
+    "note": "Les vocals e i \xF3 formen un hiat: lle-\xF3."
+  },
+  {
+    "word": "llapis",
+    "syllables": [
+      "lla",
+      "pis"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "goma",
+    "syllables": [
+      "go",
+      "ma"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "llibreta",
+    "syllables": [
+      "lli",
+      "bre",
+      "ta"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "carpeta",
+    "syllables": [
+      "car",
+      "pe",
+      "ta"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "tisores",
+    "syllables": [
+      "ti",
+      "so",
+      "res"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "pissarra",
+    "syllables": [
+      "pis",
+      "sar",
+      "ra"
+    ],
+    "topic": "aula",
+    "note": "Els grups ss i rr se separen: pis-sar-ra."
+  },
+  {
+    "word": "guix",
+    "syllables": [
+      "guix"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "pintura",
+    "syllables": [
+      "pin",
+      "tu",
+      "ra"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "pinzell",
+    "syllables": [
+      "pin",
+      "zell"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "regle",
+    "syllables": [
+      "re",
+      "gle"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "estoig",
+    "syllables": [
+      "es",
+      "toig"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "full",
+    "syllables": [
+      "full"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "dibuix",
+    "syllables": [
+      "di",
+      "buix"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "paraula",
+    "syllables": [
+      "pa",
+      "rau",
+      "la"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "lletra",
+    "syllables": [
+      "lle",
+      "tra"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "n\xFAmero",
+    "syllables": [
+      "n\xFA",
+      "me",
+      "ro"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "mestre",
+    "syllables": [
+      "mes",
+      "tre"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "mestra",
+    "syllables": [
+      "mes",
+      "tra"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "company",
+    "syllables": [
+      "com",
+      "pany"
+    ],
+    "topic": "aula"
+  },
+  {
+    "word": "porta",
+    "syllables": [
+      "por",
+      "ta"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "llit",
+    "syllables": [
+      "llit"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "sof\xE0",
+    "syllables": [
+      "so",
+      "f\xE0"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "cuina",
+    "syllables": [
+      "cui",
+      "na"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "plat",
+    "syllables": [
+      "plat"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "got",
+    "syllables": [
+      "got"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "tassa",
+    "syllables": [
+      "tas",
+      "sa"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "cullera",
+    "syllables": [
+      "cu",
+      "lle",
+      "ra"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "forquilla",
+    "syllables": [
+      "for",
+      "qui",
+      "lla"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "ganivet",
+    "syllables": [
+      "ga",
+      "ni",
+      "vet"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "rellotge",
+    "syllables": [
+      "re",
+      "llot",
+      "ge"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "mirall",
+    "syllables": [
+      "mi",
+      "rall"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "coix\xED",
+    "syllables": [
+      "coi",
+      "x\xED"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "catifa",
+    "syllables": [
+      "ca",
+      "ti",
+      "fa"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "dutxa",
+    "syllables": [
+      "dut",
+      "xa"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "sab\xF3",
+    "syllables": [
+      "sa",
+      "b\xF3"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "tovallola",
+    "syllables": [
+      "to",
+      "va",
+      "llo",
+      "la"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "escala",
+    "syllables": [
+      "es",
+      "ca",
+      "la"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "armari",
+    "syllables": [
+      "ar",
+      "ma",
+      "ri"
+    ],
+    "topic": "casa"
+  },
+  {
+    "word": "pa",
+    "syllables": [
+      "pa"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "llet",
+    "syllables": [
+      "llet"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "ou",
+    "syllables": [
+      "ou"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "arr\xF2s",
+    "syllables": [
+      "ar",
+      "r\xF2s"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "sopa",
+    "syllables": [
+      "so",
+      "pa"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "pasta",
+    "syllables": [
+      "pas",
+      "ta"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "patata",
+    "syllables": [
+      "pa",
+      "ta",
+      "ta"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "tom\xE0quet",
+    "syllables": [
+      "to",
+      "m\xE0",
+      "quet"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "pastanaga",
+    "syllables": [
+      "pas",
+      "ta",
+      "na",
+      "ga"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "enciam",
+    "syllables": [
+      "en",
+      "ci",
+      "am"
+    ],
+    "topic": "aliments",
+    "note": "Les vocals i i a formen un hiat: en-ci-am."
+  },
+  {
+    "word": "ceba",
+    "syllables": [
+      "ce",
+      "ba"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "formatge",
+    "syllables": [
+      "for",
+      "mat",
+      "ge"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "iogurt",
+    "syllables": [
+      "io",
+      "gurt"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "galeta",
+    "syllables": [
+      "ga",
+      "le",
+      "ta"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "xocolata",
+    "syllables": [
+      "xo",
+      "co",
+      "la",
+      "ta"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "mandarina",
+    "syllables": [
+      "man",
+      "da",
+      "ri",
+      "na"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "taronja",
+    "syllables": [
+      "ta",
+      "ron",
+      "ja"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "maduixa",
+    "syllables": [
+      "ma",
+      "dui",
+      "xa"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "pl\xE0tan",
+    "syllables": [
+      "pl\xE0",
+      "tan"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "s\xEDndria",
+    "syllables": [
+      "s\xEDn",
+      "dri",
+      "a"
+    ],
+    "topic": "aliments",
+    "note": "Les vocals i i a finals formen un hiat: s\xEDn-dri-a."
+  },
+  {
+    "word": "pr\xE9ssec",
+    "syllables": [
+      "pr\xE9s",
+      "sec"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "ra\xEFm",
+    "syllables": [
+      "ra",
+      "\xEFm"
+    ],
+    "topic": "aliments",
+    "note": "La di\xE8resi indica que a i \xEF es pronuncien en s\xEDl\xB7labes diferents."
+  },
+  {
+    "word": "mel",
+    "syllables": [
+      "mel"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "sal",
+    "syllables": [
+      "sal"
+    ],
+    "topic": "aliments"
+  },
+  {
+    "word": "cel",
+    "syllables": [
+      "cel"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "n\xFAvol",
+    "syllables": [
+      "n\xFA",
+      "vol"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "pluja",
+    "syllables": [
+      "plu",
+      "ja"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "neu",
+    "syllables": [
+      "neu"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "vent",
+    "syllables": [
+      "vent"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "riu",
+    "syllables": [
+      "riu"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "muntanya",
+    "syllables": [
+      "mun",
+      "ta",
+      "nya"
+    ],
+    "topic": "natura",
+    "note": "El d\xEDgraf ny es mant\xE9 junt."
+  },
+  {
+    "word": "pedra",
+    "syllables": [
+      "pe",
+      "dra"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "arbre",
+    "syllables": [
+      "ar",
+      "bre"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "bosc",
+    "syllables": [
+      "bosc"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "fulla",
+    "syllables": [
+      "fu",
+      "lla"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "herba",
+    "syllables": [
+      "her",
+      "ba"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "terra",
+    "syllables": [
+      "ter",
+      "ra"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "sorra",
+    "syllables": [
+      "sor",
+      "ra"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "estrella",
+    "syllables": [
+      "es",
+      "tre",
+      "lla"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "bolet",
+    "syllables": [
+      "bo",
+      "let"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "roca",
+    "syllables": [
+      "ro",
+      "ca"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "foc",
+    "syllables": [
+      "foc"
+    ],
+    "topic": "natura"
+  },
+  {
+    "word": "bus",
+    "syllables": [
+      "bus"
+    ],
+    "topic": "transport"
+  },
+  {
+    "word": "moto",
+    "syllables": [
+      "mo",
+      "to"
+    ],
+    "topic": "transport"
+  },
+  {
+    "word": "avi\xF3",
+    "syllables": [
+      "a",
+      "vi",
+      "\xF3"
+    ],
+    "topic": "transport",
+    "note": "Les vocals i i \xF3 pertanyen a s\xEDl\xB7labes diferents."
+  },
+  {
+    "word": "cami\xF3",
+    "syllables": [
+      "ca",
+      "mi",
+      "\xF3"
+    ],
+    "topic": "transport",
+    "note": "Les vocals i i \xF3 formen un hiat: ca-mi-\xF3."
+  },
+  {
+    "word": "barca",
+    "syllables": [
+      "bar",
+      "ca"
+    ],
+    "topic": "transport"
+  },
+  {
+    "word": "vaixell",
+    "syllables": [
+      "vai",
+      "xell"
+    ],
+    "topic": "transport"
+  },
+  {
+    "word": "bicicleta",
+    "syllables": [
+      "bi",
+      "ci",
+      "cle",
+      "ta"
+    ],
+    "topic": "transport"
+  },
+  {
+    "word": "patinet",
+    "syllables": [
+      "pa",
+      "ti",
+      "net"
+    ],
+    "topic": "transport"
+  },
+  {
+    "word": "tractor",
+    "syllables": [
+      "trac",
+      "tor"
+    ],
+    "topic": "transport"
+  },
+  {
+    "word": "helic\xF2pter",
+    "syllables": [
+      "he",
+      "li",
+      "c\xF2p",
+      "ter"
+    ],
+    "topic": "transport"
+  },
+  {
+    "word": "ambul\xE0ncia",
+    "syllables": [
+      "am",
+      "bu",
+      "l\xE0n",
+      "ci",
+      "a"
+    ],
+    "topic": "transport"
+  },
+  {
+    "word": "cap",
+    "syllables": [
+      "cap"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "peu",
+    "syllables": [
+      "peu"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "nas",
+    "syllables": [
+      "nas"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "ull",
+    "syllables": [
+      "ull"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "boca",
+    "syllables": [
+      "bo",
+      "ca"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "bra\xE7",
+    "syllables": [
+      "bra\xE7"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "cama",
+    "syllables": [
+      "ca",
+      "ma"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "dit",
+    "syllables": [
+      "dit"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "orella",
+    "syllables": [
+      "o",
+      "re",
+      "lla"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "panxa",
+    "syllables": [
+      "pan",
+      "xa"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "cabell",
+    "syllables": [
+      "ca",
+      "bell"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "esquena",
+    "syllables": [
+      "es",
+      "que",
+      "na"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "genoll",
+    "syllables": [
+      "ge",
+      "noll"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "llengua",
+    "syllables": [
+      "llen",
+      "gua"
+    ],
+    "topic": "cos"
+  },
+  {
+    "word": "samarreta",
+    "syllables": [
+      "sa",
+      "mar",
+      "re",
+      "ta"
+    ],
+    "topic": "roba"
+  },
+  {
+    "word": "pantalons",
+    "syllables": [
+      "pan",
+      "ta",
+      "lons"
+    ],
+    "topic": "roba"
+  },
+  {
+    "word": "jaqueta",
+    "syllables": [
+      "ja",
+      "que",
+      "ta"
+    ],
+    "topic": "roba"
+  },
+  {
+    "word": "mitj\xF3",
+    "syllables": [
+      "mit",
+      "j\xF3"
+    ],
+    "topic": "roba"
+  },
+  {
+    "word": "faldilla",
+    "syllables": [
+      "fal",
+      "di",
+      "lla"
+    ],
+    "topic": "roba"
+  },
+  {
+    "word": "vestit",
+    "syllables": [
+      "ves",
+      "tit"
+    ],
+    "topic": "roba"
+  },
+  {
+    "word": "bufanda",
+    "syllables": [
+      "bu",
+      "fan",
+      "da"
+    ],
+    "topic": "roba"
+  },
+  {
+    "word": "gorra",
+    "syllables": [
+      "gor",
+      "ra"
+    ],
+    "topic": "roba"
+  },
+  {
+    "word": "guant",
+    "syllables": [
+      "guant"
+    ],
+    "topic": "roba"
+  },
+  {
+    "word": "bot\xF3",
+    "syllables": [
+      "bo",
+      "t\xF3"
+    ],
+    "topic": "roba"
+  },
+  {
+    "word": "nina",
+    "syllables": [
+      "ni",
+      "na"
+    ],
+    "topic": "joc"
+  },
+  {
+    "word": "dau",
+    "syllables": [
+      "dau"
+    ],
+    "topic": "joc"
+  },
+  {
+    "word": "joc",
+    "syllables": [
+      "joc"
+    ],
+    "topic": "joc"
+  },
+  {
+    "word": "corda",
+    "syllables": [
+      "cor",
+      "da"
+    ],
+    "topic": "joc"
+  },
+  {
+    "word": "conte",
+    "syllables": [
+      "con",
+      "te"
+    ],
+    "topic": "joc"
+  },
+  {
+    "word": "can\xE7\xF3",
+    "syllables": [
+      "can",
+      "\xE7\xF3"
+    ],
+    "topic": "joc"
+  },
+  {
+    "word": "timbal",
+    "syllables": [
+      "tim",
+      "bal"
+    ],
+    "topic": "joc"
+  },
+  {
+    "word": "guitarra",
+    "syllables": [
+      "gui",
+      "tar",
+      "ra"
+    ],
+    "topic": "joc",
+    "note": "El grup gu no se separa; el grup rr s\xED."
+  },
+  {
+    "word": "piano",
+    "syllables": [
+      "pi",
+      "a",
+      "no"
+    ],
+    "topic": "joc",
+    "note": "Les vocals i i a formen un hiat: pi-a-no."
+  },
+  {
+    "word": "m\xFAsica",
+    "syllables": [
+      "m\xFA",
+      "si",
+      "ca"
+    ],
+    "topic": "joc"
+  }
 ];
 function normalize(text) {
   return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("ca").trim();
@@ -277,10 +1719,10 @@ function VocabularyEditor() {
     pending && /* @__PURE__ */ jsxs("section", { className: "import-preview", "aria-label": "Revisi\xF3 de la importaci\xF3", children: [
       /* @__PURE__ */ jsxs("strong", { children: [
         pending.length,
-        " entrades validades"
+        " entrades amb format v\xE0lid"
       ] }),
       /* @__PURE__ */ jsxs("p", { children: [
-        pending.slice(0, 5).map((w) => `${w.word}: ${w.syllables.join(" \xB7 ")}`).join("; "),
+        pending.slice(0, 5).map((w) => `${w.word}: ${w.syllables.join(" \u2013 ")}`).join("; "),
         pending.length > 5 ? "\u2026" : ""
       ] }),
       /* @__PURE__ */ jsx("p", { children: "La validaci\xF3 comprova el format i la reconstrucci\xF3 de cada paraula; revisa que la separaci\xF3 ling\xFC\xEDstica sigui correcta." }),
@@ -310,7 +1752,7 @@ function VocabularyEditor() {
         /* @__PURE__ */ jsxs("span", { children: [
           w.word.toLocaleUpperCase("ca"),
           " \xB7 ",
-          w.syllables.join(" \xB7 ")
+          w.syllables.join(" \u2013 ")
         ] }),
         /* @__PURE__ */ jsx("button", { className: "action", "aria-label": `Elimina ${w.word}`, onClick: () => {
           setRemoved(w);
@@ -368,7 +1810,7 @@ function Words() {
     ] }),
     /* @__PURE__ */ jsx2("div", { className: "word-bank", children: filtered.map((w) => /* @__PURE__ */ jsxs2("article", { children: [
       /* @__PURE__ */ jsx2("strong", { children: w.word.toLocaleUpperCase("ca") }),
-      /* @__PURE__ */ jsx2("span", { children: w.syllables.join(" \xB7 ").toLocaleUpperCase("ca") }),
+      /* @__PURE__ */ jsx2("span", { children: w.syllables.join(" \u2013 ").toLocaleUpperCase("ca") }),
       /* @__PURE__ */ jsxs2("small", { children: [
         w.syllables.length,
         " ",
@@ -385,63 +1827,199 @@ function Words() {
 }
 
 // src/modules/Syllables.tsx
-import { useId as useId3, useState as useState3 } from "react";
-import { jsx as jsx3, jsxs as jsxs3 } from "react/jsx-runtime";
-function SyllableQuestion({ item, index, total, next }) {
-  const [answer, setAnswer] = useState3(null), [revealed, setRevealed] = useState3(false);
-  return /* @__PURE__ */ jsxs3("section", { children: [
+import { useId as useId3, useMemo, useState as useState3 } from "react";
+
+// src/data/syllableActivities.ts
+function boundaries(item) {
+  let total = 0;
+  return item.syllables.slice(0, -1).map((s) => {
+    total += Array.from(s).length;
+    return total;
+  });
+}
+function correctBoundaries(item, selected) {
+  const expected = boundaries(item);
+  const actual = [...new Set(selected)].sort((a, b) => a - b);
+  return expected.length === actual.length && expected.every((n, i) => n === actual[i]);
+}
+function correctOrder(item, order) {
+  return order.length === item.syllables.length && new Set(order).size === order.length && order.every((i) => Number.isInteger(i) && i >= 0 && i < item.syllables.length) && order.map((i) => item.syllables[i]).join("|") === item.syllables.join("|");
+}
+function shuffledIndices(length) {
+  const a = Array.from({ length }, (_, i) => i);
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  if (a.length > 1 && a.every((v, i) => v === i)) a.push(a.shift());
+  return a;
+}
+
+// src/modules/Syllables.tsx
+import { Fragment, jsx as jsx3, jsxs as jsxs3 } from "react/jsx-runtime";
+function SyllableQuestion({ item, index, total, next, previous: previous2, mode, uppercase }) {
+  const [answer, setAnswer] = useState3(null), [revealed, setRevealed] = useState3(false), [cuts, setCuts] = useState3([]), [order, setOrder] = useState3([]), [result, setResult] = useState3(null);
+  const [tokens] = useState3(() => shuffledIndices(item.syllables.length));
+  const show = (s) => uppercase ? s.toLocaleUpperCase("ca") : s;
+  const letters2 = Array.from(item.word);
+  function check() {
+    setResult(mode === "split" ? correctBoundaries(item, cuts) : correctOrder(item, order));
+  }
+  return /* @__PURE__ */ jsxs3("section", { className: "syllable-question", children: [
     /* @__PURE__ */ jsxs3("div", { className: "tool-top", children: [
-      /* @__PURE__ */ jsx3("span", { children: "ESCOLTA\u2019T I PICA DE MANS" }),
+      /* @__PURE__ */ jsx3("span", { children: "SEPARACI\xD3 SIL\xB7L\xC0BICA" }),
       /* @__PURE__ */ jsxs3("span", { className: "micro-tag", children: [
         index + 1,
         " / ",
         total
       ] })
     ] }),
-    /* @__PURE__ */ jsx3("p", { children: "Digues la paraula i fes una picada per cada s\xEDl\xB7laba." }),
-    /* @__PURE__ */ jsx3("div", { className: "syllable-word", children: item.word.toLocaleUpperCase("ca") }),
-    /* @__PURE__ */ jsx3("p", { children: "QUANTES S\xCDL\xB7LABES T\xC9?" }),
-    /* @__PURE__ */ jsx3("div", { className: "timer-actions", children: Array.from({ length: Math.max(4, item.syllables.length) }, (_, i) => i + 1).map((n) => /* @__PURE__ */ jsx3("button", { className: answer === n ? "action primary" : "action", "aria-pressed": answer === n, onClick: () => {
-      setAnswer(n);
-      setRevealed(true);
-    }, children: n }, n)) }),
-    /* @__PURE__ */ jsx3("p", { className: "syllable-feedback", role: "status", children: answer === null ? "Tria una resposta." : answer === item.syllables.length ? "MOLT B\xC9!" : "TORNA-HO A PROVAR. MIRA ELS COPS DE VEU." }),
-    revealed && /* @__PURE__ */ jsx3("div", { className: "syllable-parts", "aria-label": "Separaci\xF3 sil\xB7l\xE0bica", children: item.syllables.map((s, i) => /* @__PURE__ */ jsx3("span", { children: s.toLocaleUpperCase("ca") }, i)) }),
+    /* @__PURE__ */ jsx3("p", { children: mode === "count" ? "Digues la paraula i fes una picada de mans per cada s\xEDl\xB7laba." : mode === "split" ? "Marca els l\xEDmits entre les s\xEDl\xB7labes. Si nom\xE9s en t\xE9 una, no marquis cap tall." : "Tria les s\xEDl\xB7labes en l\u2019ordre correcte per formar la paraula." }),
+    /* @__PURE__ */ jsx3("div", { className: "syllable-word", children: show(item.word) }),
+    mode === "count" ? /* @__PURE__ */ jsxs3(Fragment, { children: [
+      /* @__PURE__ */ jsx3("p", { children: "QUANTES S\xCDL\xB7LABES T\xC9?" }),
+      /* @__PURE__ */ jsx3("div", { className: "timer-actions", children: Array.from({ length: Math.max(4, item.syllables.length) }, (_, i) => i + 1).map((n) => /* @__PURE__ */ jsx3("button", { className: answer === n ? "action primary" : "action", "aria-pressed": answer === n, onClick: () => {
+        setAnswer(n);
+        setResult(n === item.syllables.length);
+      }, children: n }, n)) })
+    ] }) : mode === "split" ? /* @__PURE__ */ jsxs3(Fragment, { children: [
+      /* @__PURE__ */ jsx3("div", { className: "letter-boundaries", role: "group", "aria-label": "L\xEDmits entre s\xEDl\xB7labes", children: letters2.map((letter, i) => /* @__PURE__ */ jsxs3("span", { children: [
+        /* @__PURE__ */ jsx3("b", { children: show(letter) }),
+        i < letters2.length - 1 && /* @__PURE__ */ jsx3("button", { className: cuts.includes(i + 1) ? "cut chosen" : "cut", "aria-label": `Separa despr\xE9s de ${letters2.slice(0, i + 1).join("")} (posici\xF3 ${i + 1})`, "aria-pressed": cuts.includes(i + 1), onClick: () => {
+          setCuts((c) => c.includes(i + 1) ? c.filter((n) => n !== i + 1) : [...c, i + 1]);
+          setResult(null);
+        }, children: cuts.includes(i + 1) ? "|" : "\uFF0B" })
+      ] }, i)) }),
+      /* @__PURE__ */ jsx3("button", { className: "action primary", onClick: check, children: "Comprova la separaci\xF3" }),
+      /* @__PURE__ */ jsx3("button", { className: "action", onClick: () => {
+        setCuts([]);
+        setResult(null);
+      }, children: "Esborra els talls" })
+    ] }) : /* @__PURE__ */ jsxs3(Fragment, { children: [
+      /* @__PURE__ */ jsx3("div", { className: "assembled-word", "aria-label": "S\xEDl\xB7labes ordenades", children: order.length ? order.map((i) => /* @__PURE__ */ jsx3("span", { children: show(item.syllables[i]) }, i)) : /* @__PURE__ */ jsx3("span", { children: "Tria la primera s\xEDl\xB7laba." }) }),
+      /* @__PURE__ */ jsx3("div", { className: "syllable-parts", children: tokens.map((i) => /* @__PURE__ */ jsx3("button", { className: "action", disabled: order.includes(i), onClick: () => {
+        setOrder((o) => [...o, i]);
+        setResult(null);
+      }, children: show(item.syllables[i]) }, i)) }),
+      /* @__PURE__ */ jsxs3("div", { className: "timer-actions", children: [
+        /* @__PURE__ */ jsx3("button", { className: "action primary", disabled: order.length !== item.syllables.length, onClick: check, children: "Comprova l\u2019ordre" }),
+        /* @__PURE__ */ jsx3("button", { className: "action", disabled: !order.length, onClick: () => {
+          setOrder((o) => o.slice(0, -1));
+          setResult(null);
+        }, children: "Desf\xE9s l\u2019\xFAltima s\xEDl\xB7laba" }),
+        /* @__PURE__ */ jsx3("button", { className: "action", onClick: () => {
+          setOrder([]);
+          setResult(null);
+        }, children: "Torna a ordenar" })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx3("p", { className: "syllable-feedback", role: "status", children: result === null ? mode === "count" ? "Tria una resposta." : "Prepara la resposta i comprova-la." : result ? "MOLT B\xC9!" : "TORNA-HO A PROVAR. POTS CONSULTAR LA SOLUCI\xD3." }),
+    revealed && /* @__PURE__ */ jsxs3("div", { className: "syllable-solution", children: [
+      /* @__PURE__ */ jsx3("div", { className: "syllable-parts", "aria-label": "Separaci\xF3 sil\xB7l\xE0bica", children: item.syllables.map((s, i) => /* @__PURE__ */ jsx3("span", { children: show(s) }, i)) }),
+      /* @__PURE__ */ jsxs3("p", { children: [
+        item.syllables.length,
+        " ",
+        item.syllables.length === 1 ? "s\xEDl\xB7laba" : "s\xEDl\xB7labes",
+        item.note ? ` \xB7 ${item.note}` : ""
+      ] })
+    ] }),
     /* @__PURE__ */ jsxs3("div", { className: "timer-actions", children: [
       /* @__PURE__ */ jsx3("button", { className: "action", onClick: () => setRevealed((r) => !r), children: revealed ? "Amaga les s\xEDl\xB7labes" : "Mostra les s\xEDl\xB7labes" }),
+      /* @__PURE__ */ jsx3("button", { className: "action", onClick: previous2, children: "\u2190 Paraula anterior" }),
       /* @__PURE__ */ jsx3("button", { className: "action primary", onClick: next, children: "Paraula seg\xFCent \u2192" })
-    ] }),
-    /* @__PURE__ */ jsxs3("p", { className: "hint", children: [
-      "Banc de ",
-      total,
-      " paraules en catal\xE0 amb separaci\xF3 expl\xEDcita. Sense puntuaci\xF3 ni dades d\u2019alumnat."
     ] })
   ] });
 }
 function Syllables() {
   const id = useId3(), bank = useVocabulary();
-  const [source, setSource] = useState3("all"), [index, setIndex] = useState3(0);
-  const words = source === "custom" ? bank.custom : source === "base" ? vocabulary : bank.words;
-  const current = index % Math.max(1, words.length);
-  const item = words[current];
+  const [source, setSource] = useState3("all"), [index, setIndex] = useState3(0), [mode, setMode] = useState3("count"), [count, setCount] = useState3("all"), [topic, setTopic] = useState3("all"), [uppercase, setUppercase] = useState3(true);
+  const words = useMemo(() => {
+    const pool = source === "custom" ? bank.custom : source === "base" ? vocabulary : bank.words;
+    return pool.filter((w) => (count === "all" || w.syllables.length === Number(count)) && (topic === "all" || w.topic === topic));
+  }, [bank, source, count, topic]);
+  const current = index % Math.max(1, words.length), item = words[current];
   return /* @__PURE__ */ jsxs3("div", { className: "tool-surface", children: [
-    /* @__PURE__ */ jsxs3("label", { className: "style-picker", htmlFor: id, children: [
-      "Paraules de l\u2019activitat",
-      /* @__PURE__ */ jsxs3("select", { id, value: source, onChange: (e) => {
-        setSource(e.target.value);
-        setIndex(0);
-      }, children: [
-        /* @__PURE__ */ jsx3("option", { value: "all", children: "Tot el banc compartit" }),
-        /* @__PURE__ */ jsx3("option", { value: "base", children: "Banc inicial" }),
-        /* @__PURE__ */ jsx3("option", { value: "custom", children: "Nom\xE9s personalitzades" })
+    /* @__PURE__ */ jsxs3("div", { className: "syllable-controls form-grid", children: [
+      /* @__PURE__ */ jsxs3("label", { htmlFor: id + "source", children: [
+        "Paraules de l\u2019activitat",
+        /* @__PURE__ */ jsxs3("select", { id: id + "source", value: source, onChange: (e) => {
+          setSource(e.target.value);
+          setIndex(0);
+        }, children: [
+          /* @__PURE__ */ jsx3("option", { value: "all", children: "Tot el banc compartit" }),
+          /* @__PURE__ */ jsx3("option", { value: "base", children: "Banc inicial revisat" }),
+          /* @__PURE__ */ jsx3("option", { value: "custom", children: "Nom\xE9s personalitzades" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs3("label", { htmlFor: id + "mode", children: [
+        "Activitat",
+        /* @__PURE__ */ jsxs3("select", { id: id + "mode", value: mode, onChange: (e) => setMode(e.target.value), children: [
+          /* @__PURE__ */ jsx3("option", { value: "count", children: "Compta les s\xEDl\xB7labes" }),
+          /* @__PURE__ */ jsx3("option", { value: "split", children: "Marca la separaci\xF3" }),
+          /* @__PURE__ */ jsx3("option", { value: "order", children: "Ordena les s\xEDl\xB7labes" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs3("label", { htmlFor: id + "count", children: [
+        "Nombre de s\xEDl\xB7labes",
+        /* @__PURE__ */ jsxs3("select", { id: id + "count", value: count, onChange: (e) => {
+          setCount(e.target.value);
+          setIndex(0);
+        }, children: [
+          /* @__PURE__ */ jsx3("option", { value: "all", children: "Qualsevol" }),
+          Array.from({ length: 8 }, (_, i) => /* @__PURE__ */ jsxs3("option", { value: i + 1, children: [
+            i + 1,
+            " ",
+            i === 0 ? "s\xEDl\xB7laba" : "s\xEDl\xB7labes"
+          ] }, i))
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs3("label", { htmlFor: id + "topic", children: [
+        "Tema",
+        /* @__PURE__ */ jsxs3("select", { id: id + "topic", value: topic, onChange: (e) => {
+          setTopic(e.target.value);
+          setIndex(0);
+        }, children: [
+          /* @__PURE__ */ jsx3("option", { value: "all", children: "Qualsevol tema" }),
+          Object.entries(topics).map(([key, label]) => /* @__PURE__ */ jsx3("option", { value: key, children: label }, key))
+        ] })
       ] })
     ] }),
-    item ? /* @__PURE__ */ jsx3(SyllableQuestion, { item, index: current, total: words.length, next: () => setIndex((i) => i + 1) }, source + ":" + index + ":" + item.word + ":" + item.syllables.join("|")) : /* @__PURE__ */ jsx3("p", { role: "status", children: "Encara no hi ha paraules personalitzades. Afegeix-les o importa-les des del Banc de Paraules." })
+    /* @__PURE__ */ jsxs3("div", { className: "syllable-toolbar", children: [
+      /* @__PURE__ */ jsxs3("label", { children: [
+        /* @__PURE__ */ jsx3("input", { type: "checkbox", checked: uppercase, onChange: (e) => setUppercase(e.target.checked) }),
+        " Mostra les paraules en maj\xFAscules"
+      ] }),
+      /* @__PURE__ */ jsx3("button", { className: "action", disabled: !words.length, onClick: () => setIndex((i) => words.length > 1 ? i + 1 + Math.floor(Math.random() * (words.length - 1)) : i + 1), children: "Tria una paraula a l\u2019atzar" }),
+      /* @__PURE__ */ jsx3("button", { className: "action", onClick: () => {
+        setCount("all");
+        setTopic("all");
+        setSource("all");
+        setIndex(0);
+      }, children: "Neteja els filtres" })
+    ] }),
+    /* @__PURE__ */ jsxs3("p", { className: "hint", children: [
+      words.length,
+      " paraules disponibles amb aquests filtres \xB7 ",
+      vocabulary.length,
+      " al banc inicial."
+    ] }),
+    item ? /* @__PURE__ */ jsx3(SyllableQuestion, { item, index: current, total: words.length, uppercase, mode, next: () => setIndex((i) => i + 1), previous: () => setIndex((i) => i === 0 ? words.length - 1 : i - 1) }, [source, mode, count, topic, index, item.word, item.syllables.join("|")].join(":")) : /* @__PURE__ */ jsx3("p", { role: "status", children: "No hi ha paraules amb aquests filtres. Neteja\u2019ls o importa paraules des del Banc de paraules." }),
+    /* @__PURE__ */ jsxs3("details", { className: "syllable-guide", children: [
+      /* @__PURE__ */ jsx3("summary", { children: "Orientacions i criteris ling\xFC\xEDstics" }),
+      /* @__PURE__ */ jsx3("p", { children: "Una s\xEDl\xB7laba \xE9s un cop de veu. El nombre de lletres no determina el nombre de s\xEDl\xB7labes. Els d\xEDgrafs ll i ny es mantenen junts; en mots com cotxe i platja, tx i tj es reparteixen entre dues s\xEDl\xB7labes. Cal tenir en compte els diftongs i els hiats." }),
+      /* @__PURE__ */ jsx3("p", { children: "Practiquem la divisi\xF3 sil\xB7l\xE0bica de paraules a\xEFllades. La partici\xF3 a final de ratlla t\xE9 restriccions addicionals: no \xE9s el mateix exercici. Les separacions importades les ha de revisar el docent." }),
+      /* @__PURE__ */ jsxs3("p", { children: [
+        "Fonts: ",
+        /* @__PURE__ */ jsx3("a", { href: "https://www.cpnl.cat/gramatica/39/15-les-sil-labes", target: "_blank", rel: "noopener noreferrer", children: "CPNL \xB7 Les s\xEDl\xB7labes" }),
+        " \xB7 ",
+        /* @__PURE__ */ jsx3("a", { href: "https://www.cpnl.cat/gramatica/32/16-la-separacio-de-sil-labes-amb-diftongs-i-hiats", target: "_blank", rel: "noopener noreferrer", children: "CPNL \xB7 Diftongs i hiats" })
+      ] })
+    ] })
   ] });
 }
 
 // tests/vocabulary-import.tsx
-import { Fragment, jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
+import { Fragment as Fragment2, jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 var memory = /* @__PURE__ */ new Map();
 globalThis.localStorage = { getItem: (k) => memory.get(k) || null, setItem: (k, v) => memory.set(k, v), removeItem: (k) => memory.delete(k) };
@@ -454,24 +2032,24 @@ var many = Array.from({ length: 500 }, (_, i) => {
   const word = "xx" + String.fromCharCode(97 + Math.floor(i / 26)) + String.fromCharCode(97 + i % 26);
   return { word, syllables: [word] };
 });
-assert.equal(parseVocabulary(vocabularyDocument([...vocabulary, ...many])).length, 526);
+assert.equal(parseVocabulary(vocabularyDocument([...vocabulary, ...many])).length, vocabulary.length + 500);
 assert.equal(mergeVocabulary(vocabulary, [], [vocabulary[0]]).added, 0);
 assert.throws(() => mergeVocabulary(vocabulary, [], [{ word: "casa", syllables: ["cas", "a"] }]), /diferent/);
 assert.throws(() => mergeVocabulary([], Array.from({ length: 500 }, (_, i) => ({ word: "w" + i, syllables: ["x"] })), [bag]), /500/);
 var tree;
 await act(() => {
-  tree = create(/* @__PURE__ */ jsxs4(Fragment, { children: [
+  tree = create(/* @__PURE__ */ jsxs4(Fragment2, { children: [
     /* @__PURE__ */ jsx4(Words, {}),
     /* @__PURE__ */ jsx4(Syllables, {})
   ] }));
 });
-assert.equal(getVocabularySnapshot().words.length, 26);
+assert.equal(getVocabularySnapshot().words.length, vocabulary.length);
 await act(() => addVocabulary(parseVocabulary(vocabularyDocument([bag]))));
-assert.equal(getVocabularySnapshot().words.length, 27);
+assert.equal(getVocabularySnapshot().words.length, vocabulary.length + 1);
 assert.equal(JSON.parse(memory.get(VOCABULARY_KEY)).words[0].word, "motxilla");
-assert.equal(tree.root.findAllByType("article").length, 27);
+assert.equal(tree.root.findAllByType("article").length, vocabulary.length + 1);
 var lab = () => tree.root.findByType(Syllables);
-await act(() => lab().findByType("select").props.onChange({ target: { value: "custom" } }));
+await act(() => lab().findAllByType("select")[0].props.onChange({ target: { value: "custom" } }));
 assert.equal(lab().findByProps({ className: "syllable-word" }).children.join(""), "MOTXILLA");
 var button = (root, name) => root.findAllByType("button").find((b) => b.children.filter((x) => typeof x === "string" || typeof x === "number").join("").trim() === name);
 await act(() => button(lab(), "3").props.onClick());
@@ -482,9 +2060,9 @@ var previous = getVocabularySnapshot();
 assert.throws(() => addVocabulary([{ word: "nou", syllables: ["nou"] }, { word: "casa", syllables: ["cas", "a"] }]), /diferent/);
 assert.strictEqual(getVocabularySnapshot(), previous);
 await act(() => removeVocabulary("motxilla"));
-assert.equal(getVocabularySnapshot().words.length, 26);
+assert.equal(getVocabularySnapshot().words.length, vocabulary.length);
 assert.equal(memory.has(VOCABULARY_KEY), false);
-assert(lab().findByProps({ role: "status" }).children.join("").includes("Encara no"));
+assert(lab().findByProps({ role: "status" }).children.join("").includes("No hi ha"));
 await act(() => addVocabulary([bag]));
 assert.equal(lab().findByProps({ role: "status" }).children.join(""), "Tria una resposta.");
 await act(() => {

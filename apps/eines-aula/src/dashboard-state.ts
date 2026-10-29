@@ -8,16 +8,17 @@ export function validateState(value:unknown):DashboardState{
  return {schedule:v.schedule,notes:v.notes,pupils:v.pupils};
 }
 export const apps=[
- ['eines-aula/','Eines d’Aula','Vuit temporitzadors, seqüències i grups','◷'],
- ['files/','FILES · La meva nube','Documents privats i carpetes','☁'],
+ ['eines-aula/','Eines d’Aula','Temporitzadors, síl·labes i rutines','◷'],
+ ['files/','FILES · El meu núvol','Documents privats i carpetes','☁'],
  ['lecto-publisher.html','LECTO Publisher · v1.3','Quaderns de lectura i escriptura','▤'],
  ['pictogrames.html','Pictogrames','Comunicació i suport visual','◈'],
  ['lecto.html','Lecto','Lectura i fluïdesa','Aa'],
- ['observapt.html','Observa PT','Observació i seguiment','◎'],
- ['laboratori-nombres.html','Laboratori de Nombres','Numeració i càlcul','123'],
+ ['observapt.html','ObservaPT','Observació i seguiment','◎'],
+ ['laboratori-nombres.html','Laboratori de nombres','Numeració i càlcul','123'],
  ['referents-escriptura.html','Referents d’escriptura','Vocabulari i autonomia','✎'],
  ['calendari.html','Calendari escolar','Reunions i organització','▦'],
- ['mi-tablon.html','Mi Tablón','Notes i llistes','☑'],
+ ['mi-tablon.html','Tauler de notes','Notes i llistes','☑'],
  ['https://qs33ds-alt.github.io/Font-Freda-Diversitat/','Font Freda Diversitat','Suports i coordinació','◇'],
  ['https://qs33ds-alt.github.io/generador-pi-primaria/','Generador PI · v0.88.2','Plans individualitzats','¶']
 ] as const;
+

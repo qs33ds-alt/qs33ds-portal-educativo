@@ -323,7 +323,7 @@ function Groups() {
     ] }),
     /* @__PURE__ */ jsxs5("div", { className: "group-layout", children: [
       /* @__PURE__ */ jsxs5("div", { children: [
-        /* @__PURE__ */ jsx5("label", { className: "field-label", htmlFor: "student-names", children: "Llista d'\xE0lies (un per l\xEDnia)" }),
+        /* @__PURE__ */ jsx5("label", { className: "field-label", htmlFor: "student-names", children: "Llista d\u2019\xE0lies (un per l\xEDnia)" }),
         /* @__PURE__ */ jsx5("textarea", { id: "student-names", value: names, onChange: (e) => {
           setNames(e.target.value);
           setSelected([]);
@@ -333,7 +333,7 @@ function Groups() {
         /* @__PURE__ */ jsxs5("div", { className: "timer-actions", children: [
           /* @__PURE__ */ jsxs5("button", { className: "action primary", onClick: one, children: [
             /* @__PURE__ */ jsx5(Shuffle, { size: 17 }),
-            " Tria un torn"
+            " Tria un \xE0lies"
           ] }),
           /* @__PURE__ */ jsxs5("button", { className: "action", onClick: pairs, children: [
             /* @__PURE__ */ jsx5(Users, { size: 17 }),
@@ -362,14 +362,14 @@ function constrain(x, y, width, height) {
 
 // src/catalog.ts
 var tools = [
-  { id: "timer", name: "Temporitzador Visual", category: "Gesti\xF3", description: "Fes visible el temps i facilita les transicions.", ready: true, index: "01" },
-  { id: "sequence", name: "Ara i Despr\xE9s", category: "Suport", description: "Anticipa qu\xE8 fem ara i qu\xE8 vindr\xE0 despr\xE9s.", ready: true, index: "02" },
-  { id: "groups", name: "Selector d'Alumnes", category: "Gesti\xF3", description: "Organitza torns, parelles i petits grups.", ready: true, index: "03" },
-  { id: "autonomy", name: "Checklist d'Autonomia", category: "Suport", description: "Descompon rutines en passos accessibles.", ready: true, index: "04" },
-  { id: "observation", name: "Registre d'Observaci\xF3", category: "Seguiment", description: "Registra evid\xE8ncies educatives amb privacitat.", ready: true, index: "05" },
-  { id: "syllables", name: "Laboratori de S\xEDl\xB7labes", category: "Llenguatge", description: "Activitats de consci\xE8ncia sil\xB7l\xE0bica.", ready: true, index: "06" },
-  { id: "words", name: "Banc de Paraules per Sons", category: "Llenguatge", description: "Cerca lletres i s\xEDl\xB7labes escrites en paraules.", ready: true, index: "07" },
-  { id: "guidelines", name: "Generador de Pautes", category: "Materials", description: "Pautes d'escriptura i materials imprimibles.", ready: true, index: "08" }
+  { id: "timer", name: "Temporitzador visual", category: "Gesti\xF3", description: "Fes visible el temps i facilita les transicions.", ready: true, index: "01" },
+  { id: "sequence", name: "Ara i despr\xE9s", category: "Suport", description: "Anticipa qu\xE8 fem ara i qu\xE8 vindr\xE0 despr\xE9s.", ready: true, index: "02" },
+  { id: "groups", name: "Selector d\u2019alumnes", category: "Gesti\xF3", description: "Tria \xE0lies i forma parelles per organitzar l\u2019aula.", ready: true, index: "03" },
+  { id: "autonomy", name: "Llista d\u2019autonomia", category: "Suport", description: "Descompon rutines en passos accessibles.", ready: true, index: "04" },
+  { id: "observation", name: "Registre d\u2019observaci\xF3", category: "Seguiment", description: "Registra evid\xE8ncies educatives amb privacitat.", ready: true, index: "05" },
+  { id: "syllables", name: "Separaci\xF3 sil\xB7l\xE0bica", category: "Llenguatge", description: "Compta, separa i ordena s\xEDl\xB7labes amb vocabulari revisat.", ready: true, index: "06" },
+  { id: "words", name: "Banc de paraules", category: "Llenguatge", description: "Cerca lletres i s\xEDl\xB7labes escrites en paraules.", ready: true, index: "07" },
+  { id: "guidelines", name: "Generador de pautes", category: "Materials", description: "Pautes d'escriptura i materials imprimibles.", ready: true, index: "08" }
 ];
 
 // tests/validation.tsx

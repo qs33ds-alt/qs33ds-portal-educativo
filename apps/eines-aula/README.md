@@ -64,3 +64,6 @@ Banco ampliable y compartido con el laboratorio. Añadir palabras manualmente o 
 
 ## V1.5.0
 Rutinas y secuencias se conservan al recargar. Copias JSON compartidas: exportar, importar, revisar y deshacer. Se guardan en el navegador; no en la nube. Ver VALIDACION_V1_5.md.
+
+## V1.6.0
+Separació sil·làbica: 177 palabras, tres actividades, diez temas y filtros por número de sílabas. Revisión de catalán de interfaz y banco inicial documentada en REVISION_LINGUISTICA_V1_6.md. Se conservan vocabulario importado y copias anteriores.
