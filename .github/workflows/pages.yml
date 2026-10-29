@@ -24,12 +24,16 @@ jobs:
         working-directory: apps/eines-aula
       - run: npm run build
         working-directory: apps/eines-aula
+      - run: node --test files/tests/cloud.test.cjs
       - name: Prepare full portal with current React build
         run: |
           mkdir _site
           rsync -a --exclude='.git' --exclude='.github' --exclude='apps' --exclude='_site' ./ _site/
           rm -rf _site/eines-aula
           cp -r apps/eines-aula/dist _site/eines-aula
+          rm _site/eines-aula/dashboard.html
+          cp apps/eines-aula/dist/dashboard.html _site/index.html
+          cp -r apps/eines-aula/dist/assets _site/assets
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v4
         with:
