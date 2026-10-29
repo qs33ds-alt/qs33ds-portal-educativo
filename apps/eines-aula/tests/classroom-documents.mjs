@@ -241,7 +241,7 @@ function Autonomy() {
     /* @__PURE__ */ jsx3("input", { id: prefix + "title", maxLength: 80, value: title, onChange: (e) => setTitle(e.target.value) }),
     /* @__PURE__ */ jsxs3("div", { className: "routine-progress", children: [
       /* @__PURE__ */ jsx3("strong", { children: title || "LA MEVA RUTINA" }),
-      /* @__PURE__ */ jsx3("p", { role: "status", children: steps.length && completed === steps.length ? "RUTINA COMPLETADA!" : `${completed} DE ${steps.length} PASSOS FETS` }),
+      /* @__PURE__ */ jsx3("p", { role: "status", children: steps.length && completed === steps.length ? "RUTINA COMPLETADA!" : `PASSOS FETS: ${completed} / ${steps.length}` }),
       /* @__PURE__ */ jsx3("progress", { "aria-label": "Progr\xE9s de la rutina", value: completed, max: steps.length || 1 })
     ] }),
     /* @__PURE__ */ jsx3("ol", { className: "routine-steps", children: steps.map((step, index) => /* @__PURE__ */ jsxs3("li", { className: step.done ? "is-done" : "", children: [

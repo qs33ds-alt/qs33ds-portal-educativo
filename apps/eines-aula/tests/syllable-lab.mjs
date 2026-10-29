@@ -1746,7 +1746,9 @@ function Syllables() {
     ] }),
     /* @__PURE__ */ jsxs("p", { className: "hint", children: [
       words.length,
-      " paraules disponibles amb aquests filtres \xB7 ",
+      " ",
+      words.length === 1 ? "paraula disponible" : "paraules disponibles",
+      " amb aquests filtres \xB7 ",
       vocabulary.length,
       " al banc inicial."
     ] }),

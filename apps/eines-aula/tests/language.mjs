@@ -1793,7 +1793,9 @@ function Syllables() {
     ] }),
     /* @__PURE__ */ jsxs("p", { className: "hint", children: [
       words2.length,
-      " paraules disponibles amb aquests filtres \xB7 ",
+      " ",
+      words2.length === 1 ? "paraula disponible" : "paraules disponibles",
+      " amb aquests filtres \xB7 ",
       vocabulary.length,
       " al banc inicial."
     ] }),
@@ -1913,7 +1915,8 @@ function VocabularyEditor() {
     pending && /* @__PURE__ */ jsxs2("section", { className: "import-preview", "aria-label": "Revisi\xF3 de la importaci\xF3", children: [
       /* @__PURE__ */ jsxs2("strong", { children: [
         pending.length,
-        " entrades amb format v\xE0lid"
+        " ",
+        pending.length === 1 ? "entrada amb format v\xE0lid" : "entrades amb format v\xE0lid"
       ] }),
       /* @__PURE__ */ jsxs2("p", { children: [
         pending.slice(0, 5).map((w) => `${w.word}: ${w.syllables.join(" \u2013 ")}`).join("; "),
@@ -1925,7 +1928,7 @@ function VocabularyEditor() {
           setError("");
           try {
             const r = addVocabulary(pending);
-            setMessage(`${r.added} paraules afegides; ${r.skipped} ja existien.`);
+            setMessage(`${r.added} ${r.added === 1 ? "paraula afegida" : "paraules afegides"}; ${r.skipped} ${r.skipped === 1 ? "ja existia" : "ja existien"}.`);
             setPending(null);
           } catch (e) {
             setError(e.message);
@@ -2000,7 +2003,8 @@ function Words() {
     ] }),
     /* @__PURE__ */ jsxs3("p", { role: "status", children: [
       filtered.length,
-      " paraules"
+      " ",
+      filtered.length === 1 ? "paraula" : "paraules"
     ] }),
     /* @__PURE__ */ jsx3("div", { className: "word-bank", children: filtered.map((w) => /* @__PURE__ */ jsxs3("article", { children: [
       /* @__PURE__ */ jsx3("strong", { children: w.word.toLocaleUpperCase("ca") }),
