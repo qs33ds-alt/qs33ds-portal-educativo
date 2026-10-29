@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import React from 'react';
+import {create,act} from 'react-test-renderer';
+import App from '../src/App';
+globalThis.IS_REACT_ACT_ENVIRONMENT=true;
+const storage=new Map();globalThis.localStorage={getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)};
+globalThis.document={documentElement:{dataset:{}}};
+globalThis.window={innerWidth:1280,innerHeight:900,location:{search:'?tool=timer&embed=1'},addEventListener(){},removeEventListener(){},setInterval,clearInterval};
+let view;await act(()=>{view=create(<App/>)});assert.equal(view.root.findAllByProps({className:'embedded-tool'}).length,1);assert.equal(view.root.findAllByProps({className:'shell'}).length,0);assert.equal(view.root.findByType('output').children.join(''),'05:00');await act(()=>view.unmount());
+window.location.search='?tool=timer';await act(()=>{view=create(<App/>)});assert.equal(view.root.findAllByProps({className:'app-window'}).length,1);assert.equal(view.root.findByType('output').children.join(''),'05:00');await act(()=>view.unmount());
+window.location.search='?tool=invalid&embed=1';await act(()=>{view=create(<App/>)});assert.equal(view.root.findAllByProps({className:'embedded-tool'}).length,0);assert.equal(view.root.findAllByProps({className:'app-window'}).length,0);await act(()=>view.unmount());
+console.log('PASS: App integration opens embedded timer without catalog, standalone timer in one window, invalid links fall back to catalog.');
