@@ -16,3 +16,6 @@
 - Les activitats mantenen l’estat durant la sessió; les dades persistents conserven les claus i els formats anteriors.
 
 El tema només afecta Eines; les aplicacions externes incrustades mantenen el disseny propi. No s’ha modificat la V1.0 ni Cloudflare.
+
+## Comprovació publicada
+GitHub Actions: proves, compilació i desplegament completats. Revisió visual del catàleg i la finestra de síl·labes en tema clar. Cerca «separacio» amb resultat únic. Resposta correcta de CASA conservada després de minimitzar i restaurar.
