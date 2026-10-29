@@ -33,7 +33,9 @@ jobs:
           cp -r apps/eines-aula/dist _site/eines-aula
           rm _site/eines-aula/dashboard.html
           cp apps/eines-aula/dist/dashboard.html _site/index.html
-          cp -r apps/eines-aula/dist/assets _site/assets
+          mkdir -p _site/assets
+          cp -r apps/eines-aula/dist/assets/. _site/assets/
+          test -f _site/assets/$(basename $(find apps/eines-aula/dist/assets -name 'dashboard-*.js' -print -quit))
           touch _site/.nojekyll
       - uses: actions/upload-pages-artifact@v4
         with:
