@@ -222,10 +222,10 @@ var tools = [
   { id: "sequence", name: "Ara i Despr\xE9s", category: "Suport", description: "Anticipa qu\xE8 fem ara i qu\xE8 vindr\xE0 despr\xE9s.", ready: true, index: "02" },
   { id: "groups", name: "Selector d'Alumnes", category: "Gesti\xF3", description: "Organitza torns, parelles i petits grups.", ready: true, index: "03" },
   { id: "autonomy", name: "Checklist d'Autonomia", category: "Suport", description: "Descompon rutines en passos accessibles.", ready: true, index: "04" },
-  { id: "observation", name: "Registre d'Observaci\xF3", category: "Seguiment", description: "Registra evid\xE8ncies educatives amb privacitat.", ready: false, index: "05" },
-  { id: "syllables", name: "Laboratori de S\xEDl\xB7labes", category: "Llenguatge", description: "Activitats de consci\xE8ncia sil\xB7l\xE0bica.", ready: false, index: "06" },
-  { id: "words", name: "Banc de Paraules per Sons", category: "Llenguatge", description: "Consulta vocabulari classificat per sons.", ready: false, index: "07" },
-  { id: "guidelines", name: "Generador de Pautes", category: "Materials", description: "Pautes d'escriptura i materials imprimibles.", ready: false, index: "08" }
+  { id: "observation", name: "Registre d'Observaci\xF3", category: "Seguiment", description: "Registra evid\xE8ncies educatives amb privacitat.", ready: true, index: "05" },
+  { id: "syllables", name: "Laboratori de S\xEDl\xB7labes", category: "Llenguatge", description: "Activitats de consci\xE8ncia sil\xB7l\xE0bica.", ready: true, index: "06" },
+  { id: "words", name: "Banc de Paraules per Sons", category: "Llenguatge", description: "Cerca lletres i s\xEDl\xB7labes escrites en paraules.", ready: true, index: "07" },
+  { id: "guidelines", name: "Generador de Pautes", category: "Materials", description: "Pautes d'escriptura i materials imprimibles.", ready: true, index: "08" }
 ];
 
 // tests/validation.tsx
@@ -241,7 +241,7 @@ for (const [style] of styles) for (const progress of [0, 0.5, 1, -1, 2]) {
 assert.deepEqual(constrain(-1, -20, 390, 844), { x: 12, y: 0 });
 assert.deepEqual(constrain(900, 900, 390, 844), { x: 12, y: 764 });
 assert.deepEqual(constrain(900, 900, 100, 50), { x: 12, y: 0 });
-assert.equal(tools.filter((t) => t.ready).length, 4);
+assert.equal(tools.filter((t) => t.ready).length, 8);
 assert.equal(tools.length, 8);
 assert(renderToStaticMarkup(/* @__PURE__ */ jsx5(Timer, {})).includes("05:00"));
 assert(renderToStaticMarkup(/* @__PURE__ */ jsx5(Sequence, {})).includes("Fem una activitat"));

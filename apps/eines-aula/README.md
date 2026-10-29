@@ -54,3 +54,7 @@ Los tests .mjs son las versiones ejecutables de los .tsx incluidas para no neces
 ## V1.2
 Checklist d’Autonomia activa: títol i passos editables, marcar/desmarcar, progrés, afegir fins a 30 passos, eliminar amb opció de desfer i tornar a començar. Estat de sessió conservat en minimitzar; sense desar dades personals. Finestres ajustades a l’amplada visible en obrir i moure. Comptadors del catàleg derivats de les eines actives.
 Adaptació funcional de la llista i el progrés de https://github.com/qs33ds-alt/mi-rutina (index.html, c3af4a73f7e282958df7fb5fefffdcd2a944b2ad). La font és HTML, sense components React exportables; es reutilitza el gestor, la superfície i els controls React existents d’Eines d’Aula.
+
+
+## V1.3.0
+Ocho herramientas activas. Observación reutiliza ObservaPT; sílabas y palabras usan src/data/vocabulary.ts; pautas produce A4 con altura de escritura configurable y acceso al gestor de referentes. Ver VALIDACION_V1_3.md para alcance y pruebas. Se conserva el dashboard incorporado al repositorio.
