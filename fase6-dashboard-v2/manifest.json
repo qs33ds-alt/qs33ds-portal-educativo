@@ -1,0 +1,46 @@
+{
+  "project": "Portal Educatiu QS33DS",
+  "phase": 6,
+  "version": "6.0.0-rc1",
+  "entry": "fase6-dashboard-v2/index.html",
+  "demo_bridge": "fase6-dashboard-v2/ia-local.html",
+  "adapter": "fase6-dashboard-v2/bridge/portal_bridge.py",
+  "protocol": {
+    "request": "qs33ds.portal.ai-bridge.request.v1",
+    "response": "qs33ds.portal.ai-bridge.response.v1",
+    "modes": [
+      "demo"
+    ],
+    "actions": [
+      "summarize_demo"
+    ],
+    "transport": "manual JSON export/import",
+    "optional_local_ollama": "http://127.0.0.1:11434/api/generate"
+  },
+  "links": [
+    "./index.html",
+    "./agenda-proves.html",
+    "./generador-pi-proves.html",
+    "./dades.html",
+    "./ia-local.html"
+  ],
+  "safety": {
+    "real_student_data": false,
+    "server_auth": false,
+    "supabase": false,
+    "production_cloudflare_modified": false,
+    "existing_qs33ds_local_modified": false,
+    "font_freda_included": false,
+    "autonomous_actions": false
+  },
+  "tests": {
+    "unittest": 9,
+    "browser_local_smoke": "pass with set_content",
+    "public_pages": "not verified"
+  },
+  "limitations": [
+    "Prototype does not connect automatically to QS33DS Local",
+    "Generated responses can optionally use local Ollama; not evaluated for factual accuracy",
+    "GitHub Pages is public; localStorage shared by origin"
+  ]
+}
