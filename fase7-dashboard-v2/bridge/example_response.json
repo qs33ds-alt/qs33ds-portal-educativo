@@ -1,0 +1,14 @@
+{
+  "schema": "qs33ds.portal.ai-bridge.response.v1",
+  "mode": "demo",
+  "request_id": "qs33ds_demo_0001",
+  "action": "summarize_demo",
+  "status": "ok",
+  "engine": "deterministic",
+  "summary": "Resum de prova (2026-W45): 4 de 6 activitats completades; 2 pendents. Àmbit fictici: organization. Cap dada personal processada.",
+  "metrics": {
+    "planned_activities": 6,
+    "completed_activities": 4,
+    "pending_activities": 2
+  }
+}
