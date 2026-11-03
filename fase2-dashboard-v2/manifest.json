@@ -1,0 +1,20 @@
+{
+  "project": "QS33DS Portal Educatiu",
+  "phase": "2",
+  "version": "2.0.0-rc1",
+  "dashboard": "fase2-dashboard-v2/index.html",
+  "eines_version": "1.6.0",
+  "eines_path": "eines-aula/",
+  "tool_ids": [
+    "timer",
+    "sequence",
+    "groups",
+    "checklist",
+    "observation",
+    "syllables",
+    "words",
+    "guidelines"
+  ],
+  "production_modified": false,
+  "font_freda_included": false
+}
