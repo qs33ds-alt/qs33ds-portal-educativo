@@ -1,0 +1,12 @@
+{
+  "schema": "qs33ds.portal.ai-bridge.request.v1",
+  "mode": "demo",
+  "action": "summarize_demo",
+  "request_id": "qs33ds_demo_0001",
+  "source": "qs33ds-github-preview",
+  "payload": {
+    "week": "2026-W45",
+    "metrics": {"planned_activities": 6, "completed_activities": 4, "pending_activities": 2},
+    "context": {"focus": "organization"}
+  }
+}
