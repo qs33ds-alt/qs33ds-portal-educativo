@@ -1,0 +1,38 @@
+{
+  "name": "QS33DS Portal Educatiu",
+  "phase": 7,
+  "version": "7.0.0-rc1",
+  "status": "Staging QA complete, not approved for live pupil data",
+  "pages": [
+    "index.html",
+    "agenda-proves.html",
+    "generador-pi-proves.html",
+    "dades.html",
+    "ia-local.html"
+  ],
+  "bridge": "bridge/portal_bridge.py",
+  "tests": {
+    "python_and_chromium": 18,
+    "passed": 18,
+    "js_syntax_pages": 5,
+    "eines_links": 8
+  },
+  "findings_fixed": [
+    "Eines tool ID checklist -> autonomy",
+    "strict focus type validation",
+    "unexpected Ollama result type",
+    "demo JSON import validation"
+  ],
+  "production_ready": false,
+  "privacy": "Only synthetic demo data; GitHub Pages is public",
+  "original_apps_restored": {
+    "pi": false,
+    "agenda": false
+  },
+  "excluded": [
+    "Font Freda Diversitat",
+    "KAIRO",
+    "Panel Diari"
+  ],
+  "cloudflare_changed": false
+}
