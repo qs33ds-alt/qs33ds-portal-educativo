@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#edf6f6">
+<meta name="description" content="Portal d'aplicacions educatives QS33DS">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>QS33DS · Educació</title>
+<style>
+:root{--bg:#edf6f6;--bg2:#f7fbfb;--ink:#17313a;--muted:#62767c;--line:rgba(42,87,95,.14);--glass:rgba(255,255,255,.78);--shadow:0 18px 60px rgba(26,67,76,.10);--r:24px}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 16% 12%,rgba(191,225,231,.55),transparent 30%),radial-gradient(circle at 88% 20%,rgba(219,233,211,.60),transparent 28%),linear-gradient(135deg,var(--bg),var(--bg2))}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.45;background-image:linear-gradient(rgba(55,98,106,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(55,98,106,.045) 1px,transparent 1px);background-size:32px 32px}
+.wrap{width:min(1320px,calc(100% - 36px));margin:auto;padding:28px 0 48px;position:relative}
+header{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:12px 4px 26px}
+.brand{display:flex;align-items:center;gap:14px}.mark{width:46px;height:46px;border-radius:14px;background:#ffffffcc;border:1px solid var(--line);display:grid;place-items:center;font-size:23px}.brand h1{font-size:18px;letter-spacing:.18em;margin:0;font-weight:800}.brand p{margin:4px 0 0;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.12em}
+.topnote{font-size:12px;color:var(--muted);padding:9px 13px;border:1px solid var(--line);background:#ffffff85;border-radius:999px}
+.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:24px;margin-bottom:26px}.hero-main,.hero-side{border:1px solid var(--line);border-radius:30px;background:var(--glass);box-shadow:var(--shadow);backdrop-filter:blur(16px)}.hero-main{padding:34px;min-height:238px;display:flex;flex-direction:column;justify-content:flex-end}.kicker{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:#50747b;font-weight:800}.hero h2{font-size:clamp(32px,5vw,62px);line-height:.98;margin:12px 0 16px;letter-spacing:-.04em}.hero-main p{margin:0;max-width:720px;color:var(--muted);font-size:15px;line-height:1.55}.hero-side{padding:26px;display:grid;align-content:center;gap:15px}.metric{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line)}.metric:last-child{border:0}.metric b{font-size:27px}.metric span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.section-head{display:flex;justify-content:space-between;align-items:end;margin:32px 2px 16px}.section-head h3{margin:0;font-size:20px}.section-head p{margin:0;color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}.card{grid-column:span 4;min-height:220px;border-radius:var(--r);padding:21px;display:flex;flex-direction:column;justify-content:space-between;text-decoration:none;color:inherit;border:1px solid rgba(57,93,101,.11);box-shadow:0 10px 38px rgba(26,67,76,.08);transition:.25s ease}.card:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(26,67,76,.14)}.card:nth-child(-n+2){grid-column:span 6;min-height:250px}.icon{width:58px;height:58px;border-radius:18px;background:#ffffff8f;display:grid;place-items:center;font-size:30px}.card h4{font-size:22px;margin:18px 0 6px}.card p{font-size:13px;line-height:1.45;color:#53696f;margin:0;max-width:38ch}.foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px}.tag{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#547078}.arrow{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#ffffff94;font-size:18px}
+.blue{background:linear-gradient(145deg,#e9f4f8,#dcecf5)}.green{background:linear-gradient(145deg,#eef7f1,#dfeee5)}.mint{background:linear-gradient(145deg,#eef9f6,#dff1ec)}.amber{background:linear-gradient(145deg,#fbf6ec,#f3ead9)}.rose{background:linear-gradient(145deg,#fbf0f1,#f3e3e5)}.violet{background:linear-gradient(145deg,#f5f1fa,#e9e5f2)}.cyan{background:linear-gradient(145deg,#e9f8f8,#d3eeee)}
+footer{padding:30px 2px 0;display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+.install{position:fixed;right:18px;bottom:18px;border:1px solid var(--line);background:#17313a;color:white;border-radius:999px;padding:11px 15px;font-weight:700;display:none;cursor:pointer}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.hero-side{grid-template-columns:repeat(3,1fr)}.card,.card:nth-child(-n+2){grid-column:span 6}}
+@media(max-width:620px){.wrap{width:min(100% - 22px,1320px);padding-top:14px}.topnote{display:none}.hero-main{padding:26px 22px}.card,.card:nth-child(-n+2){grid-column:1/-1;min-height:200px}.section-head{align-items:flex-start;gap:10px;flex-direction:column}footer{flex-direction:column;gap:6px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header><div class="brand"><div class="mark">◇</div><div><h1>QS33DS</h1><p>Educational Lab</p></div></div><div class="topnote">Recursos · observació · aprenentatge</div></header>
+<section class="hero"><div class="hero-main"><div class="kicker">Portal educatiu</div><h2>Eines digitals per aprendre, observar i intervenir.</h2><p>Accés directe a les aplicacions educatives desenvolupades per a l’aula, el seguiment de l’alumnat i el treball manipulatiu.</p></div><aside class="hero-side"><div class="metric"><b>8</b><span>Aplicacions</span></div><div class="metric"><b>1</b><span>Portal</span></div><div class="metric"><b>∞</b><span>Actualitzacions</span></div></aside></section>
+<div class="section-head"><div><div class="kicker">Aplicacions</div><h3>Entorn educatiu</h3></div><p>Selecciona una eina per entrar-hi.</p></div>
+<section class="grid"><a class="card violet" href="./pictogrames.html">
+      <div><div class="icon">◇</div><h4>Pictogrames</h4><p>Gestor de pictogrames educatius per crear i preparar suports visuals per a l’aula.</p></div>
+      <div class="foot"><span class="tag">Suport visual · comunicació</span><span class="arrow">↗</span></div>
+    </a><a class="card blue" href="#LECTO_URL" >
+      <div><div class="icon">◇</div><h4>Lecto</h4><p>Lectura en 60 segons amb paraules, pseudoparaules i frases, registre per alumne i seguiment de l’evolució.</p></div>
+      <div class="foot"><span class="tag">Lectura · fluïdesa</span><span class="arrow">↗</span></div>
+    </a>
+<a class="card amber" href="#MATES_URL" >
+      <div><div class="icon">◇</div><h4>Mates Lab</h4><p>Espai manipulatiu per treballar sumes i restes, unitats i desenes, descomposició i canvi 10 ↔ 1.</p></div>
+      <div class="foot"><span class="tag">Matemàtiques · manipulació</span><span class="arrow">↗</span></div>
+    </a>
+<a class="card green" href="./observapt.html" >
+      <div><div class="icon">◇</div><h4>Observa PT</h4><p>Observació ràpida i completa per àmbits, amb fitxa individual i històric de seguiment.</p></div>
+      <div class="foot"><span class="tag">Observació · seguiment</span><span class="arrow">↗</span></div>
+    </a>
+<a class="card mint" href="#CAEI_URL" >
+      <div><div class="icon">◇</div><h4>EE · CAEI</h4><p>Gestió educativa d’alumnat, demandes inicials, reunions, fitxes i coordinació amb serveis externs.</p></div>
+      <div class="foot"><span class="tag">Gestió · inclusió</span><span class="arrow">↗</span></div>
+    </a>
+<a class="card cyan" href="https://qs33ds-alt.github.io/Font-Freda-Diversitat/" target='_blank' rel='noopener'>
+      <div><div class="icon">◇</div><h4>Font Freda Diversitat</h4><p>Accés al gestor de diversitat de l’escola: alumnat, seguiment, demandes, CAEI i coordinació educativa.</p></div>
+      <div class="foot"><span class="tag">Diversitat · seguiment</span><span class="arrow">↗</span></div>
+    </a>
+<a class="card rose" href="#EXPRESSIONS_URL" >
+      <div><div class="icon">◇</div><h4>Expressions</h4><p>Entorn interactiu per interpretar emocions, situacions i respostes amb suport visual i avatar.</p></div>
+      <div class="foot"><span class="tag">Emocions · conducta</span><span class="arrow">↗</span></div>
+    </a>
+<a class="card violet" href="#VALOR_POSICIONAL_URL" >
+      <div><div class="icon">◇</div><h4>Valor Posicional</h4><p>Recursos visuals per integrar unitats, desenes i estratègies de càlcul d’una manera clara i manipulativa.</p></div>
+      <div class="foot"><span class="tag">Numeració · estratègia</span><span class="arrow">↗</span></div>
+    </a></section>
+<footer><span>QS33DS · Educational Lab</span><span>Portal d’accés a aplicacions educatives</span></footer>
+</main>
+<button id="installBtn" class="install">Instal·lar app</button>
+<script>
+if ('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+let deferredPrompt; const btn=document.getElementById('installBtn');
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;btn.style.display='block'});
+btn.addEventListener('click',async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;btn.style.display='none'});
+</script>
+</body></html>
