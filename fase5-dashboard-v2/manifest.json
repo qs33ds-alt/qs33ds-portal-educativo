@@ -1,0 +1,42 @@
+{
+  "project": "Portal Educatiu QS33DS",
+  "version": "5.0.0-rc1",
+  "phases": [
+    4,
+    5
+  ],
+  "entry": "fase5-dashboard-v2/index.html",
+  "paths": {
+    "dashboard": "index.html",
+    "agenda": "agenda-proves.html",
+    "pi": "generador-pi-proves.html",
+    "backup": "dades.html",
+    "styles": "ui.css"
+  },
+  "localBackupKeys": [
+    "qs33ds_dashboard_v2_recovered_v1",
+    "qs33ds_agenda_docent_fase3_demo_v1",
+    "qs33ds_pi_fase3_proves_v1"
+  ],
+  "exclusions": [
+    "Font Freda Diversitat",
+    "KAIRO",
+    "Panel Diari"
+  ],
+  "unchanged": [
+    "Cloudflare aula",
+    "Cloudflare aula2",
+    "GitHub root index",
+    "six original app files"
+  ],
+  "security": {
+    "public_site": true,
+    "server_authentication": false,
+    "production_data_allowed": false,
+    "production_supabase_connected": false,
+    "localStorage_same_origin_shared": true,
+    "backup_whitelist_only": true,
+    "encryption": false
+  },
+  "status": "Staging candidate; static checks passed, browser E2E unverified"
+}
