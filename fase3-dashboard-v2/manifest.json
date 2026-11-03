@@ -1,0 +1,65 @@
+{
+  "project": "Portal Educatiu QS33DS",
+  "phase": 3,
+  "version": "3.0.0-rc1",
+  "publication": "GitHub Pages public preview; verification pending",
+  "apps": [
+    {
+      "name": "Generador PI",
+      "path": "generador-pi-proves.html",
+      "status": "prototipo de pruebas",
+      "note": "Fuente React v0.87.0 encontrada en Drive; compilación oficial pendiente"
+    },
+    {
+      "name": "Lecto",
+      "path": "../lecto.html",
+      "status": "archivo existente",
+      "note": "Comprobado en repositorio"
+    },
+    {
+      "name": "Lecto Publisher",
+      "path": "../lecto-publisher.html",
+      "status": "archivo existente",
+      "note": "Comprobado en repositorio"
+    },
+    {
+      "name": "ObservaPT",
+      "path": "../observapt.html",
+      "status": "archivo existente",
+      "note": "Comprobado en repositorio"
+    },
+    {
+      "name": "Pictogrames",
+      "path": "../pictogrames.html",
+      "status": "archivo existente",
+      "note": "Comprobado en repositorio"
+    },
+    {
+      "name": "Referents d'Escriptura",
+      "path": "../referents-escriptura.html",
+      "status": "archivo existente",
+      "note": "Comprobado en repositorio"
+    },
+    {
+      "name": "Laboratori de Nombres",
+      "path": "../laboratori-nombres.html",
+      "status": "archivo existente",
+      "note": "Comprobado en repositorio"
+    },
+    {
+      "name": "Agenda Docent",
+      "path": "agenda-proves.html",
+      "status": "prototipo de pruebas",
+      "note": "No es la Agenda V2 original"
+    }
+  ],
+  "eines": "../eines-aula/",
+  "production_worker_modified": false,
+  "font_freda_diversitat_included": false,
+  "privacy": "Only fictitious data; localStorage prototypes; no Supabase",
+  "limitations": [
+    "Original Generador PI needs rebuild and audits",
+    "Original Agenda V2 source not located",
+    "Public Pages visual navigation not verified"
+  ]
+}
