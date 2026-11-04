@@ -14,13 +14,13 @@
 <label>Àmbit fictici<select name="focus"><option value="organization">Organització</option><option value="autonomy">Autonomia</option><option value="reading">Lectura</option><option value="general">General</option></select></label>
 <label>Activitats planificades <input name="planned" type="number" value="6" min="0" max="100" step="1" required></label>
 <label>Activitats completades <input name="completed" type="number" value="4" min="0" max="100" step="1" required></label>
-</form><div class="actions"><button id="download">Descarregar petició de prova (.json)</button><span id="downloadstatus" role="status"></span></div></section>
-<section><h2>2. Processar amb QS33DS Local</h2><p>A QS33DS Local, obre <strong>Herramientas → Procesar petición del portal</strong>. Selecciona el JSON descarregat i desa el resultat en un fitxer nou.</p>
+</form><div class="actions"><button id="download">Descarregar petició de prova (.json)</button><span id="downloadstatus" role="status"></span></div><details style="margin-top:16px"><summary>Ja tens una petició descarregada?</summary><p>Recupera-la aquí si has tancat o recarregat la pàgina. Després podràs carregar el seu resultat al pas 3.</p><label>Recuperar petició JSON original <input id="requestfile" type="file" accept=".json,application/json"></label></details></section>
+<section><h2>2. Processar amb QS33DS Local</h2><p>A <strong>QS33DS Local 0.9.9.18 o posterior</strong>, obre <strong>Herramientas → Procesar petición del portal</strong>. Si no hi surt, estàs usant una versió anterior. També pots executar <strong>PROCESAR_PETICION_PORTAL.bat</strong> del paquet actualitzat sense obrir l’aplicació. Selecciona el JSON descarregat i desa el resultat en un fitxer nou.</p>
 <p>També pots usar el processador independent amb Python 3.12, sense instal·lar dependències:</p>
 <p><a href="./bridge/portal_bridge.py" download="portal_bridge.py">Descarrega portal_bridge.py</a></p>
 <code>python portal_bridge.py qs33ds_peticio_demo.json --output resultat.json</code>
 <p><small>El resum funciona sense Ollama. Opcional: afegeix <code>--ollama</code> per usar qwen3:1.7b a 127.0.0.1. El processador no obre ni modifica les bases de dades locals.</small></p>
-<p><small>Mantén aquesta pestanya oberta fins a carregar la resposta. Si la recarregues o neteges la pantalla, genera una petició nova.</small></p>
+<p><small>Mantén aquesta pestanya oberta. Si la recarregues, usa «Ja tens una petició descarregada?» per recuperar la petició original sense generar un identificador diferent.</small></p>
 </section>
-<section><h2>3. Obrir el resultat</h2><label>Seleccionar resposta JSON de QS33DS Local <input id="resultfile" type="file" accept=".json,application/json"></label><div class="actions"><button class="secondary" id="clear" type="button">Netejar pantalla</button></div><h3>Resposta (només lectura)</h3><output id="result" aria-live="polite">Cap resultat carregat.</output></section>
+<section><h2>3. Obrir el RESULTAT processat</h2><p>No seleccionis la petició del pas 1 ni una resposta qualsevol de ChatGPT. Selecciona el JSON que desa el processador local.</p><label>Seleccionar resposta JSON de QS33DS Local <input id="resultfile" type="file" accept=".json,application/json"></label><div class="actions"><button class="secondary" id="clear" type="button">Netejar pantalla</button></div><h3>Resposta (només lectura)</h3><output id="result" aria-live="polite">Cap resultat carregat.</output></section>
 </main><script src="./bridge.js" defer></script></body></html>
