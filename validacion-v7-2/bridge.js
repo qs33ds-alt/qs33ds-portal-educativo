@@ -22,9 +22,21 @@ const Bridge = (() => {
     metrics(counts);
     return {schema:'qs33ds.portal.ai-bridge.request.v1',mode:'demo',action:'summarize_demo',request_id:id,source:'qs33ds-github-preview',payload:{week,metrics:counts,context:{focus}}};
   }
+  function validateRequest(data) {
+    fields(data,['schema','mode','action','request_id','source','payload']);
+    if(data.schema!=='qs33ds.portal.ai-bridge.request.v1' || data.mode!=='demo' || data.action!=='summarize_demo' || data.source!=='qs33ds-github-preview')throw Error('No és una petició de prova del portal.');
+    fields(data.payload,['week','metrics','context']);fields(data.payload.context,['focus']);metrics(data.payload.metrics);
+    const m=data.payload.metrics;
+    return makeRequest(data.payload.week,data.payload.context.focus,m.planned_activities,m.completed_activities,data.request_id);
+  }
   function validateResponse(data, pending) {
     if (!pending) throw Error('Genera primer una petició en aquesta sessió. Si has recarregat la pàgina, genera una petició nova.');
-    fields(data,['schema','mode','action','status','request_id','metrics','summary','engine']);
+    if (data && data.schema==='qs33ds.portal.ai-bridge.request.v1') throw Error('Has seleccionat una PETICIÓ. Processa-la amb QS33DS Local i selecciona el fitxer RESULTAT que genera.');
+    if (!data || typeof data!=='object' || Array.isArray(data)) throw Error('Cal un objecte JSON de resposta de QS33DS Local.');
+    const required=['schema','mode','action','status','request_id','metrics','summary','engine'];
+    const missing=required.filter(key=>!Object.hasOwn(data,key));
+    if(missing.length)throw Error('Aquest fitxer no té el format de resposta de QS33DS Local. Falten: '+missing.join(', ')+'. Un fitxer de ChatGPT no és necessàriament compatible.');
+    fields(data,required);
     if (data.schema!=='qs33ds.portal.ai-bridge.response.v1' || data.mode!=='demo' || data.action!=='summarize_demo' || data.status!=='ok') throw Error('Resposta desconeguda.');
     if (data.request_id!==pending.request_id) throw Error('La resposta no correspon a la petició pendent.');
     metrics(data.metrics);
@@ -32,7 +44,7 @@ const Bridge = (() => {
     if (typeof data.summary!=='string' || !data.summary.trim() || data.summary.length>2000 || !['local-rules-v1','ollama:qwen3:1.7b'].includes(data.engine)) throw Error('Contingut de resposta no vàlid.');
     return data;
   }
-  return {makeRequest,validateResponse,validWeek};
+  return {makeRequest,validateRequest,validateResponse,validWeek};
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports=Bridge;
 else {
@@ -62,6 +74,22 @@ else {
       const counts=response.metrics;
       $('result').textContent=response.summary+'\n\nPlanificades: '+counts.planned_activities+' · Completades: '+counts.completed_activities+' · Pendents: '+counts.pending_activities+'\nMotor: '+response.engine+'\nPetició: '+response.request_id;
     } catch(error) { $('result').textContent='No es pot llegir la resposta: '+error.message; }
+    finally {event.target.value='';}
+  };
+  $('requestfile').onchange=async event=>{
+    const file=event.target.files[0];if(!file)return;
+    try {
+      if(file.size>8192)throw Error('Fitxer massa gran (màxim 8 KB).');
+      const recovered=Bridge.validateRequest(JSON.parse(await file.text()));
+      pending=recovered;
+      const form=$('demo').elements;
+      form.namedItem('week').value=recovered.payload.week;
+      form.namedItem('focus').value=recovered.payload.context.focus;
+      form.namedItem('planned').value=recovered.payload.metrics.planned_activities;
+      form.namedItem('completed').value=recovered.payload.metrics.completed_activities;
+      $('downloadstatus').textContent='Petició recuperada: '+pending.request_id;
+      $('result').textContent='Ara selecciona el RESULTAT d’aquesta petició al pas 3.';
+    } catch(error) {$('downloadstatus').textContent='No es pot recuperar la petició: '+error.message;}
     finally {event.target.value='';}
   };
   $('clear').onclick=()=>{pending=null;$('result').textContent='Cap resultat carregat.';$('downloadstatus').textContent='Petició descartada. Genera una petició nova per continuar.';};
