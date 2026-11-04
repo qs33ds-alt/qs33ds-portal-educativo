@@ -26,3 +26,13 @@ Còpia independent de `validacion-v7-1/`, sense substituir V7, V7.1, la portada 
 
 ## Reversibilitat
 El directori V7.2 pot retirar-se sense alterar V7, V7.1 o `generador-pi/`.
+
+
+## 2026-11-04 · Fase 7 implementada y comprobada
+- Puente manual completo: petición JSON desde V7.2, procesamiento con Python y resultado de vuelta al portal.
+- Procesador descargable en `bridge/portal_bridge.py`; integrado también en QS33DS Local 0.9.9.18-rc1, Herramientas → Procesar petición del portal.
+- Validación de semana ISO, métricas e identificador, límites de tamaño y salida sin sobrescritura.
+- 151 pruebas Python (una omitida), 11 comprobaciones JavaScript y contrato Python → web correctos.
+- GitHub Actions #104 completado correctamente. Prueba real del sitio publicado: descarga, procesamiento, rechazo de respuesta ajena y aceptación del resultado correcto (6/4/2).
+- Sigue siendo un flujo voluntario con datos ficticios. No sincroniza agenda/PI/alumnos ni accede a bases del perfil. Ollama es opcional por consola y no se ha validado con un modelo real.
+- Las tareas pendientes del informe anterior sobre otras aplicaciones, autenticación y datos reales siguen pendientes; la comprobación del circuito JSON queda resuelta por esta prueba.
